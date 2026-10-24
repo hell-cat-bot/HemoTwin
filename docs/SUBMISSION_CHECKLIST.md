@@ -13,7 +13,7 @@ Everything below must be true before the link is submitted. Each row is a gate, 
 | `[Team Name]`, `[College / Incubator]` | README, video, deck | Team leader | ✅ `Ozz` · NIT Silchar — in README and deck |
 | `[Member — role]`, phone, email | README, deck | Team leader | ✅ Ayandeep Bharadwaj (leader) + Prasenjeet Tiwari |
 | `[City, State]`, `[DD Month 2026]` | README | Team leader | ✅ Silchar, Assam · 24 October 2026 |
-| `[Unlisted YouTube link]` | README | Video owner | ⬜ **still open — paste before submitting** |
+| `[Unlisted YouTube link]` | README | Video owner | ✅ `https://youtu.be/ezq2eWIAmj8` — linked near the top, in "20-minute video", and in the deck close slide |
 
 No square brackets may survive in the final repository. Run a search for `[` before submitting.
 
@@ -23,7 +23,7 @@ No square brackets may survive in the final repository. Run a search for `[` bef
 
 | Done | Item | Detail |
 |---|---|---|
-| ☐ | Folder renamed | Root folder is `YourTeamName_YourCollegeName`. Not `HemoTwin_TeamName_CollegeName`. |
+| ☐ | Folder renamed | Local root is still `HemoTwin_TeamName_CollegeName`. The brief asks for `Team Name_College Name` — rename the **GitHub repository** to `Ozz_NIT_Silchar` (GitHub redirects the old link, so an already-submitted URL keeps working). Not done: no `gh` CLI token on this machine. |
 | ☐ | Public repository | Visibility is Public, not private. |
 | ☐ | Default branch clean | `main` contains the final state. No stray branches, no merge conflict markers. |
 | ☐ | No secrets | No API keys, no `.env`, no personal data. |
@@ -46,6 +46,18 @@ The brief requires six items in the README. Verify each is present and clearly h
 | ☐ | Open-source licence details | "Data & licence" plus the `LICENSE` file |
 
 Additional sections that must also be present: what a digital twin means here, architecture, results, the 87.2% insight, dashboard, how to run, limitations and ethics, repository structure, citation.
+
+**The brief also names requirements the README must answer explicitly** (judges score against the brief, not against taste). README section "How this maps to the challenge brief" answers each one line by line:
+
+| Brief requirement | Where we answer it |
+|---|---|
+| One specific chronic condition prevalent in India | "How this maps…" → CKD → ESRD on maintenance haemodialysis; deck slide 04 |
+| Fusion of a static/historical stream and a dynamic/real-time stream | "How this maps…" → `idp.csv` + `d1.csv` (EHR) and `vip.csv` (machine telemetry); deck slide 04 |
+| Predicts an adverse event | "Results" — IDH, AUROC 0.916, 15–60 min horizon; deck slides 08, 12 |
+| Personalises treatment protocols | "Layer 3 — Counterfactual policy simulation"; deck slides 09, 10 |
+| Working algorithm, not a mock-up | "How to run" + `scripts/verify_submission.py`; committed demo bundle |
+| UI showing how a clinician interacts with the virtual patient | "Screenshots" + "Dashboard"; deck slide 10 |
+| Architecture diagram in PDF/PPT | `docs/architecture.pdf` and `deck/HemoTwin_Deck.pdf` (16 slides) |
 
 | Done | Check | Detail |
 |---|---|---|

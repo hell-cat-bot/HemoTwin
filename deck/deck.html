@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  HemoTwin pitch deck — 15 slides, 16:9.
+  HemoTwin pitch deck — 16 slides, 16:9.
 
   TO PRINT TO PDF (Chrome or Edge):
     Ctrl+P → Destination: Save as PDF
@@ -21,7 +21,7 @@
 <title>HemoTwin — Predict the crash. Price the fix.</title>
 <style>
 /* ============================================================
-   HemoTwin deck — 15 slides, 1600 × 900, print to PDF
+   HemoTwin deck — 16 slides, 1600 × 900, print to PDF
    No external assets. No JavaScript. All charts are divs.
    ============================================================ */
 
@@ -215,6 +215,13 @@ p{color:var(--ink-soft)}
   color:#94A3B8;
   letter-spacing:.02em;
 }
+.vid{
+  padding-bottom:8px;
+  font-size:20px;
+  color:#94A3B8;
+  letter-spacing:.02em;
+}
+.vid b{color:var(--accent-bright);font-weight:600}
 
 /* ============================================================
    02 — THE PROBLEM
@@ -1075,26 +1082,41 @@ td.k{color:var(--muted);font-weight:400}
 .opgrid .note .nh{font-size:17px;margin-bottom:8px}
 
 /* ============================================================
+   04 — THE BRIEF
+   ============================================================ */
+.brief{display:grid;grid-template-columns:660px 1fr;gap:36px;align-items:start;padding-top:4px}
+.bc{border:1px solid var(--line);padding:16px 20px 14px;margin-bottom:14px;background:var(--paper)}
+.bc:last-child{margin-bottom:0}
+.bc .bl{font-size:16px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.bc h3{font-size:26px;line-height:1.2;letter-spacing:-.02em;margin-bottom:7px}
+.bc p{font-size:19px;line-height:1.42;color:var(--ink-soft)}
+.bc p b{color:var(--ink)}
+.bc.cond{border-left:4px solid var(--accent);background:#F7FDFC}
+.bc.stream{border-left:4px solid var(--warn)}
+.bc.out{border-left:4px solid var(--accent);background:#F7FDFC}
+.brief .lede{font-size:26px;line-height:1.4;margin-bottom:18px}
+
+/* ============================================================
    14 — LIMITATIONS
    ============================================================ */
 
-.limits{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:20px;height:100%}
+.limits{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:18px;height:100%}
 .limit{
   border:1px solid var(--line);
   border-top:3px solid var(--warn);
-  padding:24px 24px 20px;
+  padding:20px 22px 16px;
   display:flex;
   flex-direction:column;
 }
 .limit.hard{border-top-color:var(--danger)}
-.limit h3{font-size:26px;line-height:1.22;margin-bottom:12px;letter-spacing:-.015em}
-.limit p{font-size:22px;line-height:1.45;color:var(--ink-soft)}
+.limit h3{font-size:25px;line-height:1.2;margin-bottom:10px;letter-spacing:-.015em}
+.limit p{font-size:20px;line-height:1.4;color:var(--ink-soft)}
 .limit p b{color:var(--ink)}
 .limit .lm{
   margin-top:auto;
-  padding-top:12px;
+  padding-top:10px;
   border-top:1px solid var(--line);
-  font-size:18px;
+  font-size:17px;
   color:var(--muted);
   line-height:1.35;
 }
@@ -1138,10 +1160,11 @@ td.k{color:var(--muted);font-weight:400}
   </div>
 
   <div class="team">Team Ozz · National Institute of Technology, Silchar · Ayandeep Bharadwaj (ML + Twin) · Prasenjeet Tiwari (PPT + Video + Web)</div>
+  <div class="vid">▶ 20-minute demo video: <b>youtu.be/ezq2eWIAmj8</b> · Code, architecture and data notes: <b>github.com/hell-cat-bot/HemoTwin</b></div>
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">01 / 15</span>
+    <span class="num">01 / 16</span>
   </footer>
 </section>
 
@@ -1202,7 +1225,7 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">02 / 15</span>
+    <span class="num">02 / 16</span>
   </footer>
 </section>
 
@@ -1237,11 +1260,57 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">03 / 15</span>
+    <span class="num">03 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 04 · WHAT EXISTS ============================ -->
+<!-- ============================ 04 · THE BRIEF ============================ -->
+<section class="slide">
+  <div class="kicker">The challenge brief</div>
+  <h1>One chronic condition. Two data streams. One adverse event.</h1>
+
+  <div class="body brief">
+    <div>
+      <p class="lede">The brief asks for the digital twin of <b>one chronic condition prevalent in India</b>. Ours is the one a dialysis machine is already streaming.</p>
+
+      <div class="bc cond">
+        <div class="bl">The condition</div>
+        <h3>CKD → ESRD, on the machine</h3>
+        <p>Kidney failure is where India's type-2 epidemic ends. <b>34.5%</b> of our cohort is diabetic, <b>1,700+</b> district centres already run under PMNDP, and a patient sits down <b>156</b> times a year. Chronic, prevalent, already measured.</p>
+      </div>
+
+      <div class="bc">
+        <div class="bl">Why a twin can exist here</div>
+        <p>A wristband cannot see fluid leaving the blood. <b>Pressure, UF rate and refill</b> are measured at the chair — nobody was fusing them.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="bc stream">
+        <div class="bl">Stream A · static / historical (EHR)</div>
+        <p><b>idp.csv</b> — sex, date of birth, first-dialysis date, diabetes flag.<br><b>d1.csv</b> — session start/end, start &amp; end weight, dry weight, dialysate temperature.</p>
+      </div>
+
+      <div class="bc stream">
+        <div class="bl">Stream B · dynamic / real-time (medical IoT)</div>
+        <p><b>vip.csv</b> — the machine's own monitor: non-invasive BP, <b>UF rate</b>, blood-flow rate, dialysate temperature, conductivity. <b>4.19M</b> readings over 205,482 sessions.</p>
+      </div>
+
+      <div class="bc out">
+        <div class="bl">The output</div>
+        <h3>IDH, 15–60 minutes before onset</h3>
+        <p>AUROC <b>0.916</b> on a patient-disjoint split — then a twin that prices <b>hold / taper 25% / stop + 250 mL</b>, in a console a nurse actually works in.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">04 / 16</span>
+  </footer>
+</section>
+
+<!-- ============================ 05 · WHAT EXISTS ============================ -->
 <section class="slide">
   <div class="kicker">What exists already</div>
   <h1>The predictor is published. We are not claiming it.</h1>
@@ -1302,11 +1371,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">04 / 15</span>
+    <span class="num">05 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 05 · INSIGHT ============================ -->
+<!-- ============================ 06 · INSIGHT ============================ -->
 <section class="slide">
   <div class="kicker">The insight</div>
   <h1>Everyone already tapers. They just guess when.</h1>
@@ -1339,11 +1408,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">05 / 15</span>
+    <span class="num">06 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 06 · REFRAME ============================ -->
+<!-- ============================ 07 · REFRAME ============================ -->
 <section class="slide">
   <div class="kicker">The reframe</div>
   <h1>Predict the crash. Price the fix.</h1>
@@ -1397,11 +1466,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">06 / 15</span>
+    <span class="num">07 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 07 · WHAT WE BUILT ============================ -->
+<!-- ============================ 08 · WHAT WE BUILT ============================ -->
 <section class="slide">
   <div class="kicker">What we built</div>
   <h1>Three layers, one decision</h1>
@@ -1453,11 +1522,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">07 / 15</span>
+    <span class="num">08 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 08 · EVENT MODEL ============================ -->
+<!-- ============================ 09 · EVENT MODEL ============================ -->
 <section class="slide">
   <div class="kicker">Validation · event level</div>
   <h1>0.916, and the baselines that keep us honest</h1>
@@ -1517,11 +1586,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">08 / 15</span>
+    <span class="num">09 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 09 · THE TWIN ============================ -->
+<!-- ============================ 10 · THE TWIN ============================ -->
 <section class="slide">
   <div class="kicker">The twin</div>
   <h1>Two equations a nephrologist can argue with</h1>
@@ -1556,11 +1625,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">09 / 15</span>
+    <span class="num">10 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 10 · WHAT-IF ============================ -->
+<!-- ============================ 11 · WHAT-IF ============================ -->
 <section class="slide">
   <div class="kicker">The what-if</div>
   <h1>Chair 1, minute 110. Three choices, one price list.</h1>
@@ -1608,11 +1677,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">10 / 15</span>
+    <span class="num">11 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 11 · VALIDATION ============================ -->
+<!-- ============================ 12 · VALIDATION ============================ -->
 <section class="slide">
   <div class="kicker">Validation · two tasks</div>
   <h1>Two cohorts, two tasks, no blended number</h1>
@@ -1659,11 +1728,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device · 303,122 sessions · 1,828 patients · two countries</span>
-    <span class="num">11 / 15</span>
+    <span class="num">12 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 12 · OPERATING POINT ============================ -->
+<!-- ============================ 13 · OPERATING POINT ============================ -->
 <section class="slide">
   <div class="kicker">Validation · operating point</div>
   <h1>Why 0.0410?</h1>
@@ -1736,11 +1805,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">12 / 15</span>
+    <span class="num">13 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 13 · TRUST ============================ -->
+<!-- ============================ 14 · TRUST ============================ -->
 <section class="slide">
   <div class="kicker">Trust</div>
   <h1>Why a nurse should believe the number</h1>
@@ -1782,11 +1851,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">13 / 15</span>
+    <span class="num">14 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 13 · LIMITATIONS ============================ -->
+<!-- ============================ 15 · LIMITATIONS ============================ -->
 <section class="slide">
   <div class="kicker">Limitations</div>
   <h1>What this cannot do yet</h1>
@@ -1833,11 +1902,11 @@ td.k{color:var(--muted);font-weight:400}
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">14 / 15</span>
+    <span class="num">15 / 16</span>
   </footer>
 </section>
 
-<!-- ============================ 14 · CLOSE ============================ -->
+<!-- ============================ 16 · CLOSE ============================ -->
 <section class="slide dark close">
   <div class="kicker">What next</div>
   <div class="hook">Predict the crash.<br><em>Price the fix.</em></div>
@@ -1861,10 +1930,11 @@ td.k{color:var(--muted);font-weight:400}
   </div>
 
   <div class="team">Team Ozz · National Institute of Technology, Silchar · Ayandeep Bharadwaj · Prasenjeet Tiwari · ayandeep666@gmail.com</div>
+  <div class="vid">▶ 20-minute demo video: <b>youtu.be/ezq2eWIAmj8</b> · Code, architecture and data notes: <b>github.com/hell-cat-bot/HemoTwin</b></div>
 
   <footer class="foot">
     <span>HemoTwin — research prototype, not a medical device</span>
-    <span class="num">15 / 15</span>
+    <span class="num">16 / 16</span>
   </footer>
 </section>
 
