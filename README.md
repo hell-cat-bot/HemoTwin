@@ -31,6 +31,9 @@ A remote-operations digital twin for haemodialysis that predicts intradialytic h
 
 ---
 
+## Youtube Video - https://youtu.be/ezq2eWIAmj8
+
+
 ## Problem statement & healthcare use case
 
 A four-hour haemodialysis session is a tightrope. The machine must remove the fluid the kidneys cannot, fast enough to reach dry weight, slowly enough that blood pressure does not collapse. Intradialytic hypotension is the failure mode: systolic blood pressure drops below 90 mmHg, the patient cramps, vomits, or loses consciousness, and the session ends with saline, a UF pause, and fluid left behind.
