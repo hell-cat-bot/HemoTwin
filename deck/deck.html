@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<!--
+  HemoTwin pitch deck — 14 slides, 16:9.
+
+  TO PRINT TO PDF (Chrome or Edge):
+    Ctrl+P → Destination: Save as PDF
+    → Paper size: 1600 x 900 px is set by @page; choose "Custom" if prompted
+    → Margins: None
+    → Background graphics: ON  (required — every chart is a background div)
+    → Scale: 100%
+  Each .slide is exactly 1600 x 900 px with page-break-after.
+
+  TO PRESENT ON SCREEN:
+    Open the file in any browser. Slides are centred on grey, stacked vertically.
+    Print/PDF is the reliable path; no JavaScript is used anywhere.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1600">
+<title>HemoTwin — Predict the crash. Price the fix.</title>
+<style>
+/* ============================================================
+   HemoTwin deck — 14 slides, 1600 × 900, print to PDF
+   No external assets. No JavaScript. All charts are divs.
+   ============================================================ */
+
+:root{
+  --ink:#0F172A;
+  --paper:#FFFFFF;
+  --muted:#64748B;
+  --line:#E2E8F0;
+  --accent:#0D9488;
+  --accent-bright:#2DD4BF;
+  --accent-soft:#CCFBF1;
+  --warn:#D97706;
+  --danger:#DC2626;
+  --ink-soft:#334155;
+  --panel:#F8FAFC;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{background:#6B7280}
+
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+}
+
+.slide{
+  position:relative;
+  width:1600px;
+  height:900px;
+  background:var(--paper);
+  padding:58px 88px 92px;
+  overflow:hidden;
+  page-break-after:always;
+  break-after:page;
+  break-inside:avoid;
+  display:flex;
+  flex-direction:column;
+}
+.slide:last-child{page-break-after:auto;break-after:auto}
+
+@media screen{
+  body{
+    padding:48px 0 72px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:38px;
+    background:#6B7280;
+  }
+  .slide{box-shadow:0 18px 50px rgba(2,6,23,.45)}
+}
+
+@page{size:1600px 900px;margin:0}
+
+@media print{
+  html,body{background:#fff}
+  .slide{box-shadow:none;margin:0}
+}
+
+/* ---------- shared type ---------- */
+
+.kicker{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-size:20px;
+  font-weight:600;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:16px;
+  flex:none;
+}
+.kicker::before{
+  content:"";
+  width:28px;
+  height:3px;
+  background:var(--accent);
+  flex:none;
+}
+
+h1{
+  font-size:64px;
+  line-height:1.03;
+  letter-spacing:-.028em;
+  font-weight:700;
+  margin-bottom:36px;
+  flex:none;
+}
+
+.body{flex:1;min-height:0}
+
+p{color:var(--ink-soft)}
+
+.foot{
+  position:absolute;
+  left:88px;
+  right:88px;
+  bottom:30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:32px;
+  font-size:20px;
+  color:var(--muted);
+  border-top:1px solid var(--line);
+  padding-top:12px;
+}
+.foot .num{font-weight:700;letter-spacing:.1em;color:var(--muted);white-space:nowrap}
+
+/* ---------- dark slides ---------- */
+
+.slide.dark{background:var(--ink);color:#fff}
+.slide.dark h1{color:#fff}
+.slide.dark p{color:#CBD5E1}
+.slide.dark .kicker{color:#94A3B8}
+.slide.dark .foot{color:#94A3B8;border-top-color:#1E293B}
+.slide.dark .foot .num{color:#94A3B8}
+
+/* ============================================================
+   01 — TITLE
+   ============================================================ */
+
+.title{padding-top:52px}
+.title::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size:80px 80px;
+  pointer-events:none;
+}
+.title > *:not(.foot){position:relative}
+
+.brandline{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  padding-bottom:18px;
+  border-bottom:1px solid #1E293B;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-size:26px;
+  font-weight:700;
+  letter-spacing:.02em;
+  color:#fff;
+}
+.brand .dot{width:12px;height:12px;background:var(--accent-bright);border-radius:50%}
+.brandright{font-size:20px;color:#94A3B8;letter-spacing:.04em}
+
+.titlewrap{margin-top:96px}
+.hook{
+  font-size:104px;
+  line-height:1.02;
+  letter-spacing:-.04em;
+  font-weight:700;
+  color:#fff;
+}
+.hook em{font-style:normal;color:var(--accent-bright)}
+.tsub{
+  margin-top:36px;
+  max-width:1010px;
+  font-size:29px;
+  line-height:1.45;
+  color:#CBD5E1;
+}
+
+.titlestats{
+  margin-top:64px;
+  display:flex;
+  gap:72px;
+}
+.titlestats div{display:flex;flex-direction:column;gap:6px}
+.titlestats b{font-size:42px;font-weight:700;letter-spacing:-.03em;color:#fff}
+.titlestats span{font-size:20px;color:#94A3B8;letter-spacing:.04em}
+
+.team{
+  margin-top:auto;
+  padding-bottom:6px;
+  font-size:22px;
+  color:#94A3B8;
+  letter-spacing:.02em;
+}
+
+/* ============================================================
+   02 — THE PROBLEM
+   ============================================================ */
+
+.s2{
+  display:grid;
+  grid-template-columns:1fr 610px;
+  gap:64px;
+}
+
+.lede{font-size:29px;line-height:1.45;margin-bottom:22px}
+.lede b{color:var(--ink)}
+
+.stats{display:flex;flex-direction:column}
+.stat{
+  display:grid;
+  grid-template-columns:158px 1fr;
+  gap:26px;
+  align-items:center;
+  padding:15px 0;
+  border-top:1px solid var(--line);
+}
+.stat b{
+  font-size:50px;
+  font-weight:700;
+  letter-spacing:-.04em;
+  color:var(--ink);
+  line-height:1;
+}
+.stat span{font-size:23px;line-height:1.32;color:var(--ink-soft)}
+.stat i{
+  display:block;
+  font-style:normal;
+  font-size:18px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.closer{
+  margin-top:18px;
+  font-size:27px;
+  line-height:1.4;
+  color:var(--ink);
+  font-weight:600;
+  letter-spacing:-.01em;
+}
+
+/* panel */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:34px 34px 30px;
+  display:flex;
+  flex-direction:column;
+}
+.panel-h{
+  font-size:22px;
+  font-weight:600;
+  letter-spacing:.02em;
+  color:var(--ink);
+  margin-bottom:10px;
+}
+.panel-s{font-size:20px;color:var(--muted);line-height:1.35}
+
+/* timeline */
+.tl{position:relative;height:198px;margin-top:14px}
+.tl-line{position:absolute;left:0;right:0;top:104px;height:2px;background:#CBD5E1}
+.tl-tick{
+  position:absolute;
+  top:104px;
+  width:14px;height:14px;
+  margin-left:-7px;margin-top:-6px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid #94A3B8;
+}
+.tl-gap{
+  position:absolute;
+  top:92px;
+  height:26px;
+  background:rgba(220,38,38,.09);
+  border-left:2px dashed var(--danger);
+  border-right:2px dashed var(--danger);
+}
+.tl-crash{
+  position:absolute;
+  top:104px;
+  margin-left:-9px;margin-top:-7px;
+  width:20px;height:20px;
+  border-radius:50%;
+  background:var(--danger);
+  border:4px solid #fff;
+  box-shadow:0 0 0 3px rgba(220,38,38,.25);
+}
+.tl-crash-label{
+  position:absolute;
+  top:132px;
+  margin-left:-42px;
+  width:150px;
+  font-size:19px;
+  font-weight:600;
+  color:var(--danger);
+  text-align:center;
+  line-height:1.25;
+}
+.tl-x{
+  display:flex;
+  justify-content:space-between;
+  font-size:19px;
+  color:var(--muted);
+  margin-top:2px;
+}
+.tl-note{
+  margin-top:auto;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:20px;
+  line-height:1.4;
+  color:var(--muted);
+}
+.tl-note b{color:var(--ink);font-weight:600}
+
+/* ============================================================
+   03 — WHY INDIA
+   ============================================================ */
+
+.s3{
+  display:grid;
+  grid-template-columns:1fr 620px;
+  gap:72px;
+  height:100%;
+}
+.bigquote{
+  font-size:46px;
+  line-height:1.2;
+  letter-spacing:-.02em;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:26px;
+  max-width:640px;
+}
+.qnote{font-size:25px;line-height:1.5;color:var(--ink-soft);max-width:620px}
+.qnote b{color:var(--ink)}
+
+.s3 > div:first-child{display:flex;flex-direction:column}
+.s3stats{display:flex;flex-direction:column;justify-content:center;gap:0}
+.s3card{
+  padding:19px 0;
+  border-top:1px solid var(--line);
+}
+.s3card:last-child{border-bottom:1px solid var(--line)}
+.s3card b{
+  display:block;
+  font-size:62px;
+  line-height:1;
+  letter-spacing:-.04em;
+  font-weight:700;
+  color:var(--ink);
+}
+.s3card span{
+  display:block;
+  margin-top:10px;
+  font-size:23px;
+  line-height:1.35;
+  color:var(--ink-soft);
+  max-width:520px;
+}
+.s3card i{font-style:normal;color:var(--muted);font-size:19px}
+.s3callout{
+  margin-top:auto;
+  padding-top:34px;
+  font-size:26px;
+  line-height:1.4;
+  color:var(--ink);
+  font-weight:600;
+  letter-spacing:-.01em;
+  border-top:1px solid var(--line);
+  max-width:600px;
+}
+.s3callout span{color:var(--accent)}
+
+/* ============================================================
+   04 — WHAT EXISTS
+   ============================================================ */
+
+.s4{
+  display:grid;
+  grid-template-columns:660px 1fr;
+  gap:64px;
+  height:100%;
+}
+.zhang{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:34px 34px 28px;
+  display:flex;
+  flex-direction:column;
+}
+.ztag{
+  font-size:19px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:16px;
+}
+.zname{
+  font-size:26px;
+  font-weight:600;
+  line-height:1.3;
+  color:var(--ink);
+  margin-bottom:26px;
+}
+.zgrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px 24px;
+  margin-bottom:26px;
+}
+.zgrid b{
+  display:block;
+  font-size:44px;
+  line-height:1;
+  letter-spacing:-.035em;
+  font-weight:700;
+}
+.zgrid span{display:block;font-size:19px;color:var(--muted);margin-top:6px;line-height:1.25}
+.zhang p{font-size:21px;line-height:1.45;color:var(--ink-soft)}
+.zhang p.zmid{margin-top:2px}
+.zhang p.zfoot{margin-top:auto;padding-top:18px;border-top:1px solid var(--line)}
+
+.s4right{display:flex;flex-direction:column;min-width:0}
+.noclaim{
+  font-size:44px;
+  line-height:1.12;
+  letter-spacing:-.02em;
+  font-weight:700;
+  color:var(--ink);
+  padding-bottom:22px;
+  border-bottom:3px solid var(--danger);
+  margin-bottom:26px;
+}
+.horizon{margin-bottom:26px}
+.hrow{
+  display:grid;
+  grid-template-columns:112px 1fr;
+  align-items:center;
+  gap:16px;
+  margin-bottom:12px;
+}
+.hrow span{font-size:20px;color:var(--muted)}
+.htrack{position:relative;height:30px;background:#fff;border:1px solid var(--line)}
+.hfill{position:absolute;top:0;bottom:0;left:0;background:#E2E8F0}
+.hfill.us{background:var(--accent)}
+.hlabel{
+  position:absolute;
+  top:0;bottom:0;
+  display:flex;
+  align-items:center;
+  padding-left:10px;
+  font-size:19px;
+  font-weight:600;
+  color:var(--ink-soft);
+}
+.claim{display:grid;grid-template-columns:44px 1fr;gap:14px;margin-bottom:16px;align-items:start}
+.claim .cn{font-size:20px;font-weight:700;color:var(--accent);padding-top:4px}
+.claim p{font-size:23px;line-height:1.4}
+.claim b{color:var(--ink)}
+.hnote{margin-top:auto;font-size:19px;line-height:1.4;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+
+/* ============================================================
+   05 — THE INSIGHT
+   ============================================================ */
+
+.s5{
+  display:grid;
+  grid-template-columns:700px 1fr;
+  gap:60px;
+  align-items:center;
+  flex:1;
+}
+.s5body{display:flex;flex-direction:column}
+.huge{
+  font-size:196px;
+  line-height:.86;
+  letter-spacing:-.06em;
+  font-weight:700;
+  color:var(--ink);
+}
+.huge span{font-size:96px;letter-spacing:-.04em}
+.s5cap{
+  margin-top:20px;
+  font-size:27px;
+  line-height:1.42;
+  color:var(--ink-soft);
+  max-width:620px;
+}
+.s5cap b{color:var(--ink)}
+
+.s5chart{
+  border-left:2px solid var(--line);
+  padding-left:44px;
+  padding-top:6px;
+}
+.charthead{
+  font-size:20px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:26px;
+}
+.ufbar{margin-bottom:38px}
+.ufbar .ufl{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:10px;
+}
+.ufbar .ufl span{font-size:22px;color:var(--ink-soft)}
+.ufbar .ufl b{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.ufbar .ufl b i{font-style:normal;font-size:20px;color:var(--muted);font-weight:400;margin-left:4px}
+.track{height:26px;background:#F1F5F9;border:1px solid var(--line);position:relative}
+.fill{position:absolute;top:0;bottom:0;left:0;background:var(--accent)}
+.fill.dim{background:#94A3B8}
+.ufnote{font-size:20px;line-height:1.4;color:var(--muted);margin-top:8px}
+
+.s5line{
+  margin-top:auto;
+  border-top:3px solid var(--ink);
+  padding-top:26px;
+  font-size:40px;
+  line-height:1.22;
+  letter-spacing:-.025em;
+  font-weight:700;
+  color:var(--ink);
+}
+.s5line em{font-style:normal;color:var(--accent)}
+
+/* ============================================================
+   06 — THE REFRAME / FRONTIER
+   ============================================================ */
+
+.s6{
+  display:grid;
+  grid-template-columns:520px 1fr;
+  gap:70px;
+  height:100%;
+}
+.axisitem{margin-bottom:28px}
+.axisitem .al{
+  font-size:19px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+.axisitem h3{font-size:27px;line-height:1.3;font-weight:600;color:var(--ink);margin-bottom:6px}
+.axisitem p{font-size:22px;line-height:1.4;color:var(--ink-soft)}
+.s6punch{
+  margin-top:34px;
+  font-size:29px;
+  line-height:1.35;
+  font-weight:600;
+  color:var(--ink);
+  padding-left:18px;
+  border-left:4px solid var(--accent);
+}
+
+.chart{position:relative;height:100%;padding:8px 0 44px 58px}
+.yaxis{
+  position:absolute;
+  left:0;top:8px;bottom:44px;
+  width:48px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:flex-end;
+  font-size:18px;
+  color:var(--muted);
+}
+.plot{
+  position:relative;
+  height:100%;
+  border-left:1px solid #CBD5E1;
+  border-bottom:1px solid #CBD5E1;
+}
+.gridline{position:absolute;left:0;right:0;height:1px;background:#EEF2F6}
+.dangerband{
+  position:absolute;left:0;right:0;top:50%;bottom:0;
+  background:rgba(220,38,38,.05);
+}
+.safeline{
+  position:absolute;left:0;right:0;top:50%;
+  border-top:2px dashed rgba(220,38,38,.55);
+}
+.safeline span{
+  position:absolute;
+  right:6px;top:-30px;
+  font-size:18px;
+  color:var(--danger);
+  font-weight:600;
+  background:rgba(220,38,38,.05);
+  padding:0 4px;
+}
+.zone{
+  position:absolute;
+  left:10px;bottom:12px;
+  font-size:19px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:rgba(220,38,38,.75);
+}
+.dot{position:absolute;width:0;height:0}
+.dot i{
+  position:absolute;
+  left:-11px;top:-11px;
+  width:22px;height:22px;
+  border-radius:50%;
+  background:var(--accent);
+  border:4px solid #fff;
+  box-shadow:0 0 0 2px var(--accent);
+}
+.dot.hollow i{background:#fff;box-shadow:0 0 0 2px #94A3B8;border-color:#fff}
+.dot b{
+  position:absolute;
+  left:20px;top:-13px;
+  font-size:21px;
+  font-weight:600;
+  white-space:nowrap;
+  color:var(--ink);
+}
+.dot.flip b{left:auto;right:20px}
+.xaxis{
+  position:absolute;
+  left:58px;right:0;bottom:26px;
+  display:flex;
+  justify-content:space-between;
+  font-size:18px;
+  color:var(--muted);
+}
+.xlabel{
+  position:absolute;
+  left:58px;right:0;bottom:2px;
+  text-align:center;
+  font-size:19px;
+  color:var(--muted);
+  letter-spacing:.06em;
+}
+.chart{height:100%}
+.s6 .chart{padding-bottom:56px}
+
+/* ============================================================
+   07 — ARCHITECTURE
+   ============================================================ */
+
+.stream{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+  margin-bottom:22px;
+}
+.stream-item{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:16px 22px;
+  display:grid;
+  grid-template-columns:132px 1fr;
+  gap:16px;
+  align-items:center;
+}
+.stream-item b{font-size:21px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+.stream-item span{font-size:20px;line-height:1.3;color:var(--ink-soft)}
+
+.layers{
+  display:grid;
+  grid-template-columns:1fr 46px 1fr 46px 1fr;
+  align-items:stretch;
+  margin-bottom:22px;
+}
+.arrow{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  color:#94A3B8;
+  padding-bottom:20px;
+}
+.layer{
+  border:1px solid var(--line);
+  border-top:4px solid var(--ink);
+  padding:24px 24px 22px;
+  display:flex;
+  flex-direction:column;
+  min-height:322px;
+}
+.layer.mid{border-top-color:var(--accent)}
+.layer .ln{
+  font-size:18px;
+  letter-spacing:.14em;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+.layer h3{font-size:30px;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px;font-weight:700}
+.layer p{font-size:22px;line-height:1.4;color:var(--ink-soft)}
+.layer .lmeta{
+  margin-top:auto;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  font-size:19px;
+  line-height:1.35;
+  color:var(--accent);
+  font-weight:600;
+}
+
+.output{
+  border:1px solid var(--ink);
+  padding:18px 24px;
+  display:grid;
+  grid-template-columns:190px 1fr;
+  gap:22px;
+  align-items:center;
+  background:var(--ink);
+  color:#fff;
+}
+.output b{font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-bright)}
+.output span{font-size:22px;line-height:1.35;color:#E2E8F0}
+
+/* ============================================================
+   08 — EVENT MODEL
+   ============================================================ */
+
+.tiles{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-bottom:30px;
+}
+.tile{
+  border:1px solid var(--line);
+  border-top:3px solid var(--ink);
+  padding:20px 22px 18px;
+  min-height:186px;
+  display:flex;
+  flex-direction:column;
+}
+.tile.hot{border-top-color:var(--accent)}
+.tl2{font-size:18px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.tv{font-size:58px;line-height:1;letter-spacing:-.04em;font-weight:700}
+.tv small{font-size:22px;letter-spacing:0;font-weight:600;color:var(--muted);margin-left:6px}
+.ts{margin-top:auto;padding-top:12px;font-size:20px;line-height:1.32;color:var(--ink-soft)}
+
+.s8low{display:grid;grid-template-columns:1fr 560px;gap:56px;align-items:start;margin-bottom:22px}
+.s8body{display:flex;flex-direction:column}
+.s8foot{
+  margin-top:auto;
+  border-left:4px solid var(--accent);
+  background:var(--panel);
+  padding:16px 22px;
+  font-size:21px;
+  line-height:1.42;
+  color:var(--ink-soft);
+}
+.s8foot b{color:var(--ink)}
+.bars{display:flex;flex-direction:column;gap:18px}
+.bar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.bar span{font-size:22px;color:var(--ink-soft)}
+.bar b{font-size:24px;font-weight:700}
+.bartrack{height:18px;background:#F1F5F9;border:1px solid var(--line);position:relative}
+.barfill{position:absolute;left:0;top:0;bottom:0;background:#CBD5E1}
+.barfill.a{background:var(--accent)}
+.axis8{display:flex;justify-content:space-between;font-size:17px;color:var(--muted);margin-top:8px}
+
+.note{
+  border-left:3px solid var(--warn);
+  padding-left:22px;
+}
+.note .nh{
+  font-size:19px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--warn);
+  margin-bottom:10px;
+}
+.note p{font-size:22px;line-height:1.45;color:var(--ink-soft);margin-bottom:10px}
+.note b{color:var(--ink)}
+
+/* ============================================================
+   09 — THE TWIN
+   ============================================================ */
+
+.eqgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.eqbox{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:28px 30px 24px;
+  min-height:342px;
+  display:flex;
+  flex-direction:column;
+}
+.eqtag{
+  font-size:18px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:18px;
+}
+.eq{
+  font-family:ui-monospace,"Cascadia Mono",Consolas,"Courier New",monospace;
+  font-size:27px;
+  line-height:1.42;
+  color:var(--ink);
+  letter-spacing:-.02em;
+  margin-bottom:18px;
+}
+.eq span{display:block;padding-left:26px}
+.eq sub{font-size:16px}
+.eqbox p{font-size:22px;line-height:1.45;color:var(--ink-soft)}
+.eqbox p b{color:var(--ink)}
+.pchip{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  font-size:19px;
+  line-height:1.35;
+  color:var(--accent);
+  font-weight:600;
+}
+.pchip sub{font-size:13px}
+
+.update{
+  display:grid;
+  grid-template-columns:1fr 40px 1fr 40px 1fr;
+  align-items:center;
+  border:1px solid var(--line);
+  padding:20px 26px;
+  gap:10px;
+}
+.s9body{display:flex;flex-direction:column}
+.eqnote{
+  margin-top:auto;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:22px;
+  line-height:1.42;
+  color:var(--muted);
+  max-width:1180px;
+}
+.eqnote b{color:var(--ink-soft)}
+.ustep{text-align:center}
+.ustep b{display:block;font-size:21px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin-bottom:6px}
+.ustep span{font-size:19px;color:var(--muted);line-height:1.3}
+.uarrow{text-align:center;font-size:26px;color:#94A3B8}
+
+/* ============================================================
+   10 — THE WHAT-IF
+   ============================================================ */
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pcard{
+  border:1px solid var(--line);
+  padding:26px 28px 24px;
+  display:flex;
+  flex-direction:column;
+  min-height:372px;
+  background:#fff;
+}
+.pcard.pick{
+  border:2px solid var(--accent);
+  background:#F7FDFC;
+}
+.ptag{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:18px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+.pcard.pick .ptag{color:var(--accent)}
+.badge{
+  font-size:16px;
+  letter-spacing:.06em;
+  background:var(--accent-soft);
+  color:#0F766E;
+  padding:4px 9px;
+  font-weight:700;
+}
+.pname{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:14px;color:var(--ink)}
+.nadir{
+  font-size:82px;
+  line-height:.95;
+  letter-spacing:-.05em;
+  font-weight:700;
+  color:var(--ink);
+}
+.nadir small{font-size:22px;font-weight:600;letter-spacing:0;color:var(--muted);margin-left:6px}
+.nadir.bad{color:var(--danger)}
+.ci{
+  font-size:21px;
+  color:var(--muted);
+  margin-top:8px;
+  min-height:28px;
+}
+.pcost{
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+}
+.pcost span{font-size:19px;color:var(--muted)}
+.pcost b{font-size:26px;font-weight:700;color:var(--ink)}
+.pcon{
+  margin-top:14px;
+  font-size:22px;
+  line-height:1.4;
+  color:var(--ink-soft);
+}
+
+.whywrap{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:44px;
+  align-items:center;
+  margin-top:26px;
+  padding-top:22px;
+  border-top:1px solid var(--line);
+}
+.mini{
+  position:relative;
+  height:86px;
+  border-bottom:1px solid #CBD5E1;
+  border-left:1px solid #CBD5E1;
+  margin-left:6px;
+}
+.mini .mdot{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--accent);transform:translate(-50%,50%)}
+.mini .mdot.bad{background:var(--danger)}
+.mini .mdot.good{background:var(--accent)}
+.mini .mline{position:absolute;left:0;right:0;border-top:2px dashed rgba(220,38,38,.5);bottom:0}
+.whysay{font-size:26px;line-height:1.4;color:var(--ink);font-weight:600;letter-spacing:-.01em}
+.whysay em{font-style:normal;color:var(--accent)}
+
+/* ============================================================
+   11 — VALIDATION
+   ============================================================ */
+
+.pill{
+  position:absolute;
+  right:88px;
+  top:70px;
+  font-size:17px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--danger);
+  border:2px solid var(--danger);
+  padding:7px 12px;
+}
+.tables{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.tcard{border:1px solid var(--line)}
+.thead{
+  padding:16px 22px;
+  border-bottom:1px solid var(--line);
+  background:var(--panel);
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+}
+.thead b{font-size:24px;letter-spacing:-.01em}
+.thead span{font-size:18px;color:var(--muted)}
+table{width:100%;border-collapse:collapse}
+td{
+  padding:8px 22px;
+  border-bottom:1px solid #EEF2F6;
+  font-size:24px;
+  color:var(--ink-soft);
+}
+tr:last-child td{border-bottom:none}
+td:last-child{text-align:right;font-weight:600;color:var(--ink)}
+td.k{color:var(--muted);font-weight:400}
+.tfoot{
+  padding:12px 22px;
+  font-size:18px;
+  color:var(--muted);
+  background:var(--panel);
+  border-top:1px solid var(--line);
+  line-height:1.35;
+}
+
+.volcheck{
+  margin-top:16px;
+  border:1px solid var(--line);
+  border-left:5px solid var(--accent);
+  padding:14px 24px;
+  display:grid;
+  grid-template-columns:270px 1fr;
+  gap:26px;
+  align-items:center;
+}
+.volcheck b{font-size:20px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.volcheck p{font-size:21px;line-height:1.45;color:var(--ink-soft)}
+.volcheck p b{color:var(--ink)}
+
+/* ============================================================
+   12 — TRUST
+   ============================================================ */
+
+.trustgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px;flex:1.15}
+.s12body{display:flex;flex-direction:column}
+.trust{
+  border:1px solid var(--line);
+  padding:24px 24px 22px;
+  min-height:238px;
+}
+.trust .ti{
+  font-size:18px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-weight:700;
+  margin-bottom:10px;
+}
+.trust h3{font-size:26px;line-height:1.2;margin-bottom:10px;letter-spacing:-.015em}
+.trust p{font-size:22px;line-height:1.42;color:var(--ink-soft)}
+.trust p b{color:var(--ink)}
+.trustrow2{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1}
+.trustrow2 .trust{min-height:150px}
+
+/* ============================================================
+   13 — LIMITATIONS
+   ============================================================ */
+
+.limits{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:20px;height:100%}
+.limit{
+  border:1px solid var(--line);
+  border-top:3px solid var(--warn);
+  padding:24px 24px 20px;
+  display:flex;
+  flex-direction:column;
+}
+.limit.hard{border-top-color:var(--danger)}
+.limit h3{font-size:26px;line-height:1.22;margin-bottom:12px;letter-spacing:-.015em}
+.limit p{font-size:22px;line-height:1.45;color:var(--ink-soft)}
+.limit p b{color:var(--ink)}
+.limit .lm{
+  margin-top:auto;
+  padding-top:12px;
+  border-top:1px solid var(--line);
+  font-size:18px;
+  color:var(--muted);
+  line-height:1.35;
+}
+
+/* ============================================================
+   14 — CLOSE
+   ============================================================ */
+
+.close .hook{font-size:92px}
+.close .kicker{margin-bottom:26px}
+.nextgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+.next{
+  border-top:1px solid #334155;
+  padding-top:18px;
+}
+.next b{display:block;font-size:18px;letter-spacing:.14em;color:var(--accent-bright);margin-bottom:10px}
+.next h3{font-size:26px;color:#fff;margin-bottom:8px;line-height:1.25}
+.next p{font-size:20px;line-height:1.4;color:#94A3B8}
+.close .team{font-size:21px;padding-bottom:6px}
+
+</style>
+</head>
+<body>
+
+<!-- ============================ 01 · TITLE ============================ -->
+<section class="slide dark title">
+  <div class="brandline">
+    <div class="brand"><span class="dot"></span>HemoTwin</div>
+    <div class="brandright">Digital-twin hackathon · 24 October 2026</div>
+  </div>
+
+  <div class="titlewrap">
+    <div class="hook">Predict the crash.<br><em>Price the fix.</em></div>
+    <p class="tsub">A remote-operations digital twin for haemodialysis. It predicts intradialytic hypotension 15–60 minutes ahead, then shows what each fix costs — in blood pressure, and in fluid left behind.</p>
+  </div>
+
+  <div class="titlestats">
+    <div><b>303,122</b><span>dialysis sessions</span></div>
+    <div><b>2</b><span>countries</span></div>
+    <div><b>1,828</b><span>patients</span></div>
+  </div>
+
+  <div class="team">[Team name] · [College] · [Member 1] · [Member 2] · [Member 3]</div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">01 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 02 · PROBLEM ============================ -->
+<section class="slide">
+  <div class="kicker">The problem</div>
+  <h1>A dialysis session is a four-hour tightrope</h1>
+
+  <div class="body s2">
+    <div>
+      <p class="lede">Remove too little fluid and the patient stays overloaded. Remove it too fast and the pressure falls. A systolic below <b>90 mmHg</b> during the session is intradialytic hypotension — <b>IDH</b>.</p>
+
+      <div class="stats">
+        <div class="stat">
+          <b>2×</b>
+          <span>vascular-access thrombosis in the highest IDH quartile<i>Chang, JASN 2011</i></span>
+        </div>
+        <div class="stat">
+          <b>9.4×</b>
+          <span>intradialytic arrhythmia with IDH<i>Pun, CJASN 2021</i></span>
+        </div>
+        <div class="stat">
+          <b>1.57</b>
+          <span>hazard ratio for mortality when nadir systolic falls below 90<i>Flythe, NDT 2018 · association, not proof of causation</i></span>
+        </div>
+      </div>
+
+      <p class="closer">The event takes minutes.<br>The measurement takes half an hour.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h">One session · one cuff every ~30 minutes</div>
+      <div class="panel-s">Schematic. Nine readings across four hours, and an event between two of them.</div>
+
+      <div class="tl">
+        <div class="tl-line"></div>
+        <div class="tl-gap" style="left:50%;width:12.5%"></div>
+
+        <div class="tl-tick" style="left:0%"></div>
+        <div class="tl-tick" style="left:12.5%"></div>
+        <div class="tl-tick" style="left:25%"></div>
+        <div class="tl-tick" style="left:37.5%"></div>
+        <div class="tl-tick" style="left:50%"></div>
+        <div class="tl-tick" style="left:62.5%"></div>
+        <div class="tl-tick" style="left:75%"></div>
+        <div class="tl-tick" style="left:87.5%"></div>
+        <div class="tl-tick" style="left:100%"></div>
+
+        <div class="tl-crash" style="left:56.25%"></div>
+        <div class="tl-crash-label" style="left:56.25%">the crash<br>SBP 74</div>
+      </div>
+
+      <div class="tl-x"><span>0 min</span><span>120</span><span>240 min</span></div>
+
+      <div class="tl-note"><b>The monitor alarms when the pressure is already low.</b> A forecast is a different object: it has to arrive before the gap closes.</div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">02 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 03 · WHY INDIA ============================ -->
+<section class="slide">
+  <div class="kicker">Why India</div>
+  <h1>1,700+ district centres. No nephrologist on site.</h1>
+
+  <div class="body s3">
+    <div>
+      <p class="bigquote">“This is the terminal ward of India’s T2D epidemic.”</p>
+      <p class="qnote"><b>34.5%</b> of our dialysis cohort is diabetic (370 of 1,072 patients). India has about <b>101.3 million</b> people with diabetes and 136 million with prediabetes (ICMR-INDIAB 2023). Kidney failure is where that epidemic ends — on a machine, three times a week.</p>
+
+      <p class="s3callout">One nephrologist cannot be in 1,700 buildings.<br><span>Remote supervision is not a feature. It is the only arithmetic that works.</span></p>
+    </div>
+
+    <div class="s3stats">
+      <div class="s3card">
+        <b>1,700+</b>
+        <span>dialysis centres under the Pradhan Mantri National Dialysis Programme, many in district hospitals without on-site nephrology <i>→ remote supervision is the only scalable model</i></span>
+      </div>
+      <div class="s3card">
+        <b>156</b>
+        <span>sessions per patient per year — three a week, for a median dialysis vintage of 9.6 years <i>→ no home sensor produces this density</i></span>
+      </div>
+      <div class="s3card">
+        <b>~34M</b>
+        <span>dialysis sessions a year in India <i>→ an estimate, labelled as one</i></span>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">03 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 04 · WHAT EXISTS ============================ -->
+<section class="slide">
+  <div class="kicker">What exists already</div>
+  <h1>The predictor is published. We are not claiming it.</h1>
+
+  <div class="body s4">
+    <div class="zhang">
+      <div class="ztag">Published · deployed · not ours</div>
+      <div class="zname">Zhang et al. · <i>Nephrology Dialysis Transplantation</i> · 2023</div>
+
+      <div class="zgrid">
+        <div><b>0.89</b><span>AUROC, 15–75 min ahead</span></div>
+        <div><b>15–75</b><span>minute horizon</span></div>
+        <div><b>6</b><span>US clinics, live</span></div>
+        <div><b>42,656</b><span>sessions, 693 patients</span></div>
+      </div>
+
+      <p class="zmid">Same family of model as ours: boosted trees on machine telemetry. The difference is what happens after the score.</p>
+
+      <p class="zfoot">It works, it is in clinics, and a judge has seen it before. So we built the layer it does not have.</p>
+    </div>
+
+    <div class="s4right">
+      <div class="noclaim">We do not claim the predictor.</div>
+
+      <div class="horizon">
+        <div class="hrow">
+          <span>Zhang</span>
+          <div class="htrack">
+            <div class="hfill" style="left:16.6%;width:66.7%"></div>
+            <div class="hlabel" style="left:18%">15–75 min</div>
+          </div>
+        </div>
+        <div class="hrow">
+          <span>HemoTwin</span>
+          <div class="htrack">
+            <div class="hfill us" style="left:16.6%;width:16.7%"></div>
+            <div class="hlabel" style="left:36%">15–60 min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="claim">
+        <div class="cn">01</div>
+        <p><b>The UF-policy twin.</b> Hold, taper, stop — each simulated forward, each with its fluid cost attached.</p>
+      </div>
+      <div class="claim">
+        <div class="cn">02</div>
+        <p><b>A volume state with ground truth.</b> Modelled ultrafiltration, checked against measured weight loss.</p>
+      </div>
+      <div class="claim">
+        <div class="cn">03</div>
+        <p><b>Two countries of data.</b> 303,122 sessions across Taiwan and Spain — and a console built for one nephrologist covering many chairs.</p>
+      </div>
+
+      <p class="hnote">Our horizon is narrower, and a narrower horizon is an easier task. We do not compare the two AUROCs — we compare on what the output lets a nurse do.</p>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">04 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 05 · INSIGHT ============================ -->
+<section class="slide">
+  <div class="kicker">The insight</div>
+  <h1>Everyone already tapers. They just guess when.</h1>
+
+  <div class="body s5body">
+    <div class="s5">
+      <div>
+        <div class="huge">87.2<span>%</span></div>
+        <p class="s5cap">of <b>32,565 real sessions</b> cut ultrafiltration by more than 20% mid-session. <b>81.7%</b> end below 80% of their peak rate.</p>
+      </div>
+
+      <div class="s5chart">
+        <div class="charthead">Median UF rate · measured</div>
+
+        <div class="ufbar">
+          <div class="ufl"><span>Session start</span><b>0.58<i>L/h</i></b></div>
+          <div class="track"><div class="fill" style="width:82.9%"></div></div>
+        </div>
+
+        <div class="ufbar">
+          <div class="ufl"><span>Session end</span><b>0.10<i>L/h</i></b></div>
+          <div class="track"><div class="fill dim" style="width:14.3%"></div></div>
+          <div class="ufnote">A 5.8-fold fall in the median rate. The staff are not waiting for the alarm — they are already reacting.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s5line">The question was never <em>whether</em> to taper.<br>It is when — and what it costs.</div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">05 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 06 · REFRAME ============================ -->
+<section class="slide">
+  <div class="kicker">The reframe</div>
+  <h1>Predict the crash. Price the fix.</h1>
+
+  <div class="body s6">
+    <div>
+      <div class="axisitem">
+        <div class="al">Cost one</div>
+        <h3>Pressure too low, now</h3>
+        <p>Access thrombosis, arrhythmia, a session that ends in saline and a stretcher.</p>
+      </div>
+
+      <div class="axisitem">
+        <div class="al">Cost two</div>
+        <h3>Fluid left behind, later</h3>
+        <p>Overload, a harder next session, and the same trade-off again on Thursday.</p>
+      </div>
+
+      <div class="axisitem">
+        <div class="al">What the twin adds</div>
+        <h3>Both axes, one picture</h3>
+        <p>Each policy becomes a point: nadir on the vertical, litres left on the horizontal.</p>
+      </div>
+
+      <p class="s6punch">A risk score has one number. A decision has a price.</p>
+    </div>
+
+    <div class="chart">
+      <div class="yaxis"><span>110</span><span>100</span><span>90</span><span>80</span><span>70</span></div>
+
+      <div class="plot">
+        <div class="gridline" style="top:0%"></div>
+        <div class="gridline" style="top:25%"></div>
+        <div class="gridline" style="top:50%"></div>
+        <div class="gridline" style="top:75%"></div>
+        <div class="gridline" style="top:100%"></div>
+
+        <div class="dangerband"></div>
+        <div class="safeline"><span>SBP 90 — crash definition</span></div>
+        <div class="zone">crash zone</div>
+
+        <div class="dot" style="left:2%;top:70%"><i></i><b>Hold</b></div>
+        <div class="dot" style="left:33.3%;top:35%"><i></i><b>Taper</b></div>
+        <div class="dot flip" style="left:75%;top:22.5%"><i></i><b>Stop + 250 mL</b></div>
+      </div>
+
+      <div class="xaxis"><span>0</span><span>0.4</span><span>0.8</span><span>1.2 L</span></div>
+      <div class="xlabel">Fluid left behind at session end</div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">06 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 07 · WHAT WE BUILT ============================ -->
+<section class="slide">
+  <div class="kicker">What we built</div>
+  <h1>Three layers, one decision</h1>
+
+  <div class="body">
+    <div class="stream">
+      <div class="stream-item">
+        <b>Medical IoT</b>
+        <span>4,190,926 timestamped rows · 2,342,586 BP events · UF rate, blood flow, venous pressure</span>
+      </div>
+      <div class="stream-item">
+        <b>EHR</b>
+        <span>age · sex · diabetes · dialysis vintage (median 9.6 years) — mapped to FHIR / ABDM at deployment</span>
+      </div>
+    </div>
+
+    <div class="layers">
+      <div class="layer">
+        <div class="ln">Layer 01</div>
+        <h3>Event model</h3>
+        <p>40 features, patient-disjoint split. Answers one question: will systolic fall below 90 in the next 15–60 minutes?</p>
+        <div class="lmeta">AUROC 0.916 · catches 75.7% of crash sessions</div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <div class="layer mid">
+        <div class="ln">Layer 02</div>
+        <h3>Physiological twin</h3>
+        <p>Holds a volume state for this patient, with two named parameters. Predicts the next BP, then corrects when the cuff fires.</p>
+        <div class="lmeta">V(t) · k<sub>refill</sub> · β<sub>bp</sub></div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <div class="layer">
+        <div class="ln">Layer 03</div>
+        <h3>Counterfactual engine</h3>
+        <p>Projects pressure over the next hour under hold, taper and stop, and does the fluid accounting to session end. Returns a nadir with an interval, and the fluid each policy leaves behind.</p>
+        <div class="lmeta">3 policies · empirical band · litres left</div>
+      </div>
+    </div>
+
+    <div class="output">
+      <b>Action sheet</b>
+      <span>Taper to X mL/h · recheck in 15 minutes · escalate to the remote nephrologist if nadir &lt; 90 mmHg. Nothing fires automatically.</span>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">07 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 08 · EVENT MODEL ============================ -->
+<section class="slide">
+  <div class="kicker">Validation · event level</div>
+  <h1>0.916, and the baselines that keep us honest</h1>
+
+  <div class="body s8body">
+    <div class="tiles">
+      <div class="tile hot">
+        <div class="tl2">AUROC</div>
+        <div class="tv">0.916</div>
+        <div class="ts">95% CI 0.897–0.932<br>patient-clustered bootstrap</div>
+      </div>
+      <div class="tile">
+        <div class="tl2">AUPRC</div>
+        <div class="tv">8.4<small>× lift</small></div>
+        <div class="ts">AUPRC 0.236 against 2.80% test prevalence</div>
+      </div>
+      <div class="tile hot">
+        <div class="tl2">Crash sessions caught</div>
+        <div class="tv">75.7<small>%</small></div>
+        <div class="ts">1,783 of 2,354, at least 15 min before onset</div>
+      </div>
+      <div class="tile">
+        <div class="tl2">False-alarm sessions</div>
+        <div class="tv">20.6<small>%</small></div>
+        <div class="ts">sessions without IDH that raise an alarm</div>
+      </div>
+    </div>
+
+    <div class="s8low">
+      <div>
+        <div class="bars">
+          <div>
+            <div class="bar"><span>HemoTwin event model</span><b>0.916</b></div>
+            <div class="bartrack"><div class="barfill a" style="width:90.2%"></div></div>
+          </div>
+          <div>
+            <div class="bar"><span>R1 — alarm when SBP is already low</span><b>0.787</b></div>
+            <div class="bartrack"><div class="barfill" style="width:82.6%"></div></div>
+          </div>
+          <div>
+            <div class="bar"><span>R2 — extrapolate the BP slope</span><b>0.738</b></div>
+            <div class="bartrack"><div class="barfill" style="width:78.5%"></div></div>
+          </div>
+        </div>
+        <div class="axis8"><span>0.75</span><span>0.85</span><span>0.95</span><span>1.00</span></div>
+      </div>
+
+      <div class="note">
+        <div class="nh">What the headline does not say</div>
+        <p><b>86.0%</b> of crash sessions with a usable warning window (1,783 / 2,073). <b>281</b> sessions had no anchor in the window — a cuffing-cadence limit, reported not hidden.</p>
+        <p><b>1,268,990</b> prediction anchors, 32,221 positives (2.54%), 1,070 patients, split by patient. And our 15–60 min AUROC is <b>not</b> comparable to a 15–75 min result.</p>
+      </div>
+    </div>
+
+    <p class="s8foot">Our AUPRC of <b>0.236</b> is higher than the best published external AUPRC (Kim 2022, 0.106), on a different cohort and a narrower horizon. We do not treat that as a like-for-like win. We lead with <b>detection and alarm burden</b>, not the area under the curve.</p>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">08 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 09 · THE TWIN ============================ -->
+<section class="slide">
+  <div class="kicker">The twin</div>
+  <h1>Two equations a nephrologist can argue with</h1>
+
+  <div class="body s9body">
+    <div class="eqgrid">
+      <div class="eqbox">
+        <div class="eqtag">State · volume</div>
+        <div class="eq">dV/dt = −UF(t)<span>+ k<sub>refill</sub> · (V<sub>target</sub> − V(t))</span></div>
+        <p>Ultrafiltration pulls volume out. Tissue refills plasma at a rate set by <b>k<sub>refill</sub></b>. The deeper the deficit, the harder the refill pushes back. That is the whole volume model.</p>
+        <div class="pchip">k<sub>refill</sub> — per hour · starts from a population prior, updated from the patient’s own sessions</div>
+      </div>
+
+      <div class="eqbox">
+        <div class="eqtag">Output · pressure</div>
+        <div class="eq">SBP(t) = SBP<sub>0</sub> + β<sub>bp</sub> · (V(t) − V<sub>0</sub>)<span>− γ · elapsed(t)</span></div>
+        <p>Systolic pressure rides on the volume still in the patient, scaled by <b>β<sub>bp</sub></b>, minus a slow drift with time on the machine.</p>
+        <div class="pchip">β<sub>bp</sub> — mmHg per litre · the number that differs most between patients</div>
+      </div>
+    </div>
+
+    <div class="update">
+      <div class="ustep"><b>Predict</b><span>Forward to the next cuff</span></div>
+      <div class="uarrow">→</div>
+      <div class="ustep"><b>Measure</b><span>The next real BP arrives</span></div>
+      <div class="uarrow">→</div>
+      <div class="ustep"><b>Correct</b><span>State and both parameters update</span></div>
+    </div>
+
+    <p class="eqnote"><b>Two personal parameters, not twenty.</b> With a cuff every ~30 minutes, anything richer is not identifiable from one session — it is curve-fitting with a nicer diagram. We chose the model a nephrologist can audit, then checked its volume state against measured weight loss.</p>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">09 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 10 · WHAT-IF ============================ -->
+<section class="slide">
+  <div class="kicker">The what-if</div>
+  <h1>Chair 1, minute 110. Three choices, one price list.</h1>
+
+  <div class="body">
+    <div class="cards">
+      <div class="pcard">
+        <div class="ptag"><span>A · Hold</span><span class="badge">crash</span></div>
+        <div class="pname">Hold current UF</div>
+        <div class="nadir bad">70<small>mmHg</small></div>
+        <div class="ci">90% interval 33–92 mmHg</div>
+        <div class="pcost"><span>Fluid left at end</span><b>0.0 L</b></div>
+        <div class="pcon">Target met, and systolic reaches 70. The real onset was minute 140. Saline and a UF stop follow.</div>
+      </div>
+
+      <div class="pcard">
+        <div class="ptag"><span>B · Taper</span><span class="badge">the cheap fix</span></div>
+        <div class="pname">Taper UF by 25%</div>
+        <div class="nadir">77<small>mmHg</small></div>
+        <div class="ci">90% interval 40–99 mmHg</div>
+        <div class="pcost"><span>Fluid left at end</span><b>0.45 L</b></div>
+        <div class="pcon">Not enough. The point estimate still falls below 90, and 0.45 L stays behind.</div>
+      </div>
+
+      <div class="pcard pick">
+        <div class="ptag"><span>C · Stop</span><span class="badge">the rescue</span></div>
+        <div class="pname">Stop UF + 250 mL</div>
+        <div class="nadir">103<small>mmHg</small></div>
+        <div class="ci">90% interval 67–126 mmHg</div>
+        <div class="pcost"><span>Fluid left at end</span><b>1.79 L</b></div>
+        <div class="pcon">Clears the threshold. The price is 1.79 L of prescribed fluid not removed.</div>
+      </div>
+    </div>
+
+    <div class="whywrap">
+      <div class="mini">
+        <div class="mline"></div>
+        <div class="mdot bad" style="left:4%;bottom:20%"></div>
+        <div class="mdot" style="left:30%;bottom:30%"></div>
+        <div class="mdot good" style="left:78%;bottom:72%"></div>
+      </div>
+      <div class="whysay">The cheap fix is not enough. The fix that works costs 1.8 litres. <em>That</em> is the decision.</div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">10 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 11 · VALIDATION ============================ -->
+<section class="slide">
+  <div class="kicker">Validation · two tasks</div>
+  <h1>Two cohorts, two tasks, no blended number</h1>
+  <div class="pill">never one blended AUROC</div>
+
+  <div class="body">
+    <div class="tables">
+      <div class="tcard">
+        <div class="thead"><b>HEMOBP · Taiwan</b><span>event level</span></div>
+        <table>
+          <tr><td class="k">Task</td><td>15–60 min ahead</td></tr>
+          <tr><td class="k">Patients</td><td>1,070</td></tr>
+          <tr><td class="k">Sessions</td><td>205,482</td></tr>
+          <tr><td class="k">BP events</td><td>2,342,586</td></tr>
+          <tr><td class="k">Prediction anchors</td><td>1,268,990</td></tr>
+          <tr><td class="k">Positives</td><td>32,221 · 2.54%</td></tr>
+          <tr><td class="k">Split</td><td>patient-disjoint</td></tr>
+          <tr><td class="k">AUROC</td><td>0.916 [0.897–0.932]</td></tr>
+        </table>
+        <div class="tfoot">CC BY 4.0 · Lin et al., <i>Scientific Data</i> 2019</div>
+      </div>
+
+      <div class="tcard">
+        <div class="thead"><b>Mendeley · Spain</b><span>session level</span></div>
+        <table>
+          <tr><td class="k">Task</td><td>session-level hypotension?</td></tr>
+          <tr><td class="k">Patients</td><td>758</td></tr>
+          <tr><td class="k">Sessions</td><td>97,640</td></tr>
+          <tr><td class="k">Prevalence</td><td>25.5% · 24,912</td></tr>
+          <tr><td class="k">Label</td><td>symptomatic · SI / NO</td></tr>
+          <tr><td class="k">Granularity</td><td>one pre + one post BP</td></tr>
+          <tr><td class="k">Time series</td><td>none — cannot test 15–60</td></tr>
+          <tr><td class="k">Transport</td><td><b>0.474 — failed</b></td></tr>
+        </table>
+        <div class="tfoot">CC BY 4.0 · external frame only; transport failed, so no external claim</div>
+      </div>
+    </div>
+
+    <div class="volcheck">
+      <b>Volume-state check</b>
+      <p>Modelled ultrafiltration versus measured weight loss (start minus end): median difference <b>+0.07 L</b>, MAE <b>0.40 L</b>, and <b>75%</b> of sessions within <b>0.5 L</b>. Measured UF median <b>2.2 L</b> per session across 16,591 sessions. The state variable is checked, not assumed.</p>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device · 303,122 sessions · 1,828 patients · two countries</span>
+    <span class="num">11 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 12 · TRUST ============================ -->
+<section class="slide">
+  <div class="kicker">Trust</div>
+  <h1>Why a nurse should believe the number</h1>
+
+  <div class="body s12body">
+    <div class="trustgrid">
+      <div class="trust">
+        <div class="ti">01 · Calibration</div>
+        <h3>Probabilities, not scores</h3>
+        <p>A reliability diagram, a Brier score, and the cohort base rate printed beside every risk. A 50% that means 50 out of 100.</p>
+      </div>
+
+      <div class="trust">
+        <div class="ti">02 · Alarm budget</div>
+        <h3>The nursing team picks the trade</h3>
+        <p>Threshold fixed on validation at 0.0410. On test: sensitivity 0.862, <b>20.6%</b> false-alarm session rate. The operating point is a staffing decision, and it is shown, not buried.</p>
+      </div>
+
+      <div class="trust">
+        <div class="ti">03 · Drivers</div>
+        <h3>SHAP, translated</h3>
+        <p>“UF rate above her usual.” “One hundred and ten minutes into the session.” “Refill index below her own baseline.” Reasons a nurse can check.</p>
+      </div>
+    </div>
+
+    <div class="trustrow2">
+      <div class="trust">
+        <div class="ti">04 · Audit</div>
+        <h3>Every override is data</h3>
+        <p>Recommendation, override, recheck and outcome are timestamped and exportable. Overrides are reviewed weekly — they mark where the model and the ward disagree.</p>
+      </div>
+
+      <div class="trust">
+        <div class="ti">05 · Subgroups</div>
+        <h3>Pre-specified, not yet run</h3>
+        <p>Vintage, diabetes, sex, age band. The analysis is specified in the model card and will be published with intervals — including where it is worse. We do not claim fairness we have not measured.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">12 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 13 · LIMITATIONS ============================ -->
+<section class="slide">
+  <div class="kicker">Limitations</div>
+  <h1>What this cannot do yet</h1>
+
+  <div class="body">
+    <div class="limits">
+      <div class="limit hard">
+        <h3>One cohort; the external check failed</h3>
+        <p>Taiwanese data only, internally validated. A session model scored <b>0.720</b> internally and <b>0.474</b> in Spain, because the labels mean different things. No Indian cohort. Deployment means retraining, never transplanting probabilities.</p>
+        <div class="lm">Failure reported in docs/EXTERNAL_VALIDATION.md</div>
+      </div>
+
+      <div class="limit hard">
+        <h3>A cuff every ~30 minutes</h3>
+        <p>281 crash sessions had no anchor inside a warnable window. The model cannot see what the machine does not measure.</p>
+        <div class="lm">Reported as 75.7% of all, 86.0% of warnable</div>
+      </div>
+
+      <div class="limit">
+        <h3>“SBP under 90” is a definition</h3>
+        <p>Not a symptom. We predict a number crossing a threshold, not dizziness, cramps or a patient who feels awful.</p>
+        <div class="lm">Symptom labels are not in these cohorts</div>
+      </div>
+
+      <div class="limit hard">
+        <h3>The counterfactual is observational</h3>
+        <p>Within-policy-space simulation: everyone tapers, so we are choosing timing, not inventing an intervention. Validated on held-out patients, with intervals.</p>
+        <div class="lm">A decision aid, not a prescription</div>
+      </div>
+
+      <div class="limit hard">
+        <h3>Not a medical device</h3>
+        <p>No regulatory clearance. No diagnosis, no prescription, no automatic action. It is a research prototype in front of clinicians.</p>
+        <div class="lm">CDSCO pathway not started</div>
+      </div>
+
+      <div class="limit">
+        <h3>Alarm burden is real</h3>
+        <p>20.6% of uncomplicated sessions raise an alarm. That is a ward cost, and the reason the threshold is a nursing decision.</p>
+        <div class="lm">Tunable; shown, not hidden</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">13 / 14</span>
+  </footer>
+</section>
+
+<!-- ============================ 14 · CLOSE ============================ -->
+<section class="slide dark close">
+  <div class="kicker">What next</div>
+  <div class="hook">Predict the crash.<br><em>Price the fix.</em></div>
+
+  <div class="nextgrid">
+    <div class="next">
+      <b>01 · Now</b>
+      <h3>Shadow mode</h3>
+      <p>Run on a partner machine, silent. Log predictions, overrides and outcomes. No clinical action.</p>
+    </div>
+    <div class="next">
+      <b>02 · Next</b>
+      <h3>Prospective comparison</h3>
+      <p>Pre-registered, against standard care. Measure IDH rate, alarm burden, fluid removed.</p>
+    </div>
+    <div class="next">
+      <b>03 · Then</b>
+      <h3>Retrain in India</h3>
+      <p>Local data, local thresholds, FHIR / ABDM. The model travels as a method, not as weights.</p>
+    </div>
+  </div>
+
+  <div class="team">[Team name] · [College] · [Member 1] · [Member 2] · [Member 3] · [contact]</div>
+
+  <footer class="foot">
+    <span>HemoTwin — research prototype, not a medical device</span>
+    <span class="num">14 / 14</span>
+  </footer>
+</section>
+
+</body>
+</html>

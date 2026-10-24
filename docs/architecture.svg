@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-labelledby="title desc">
+<title id="title">HemoTwin architecture</title>
+<desc id="desc">Five-column left-to-right flow: data, features, models, twin, dashboard.</desc>
+<rect x="0" y="0" width="1600" height="900" fill="#FFFFFF"/>
+<text x="60" y="58" font-family="Arial, Helvetica, sans-serif" font-size="30" fill="#0F172A" font-weight="700">HemoTwin</text>
+<text x="236" y="55" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#64748B" font-weight="600" letter-spacing="2.6">HAEMODIALYSIS DIGITAL TWIN</text>
+<text x="1540" y="55" font-family="Arial, Helvetica, sans-serif" font-size="11.5" fill="#64748B" text-anchor="end">v1.0 · 2026 · research prototype</text>
+<text x="60" y="86" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#64748B">Predict the crash. Price the fix. Forecasts intradialytic hypotension 15–60 minutes ahead, then prices the ultrafiltration decision.</text>
+<line x1="60" y1="104" x2="1540" y2="104" stroke="#E2E8F0" stroke-width="1"/>
+<text x="60" y="148" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#0D9488" font-weight="700" letter-spacing="1">01</text>
+<text x="90" y="148" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#0F172A" font-weight="700" letter-spacing="2.4">DATA</text>
+<line x1="60" y1="162" x2="332" y2="162" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="60" y="176" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="82" y="210" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Machine telemetry</text>
+<text x="82" y="234" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">BP · UF · dialysate</text>
+<rect x="60" y="286" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="82" y="320" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">HEMOBP — Taiwan</text>
+<text x="82" y="344" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">1,070 patients</text>
+<rect x="60" y="396" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="82" y="430" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">205,482 sessions</text>
+<text x="82" y="454" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">4.19M telemetry rows</text>
+<rect x="60" y="506" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="82" y="540" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Mendeley — Spain</text>
+<text x="82" y="564" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">97,640 sessions · transport failed</text>
+<rect x="60" y="616" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="82" y="650" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Static EHR</text>
+<text x="82" y="674" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">age · sex · DM · vintage</text>
+<text x="362" y="148" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#0D9488" font-weight="700" letter-spacing="1">02</text>
+<text x="392" y="148" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#0F172A" font-weight="700" letter-spacing="2.4">FEATURES</text>
+<line x1="362" y1="162" x2="634" y2="162" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="362" y="176" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="384" y="210" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Quality filters</text>
+<text x="384" y="234" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">session validity</text>
+<rect x="362" y="286" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="384" y="320" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Label builder</text>
+<text x="384" y="344" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">SBP&lt;90 in (t+15, t+60]</text>
+<rect x="362" y="396" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="384" y="430" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">40 causal features</text>
+<text x="384" y="454" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">shift(1) history only</text>
+<rect x="362" y="506" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="384" y="540" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Patient split</text>
+<text x="384" y="564" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">70 / 15 / 15, disjoint</text>
+<rect x="362" y="616" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="384" y="650" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Feature store</text>
+<text x="384" y="674" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">in-memory + manifest</text>
+<text x="664" y="148" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#0D9488" font-weight="700" letter-spacing="1">03</text>
+<text x="694" y="148" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#0F172A" font-weight="700" letter-spacing="2.4">MODELS</text>
+<line x1="664" y1="162" x2="936" y2="162" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="664" y="176" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="686" y="210" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">LightGBM</text>
+<text x="686" y="234" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">31 leaves · lr 0.02</text>
+<rect x="664" y="286" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="686" y="320" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Early stopping</text>
+<text x="686" y="344" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">on validation AUPRC</text>
+<rect x="664" y="396" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="686" y="430" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Isotonic calibration</text>
+<text x="686" y="454" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">held-out half of val</text>
+<rect x="664" y="506" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="664" y="516" width="3" height="70" fill="#0D9488"/>
+<text x="686" y="540" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Event model</text>
+<text x="686" y="564" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">AUROC 0.916 · 8.4x lift</text>
+<rect x="664" y="616" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="686" y="650" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Rule baselines</text>
+<text x="686" y="674" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">R1 0.787 · R2 0.738</text>
+<text x="966" y="148" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#0D9488" font-weight="700" letter-spacing="1">04</text>
+<text x="996" y="148" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#0F172A" font-weight="700" letter-spacing="2.4">TWIN</text>
+<line x1="966" y1="162" x2="1238" y2="162" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="966" y="176" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="988" y="210" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Volume state</text>
+<text x="988" y="234" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748B">dD/dt = UF - kD</text>
+<rect x="966" y="286" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="988" y="320" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">BP link</text>
+<text x="988" y="344" font-family="Consolas, Menlo, monospace" font-size="12" fill="#64748B">SBP = SBP0 - beta*D</text>
+<rect x="966" y="396" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="988" y="430" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Two parameters</text>
+<text x="988" y="454" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">k_refill · beta_bp</text>
+<rect x="966" y="506" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="966" y="516" width="3" height="70" fill="#D97706"/>
+<text x="988" y="540" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Counterfactual</text>
+<text x="988" y="564" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">hold · taper · stop</text>
+<rect x="966" y="616" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="966" y="626" width="3" height="70" fill="#0D9488"/>
+<text x="988" y="650" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Residual band</text>
+<text x="988" y="674" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">90% interval, held-out</text>
+<text x="1268" y="148" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#0D9488" font-weight="700" letter-spacing="1">05</text>
+<text x="1298" y="148" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#0F172A" font-weight="700" letter-spacing="2.4">DASHBOARD</text>
+<line x1="1268" y1="162" x2="1540" y2="162" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="1268" y="176" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="1268" y="186" width="3" height="70" fill="#D97706"/>
+<text x="1290" y="210" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Chair board</text>
+<text x="1290" y="234" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">8 chairs, ranked</text>
+<rect x="1268" y="286" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="1290" y="320" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Session view</text>
+<text x="1290" y="344" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">BP · UF · forecast</text>
+<rect x="1268" y="396" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="1290" y="430" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Twin state</text>
+<text x="1290" y="454" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">volume vs measured UF</text>
+<rect x="1268" y="506" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="1268" y="516" width="3" height="70" fill="#0D9488"/>
+<text x="1290" y="540" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">What-if frontier</text>
+<text x="1290" y="564" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">BP gain vs litres left</text>
+<rect x="1268" y="616" width="272" height="90" rx="8" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+<text x="1290" y="650" font-family="Arial, Helvetica, sans-serif" font-size="14.5" fill="#0F172A" font-weight="600">Trust panel</text>
+<text x="1290" y="674" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">calibration · alarm budget</text>
+<line x1="336" y1="441" x2="350" y2="441" stroke="#94A3B8" stroke-width="1.5"/>
+<polygon points="350,436 360,441 350,446" fill="#94A3B8"/>
+<line x1="638" y1="441" x2="652" y2="441" stroke="#94A3B8" stroke-width="1.5"/>
+<polygon points="652,436 662,441 652,446" fill="#94A3B8"/>
+<line x1="940" y1="441" x2="954" y2="441" stroke="#94A3B8" stroke-width="1.5"/>
+<polygon points="954,436 964,441 954,446" fill="#94A3B8"/>
+<line x1="1242" y1="441" x2="1256" y2="441" stroke="#94A3B8" stroke-width="1.5"/>
+<polygon points="1256,436 1266,441 1256,446" fill="#94A3B8"/>
+<line x1="60" y1="740" x2="1540" y2="740" stroke="#E2E8F0" stroke-width="1"/>
+<rect x="60" y="760" width="12" height="12" rx="2" fill="#0D9488"/>
+<text x="82" y="770" font-family="Arial, Helvetica, sans-serif" font-size="11.5" fill="#64748B">Model or simulation output</text>
+<rect x="270" y="760" width="12" height="12" rx="2" fill="#D97706"/>
+<text x="292" y="770" font-family="Arial, Helvetica, sans-serif" font-size="11.5" fill="#64748B">Clinical decision point</text>
+<rect x="470" y="760" width="12" height="12" rx="2" fill="#FFFFFF" stroke="#E2E8F0"/>
+<text x="492" y="770" font-family="Arial, Helvetica, sans-serif" font-size="11.5" fill="#64748B">Pipeline component or artifact</text>
+<text x="1540" y="770" font-family="Arial, Helvetica, sans-serif" font-size="11.5" fill="#64748B" text-anchor="end">Open data only: HEMOBP and Mendeley, CC BY 4.0. No PHI.</text>
+<line x1="60" y1="820" x2="1540" y2="820" stroke="#E2E8F0" stroke-width="1"/>
+<text x="60" y="852" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B">HemoTwin — research prototype, not a medical device</text>
+<text x="1540" y="852" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748B" text-anchor="end">Predict the crash. Price the fix.</text>
+</svg>

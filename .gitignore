@@ -1,0 +1,30 @@
+# Raw data is downloaded, not committed (CC BY 4.0, large files)
+data/raw/
+
+# Generated pipeline outputs
+artifacts/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# Local secrets and logs
+.env
+*.log
