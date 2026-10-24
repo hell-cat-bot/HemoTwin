@@ -29,7 +29,7 @@ A remote-operations digital twin for haemodialysis that predicts intradialytic h
 
 > **Research prototype, not a medical device.** It does not diagnose, prescribe, or act on its own. It shows a nurse a trade-off and a reason, and the nurse decides.
 
-**▶ 20-minute demo video:** https://youtu.be/ezq2eWIAmj8 (unlisted) · **▶ Architecture diagram:** [`docs/architecture.pdf`](docs/architecture.pdf) · **▶ Slides:** [`deck/HemoTwin_Deck.pdf`](deck/HemoTwin_Deck.pdf)
+**▶ Demo video:** https://youtu.be/ezq2eWIAmj8 (unlisted) · **▶ Architecture diagram:** [`docs/architecture.pdf`](docs/architecture.pdf) · **▶ Slides:** [`deck/HemoTwin_Deck.pdf`](deck/HemoTwin_Deck.pdf)
 
 ---
 
@@ -432,11 +432,11 @@ Raw data is **not** committed. `data/raw/` is git-ignored by design: the downloa
 
 ---
 
-## 20-minute video
+## Demo video
 
 **Video:** https://youtu.be/ezq2eWIAmj8 (unlisted — opens without an account)
 
-Script, timings and shot list: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md).
+**Length: 9:26 in the current upload.** The brief asks for a minimum of 20 minutes, so the extended cut has to replace this file before the final submission. The full-length version is already written to the word — 2,651 spoken words, 132 words per minute, timed section by section to 20:00 — in [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md). Record the voice-over against those slide timings, keep the 60-second console demo as the spine, and upload over the same unlisted link.
 
 The video covers the problem, the India framing, the published baseline we do not claim to beat, the 87.2% insight, the architecture, a live 60-second demo, validation with both detection denominators, the threshold sweep, limitations, and the deployment path. It is unlisted, not private, so judges can open it without an account.
 

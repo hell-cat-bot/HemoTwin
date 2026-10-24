@@ -13,7 +13,8 @@ Everything below must be true before the link is submitted. Each row is a gate, 
 | `[Team Name]`, `[College / Incubator]` | README, video, deck | Team leader | ✅ `Ozz` · NIT Silchar — in README and deck |
 | `[Member — role]`, phone, email | README, deck | Team leader | ✅ Ayandeep Bharadwaj (leader) + Prasenjeet Tiwari |
 | `[City, State]`, `[DD Month 2026]` | README | Team leader | ✅ Silchar, Assam · 24 October 2026 |
-| `[Unlisted YouTube link]` | README | Video owner | ✅ `https://youtu.be/ezq2eWIAmj8` — linked near the top, in "20-minute video", and in the deck close slide |
+| `[Unlisted YouTube link]` | README | Video owner | ✅ `https://youtu.be/ezq2eWIAmj8` — linked near the top, in "Demo video", and on the deck title and close slides |
+| **Video length ≥ 20 minutes** | the uploaded MP4 | Video owner | ⬜ **open — the current upload is 9:26.** The brief's minimum is 20:00. The full 20-minute script is written to the word in `docs/VIDEO_SCRIPT.md`; record it, upload over the same unlisted link, then delete the "Length: 9:26" note in the README |
 
 No square brackets may survive in the final repository. Run a search for `[` before submitting.
 

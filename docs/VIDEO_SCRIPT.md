@@ -4,6 +4,8 @@
 **Format:** screen recording + voice-over, 1920 × 1080, 20:00 hard limit.
 **Rules for this script:** every number below is from `docs/FACTS.md`. Never compare our AUROC to Zhang et al. Never call the machine a wearable. Never say "product" — it is a research prototype.
 
+> **Status: the linked upload is 9:26, the brief's minimum is 20:00.** The link in the README points at `youtu.be/ezq2eWIAmj8`, and that file is unlisted but short. This document is the fix: the whole script is written to the word and timed to 20:00, so recording it end to end produces a compliant video. Record the voice-over section by section against the slide timings, keep the 60-second console demo as the spine, and **upload over the same unlisted link** so the README link never goes stale.
+
 **How to read this document:** spoken lines are in block quotes. Everything in *italics* is a stage direction and is not spoken. Target pace is 130–140 words per minute. Total spoken words: **2,651**.
 
 ---
