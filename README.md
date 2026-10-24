@@ -8,7 +8,6 @@
 
 A remote-operations digital twin for haemodialysis that predicts intradialytic hypotension (IDH) 15–60 minutes ahead, then simulates holding, tapering, or stopping ultrafiltration and shows the blood-pressure gain against the fluid left behind.
 
-> **REPLACE the folder name `HemoTwin_TeamName_CollegeName` with `YourTeamName_YourCollegeName` before submitting.**
 
 ![HemoTwin remote-operations console](docs/dashboard.png)
 
