@@ -20,16 +20,13 @@ A remote-operations digital twin for haemodialysis that predicts intradialytic h
 
 | Field | Detail |
 |---|---|
-| **Team name** | `[Team Name]` |
-| **College / incubator** | `[College / Incubator]` |
-| **Team leader** | `[Member 1 — role]` · `[phone]` · `[email]` |
-| **Member 2** | `[Member 2 — role]` |
-| **Member 3** | `[Member 3 — role]` |
-| **Member 4** | `[Member 4 — role]` |
-| **City / state** | `[City, State]` |
-| **Submission date** | `[DD Month 2026]` |
+| **Team name** | `Ozz` |
+| **College / incubator** | `National Institute of Technology, Silchar` |
+| **Team leader** | `Ayandeep Bharadwaj - ML + Twin` · `9101582922` · `ayandeep666@gmail.com` |
+| **Member 2** | `Prasenjeet Tiwari — PPT + Video + Web` |
+| **City / state** | `Silchar, Assam` |
+| **Submission date** | `24 October 2026` |
 
-Roles to assign: ML/pipeline, twin and simulation, dashboard/frontend, video and documentation.
 
 **Positioning statement.** HemoTwin is a research-stage clinical decision-support prototype for haemodialysis units. It maintains a per-patient volume and refill state, predicts intradialytic hypotension 15–60 minutes ahead, and simulates the blood-pressure and fluid consequences of holding, tapering, or stopping ultrafiltration. It is not a medical device and does not issue prescriptions.
 
@@ -403,9 +400,8 @@ If you reference this work:
 ```bibtex
 @misc{hemotwin2026,
   title        = {HemoTwin: a UF-policy digital twin for intradialytic hypotension},
-  author       = {{HemoTwin Team}},
+  author       = {Ozz},
   year         = {2026},
-  howpublished = {Digital Twin Challenge 2026, Happiest Health},
   note         = {Research prototype. Not a medical device.}
 }
 ```
@@ -414,4 +410,4 @@ If you reference this work:
 
 **Prior work we build on, and do not claim.** Zhang et al. (*Nephrology Dialysis Transplantation* 2023) established that intradialytic hypotension is predictable at 15–75 minutes with boosted trees; our event model is a narrower-horizon reimplementation of that idea, not a novel predictor. BestShape (*Clinical Kidney Journal* 2025) and ChiCTR2000036973 informed the clinical rationale for UF-guided management. Kim et al. (2022) and Dong et al. (2023) set the external-validation bar we compare against honestly.
 
-**Team.** `[Member 1 — role]`, `[Member 2 — role]`, `[Member 3 — role]`, `[Member 4 — role]`, `[College / Incubator]`.
+**Team.** `Ayandeep Bharadwaj - ML + Twin`, `Prasenjeet Tiwari — PPT + Web + Twin`
