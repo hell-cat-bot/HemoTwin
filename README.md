@@ -29,6 +29,8 @@ A remote-operations digital twin for haemodialysis that predicts intradialytic h
 
 > **Research prototype, not a medical device.** It does not diagnose, prescribe, or act on its own. It shows a nurse a trade-off and a reason, and the nurse decides.
 
+**▶ 20-minute demo video:** https://youtu.be/ezq2eWIAmj8 (unlisted) · **▶ Architecture diagram:** [`docs/architecture.pdf`](docs/architecture.pdf) · **▶ Slides:** [`deck/HemoTwin_Deck.pdf`](deck/HemoTwin_Deck.pdf)
+
 ---
 
 ## Screenshots
@@ -107,6 +109,25 @@ The clinical problem is not a lack of monitors. It is a lack of **lead time** an
 Where there is no on-site nephrologist, remote supervision is the only scalable model: a central clinician covers many chairs and needs exception-based triage, not another raw feed. HemoTwin is built for that console. The 34.5% diabetic share is not incidental: diabetic kidney disease is the terminal stage of India's type 2 diabetes epidemic, so this is the downstream ward of the country's largest chronic-disease problem.
 
 **Target user:** the dialysis nurse at the chair, and the remote nephrologist supervising several units. **Target decision:** when to taper ultrafiltration, and what that taper costs in fluid not removed.
+
+---
+
+## How this maps to the challenge brief
+
+The brief asks for a digital twin of **one specific chronic condition prevalent in India**, fusing **static/historical records** with **dynamic time-series**, predicting **an adverse event**, and shown through a **UI a clinician would use**. Here is the mapping, line by line.
+
+| Brief asks for | HemoTwin delivers |
+|---|---|
+| **One chronic condition prevalent in India** | **Chronic kidney disease → end-stage renal disease (ESRD) on maintenance haemodialysis.** CKD is India's leading chronic-disease burden; 1,700+ centres already run under the PMNDP, and 34.5% of our cohort has diabetes — diabetic kidney disease is the terminal stage of India's type-2 epidemic. We pick the *downstream ward* of India's largest chronic-disease problem, where a machine already generates the data. |
+| **Static / historical stream (EHR)** | `idp.csv` — patient demographics, diagnoses, comorbidities, dry weight. `d1.csv` — session records: UF goal, prescribed dose, dialysate temperature, measured post-session weight. Static per patient and per session, exactly the EHR layer. |
+| **Dynamic / real-time stream (wearable or IoT time-series)** | `vip.csv` — the dialysis machine's own monitor telemetry: non-invasive blood-pressure series (systolic/diastolic/mean, ~30-minute cuff cadence), ultrafiltration rate, blood-flow and dialysate-flow rate, per session. This is medical-IoT time-series from the chair, not a fitness band. |
+| **Fusion of the two** | Both streams land on the *same* patient and the *same* minute. The static file supplies the prior (age, diabetes, dry weight); the dynamic file supplies the current state. The twin carries a per-patient fluid state forward and the event model scores each new reading against it. |
+| **Predict an adverse event** | **Intradialytic hypotension (IDH)** — nadir SBP < 90 mmHg — predicted **15–60 minutes before onset** on a patient-disjoint test split. AUROC **0.916**; 75.7% of crash sessions caught (86.0% of those with a usable warning window); 20.6% false-alarm session rate at the shipped operating point. |
+| **Personalise treatment protocols** | Layer 3: the same twin, rolled forward under the three policies a nurse actually faces — **hold**, **taper 25%**, **stop and give 250 mL** — each priced in BP gained vs litres of fluid left behind, with a 90% band from held-out residuals. This is where a twin beats a classifier: a score cannot tell you the price of the safer option. |
+| **Working algorithm, not a mock-up** | LightGBM + isotonic calibration, trained end to end on 1,268,990 anchors from 205,482 real sessions, 40 causal features, patient-disjoint 70/15/15 split. `python scripts/train.py` reproduces it; `python scripts/verify_submission.py` checks the submission. |
+| **UI showing how a clinician interacts with the virtual patient** | A **Streamlit console** with four views: chair board (8 chairs ranked by risk), session view, twin state, and the **what-if frontier** (nadir per policy with interval and fluid cost), plus a validation/trust panel. Screenshots above; a 60-second walkthrough in the video. |
+
+**What we did *not* do, on purpose.** We did not use Synthea or MIMIC-IV, and we did not synthesise patients. The brief permits anonymised open-source data, and a real cohort of 205,482 sessions is harder to argue with than a generated one. We also did not bolt on a wearable stream (steps, sleep) that has no causal path to blood-pressure collapse during dialysis — a fusion of two real streams that actually interact beats a fusion of four unrelated ones.
 
 ---
 
@@ -413,7 +434,7 @@ Raw data is **not** committed. `data/raw/` is git-ignored by design: the downloa
 
 ## 20-minute video
 
-**Video:** `[Unlisted YouTube link — paste before submitting]`
+**Video:** https://youtu.be/ezq2eWIAmj8 (unlisted — opens without an account)
 
 Script, timings and shot list: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md).
 
