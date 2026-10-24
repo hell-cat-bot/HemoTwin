@@ -37,6 +37,29 @@
 
 **Always report both detection numbers** (75.7% of all crash sessions; 86.0% of those with a usable warning window).
 
+## Operating point — threshold sweep and decision curve
+
+Source: `artifacts/predictions_test.parquet` (held-out patient-disjoint test split), re-derived by `scripts/threshold_sweep.py`. **27,421 test sessions, 2,354 with an IDH event** (8.59% session-level prevalence). The sweep is an *independent re-derivation*: at the frozen threshold it reproduces the headline numbers exactly (1,783 detected · 290 missed · 281 no-anchor · 20.6088% false-alarm rate · 7,182 flagged sessions · 28.07% session PPV).
+
+| Threshold | Detection (all) | Detection (evaluable) | False-alarm session rate | Session PPV | Net benefit @ pt=0.10 |
+|---|---|---|---|---|---|
+| 0.010 | 83.9% | 95.3% | 37.3% | 19.3% | 0.0342 |
+| 0.025 | 79.0% | 89.7% | 24.3% | 25.7% | 0.0431 |
+| **0.0410 (frozen)** | **75.7%** | **86.0%** | **20.6%** | **28.1%** | **0.0441** |
+| 0.050 | 70.4% | 79.9% | 16.0% | 31.8% | 0.0442 |
+| 0.100 | 58.3% | 66.2% | 10.0% | 38.1% | 0.0399 |
+| 0.200 | 26.4% | 30.0% | 2.7% | 50.3% | 0.0199 |
+
+Net benefit at the frozen threshold 0.0410: **+0.0441** at pt = 0.10 (and +0.0551 at pt = 0.05, +0.0179 at pt = 0.20).
+
+**Trivial-policy baselines at pt = 0.10:** never alarm **0.0000** · alarm on every session **−0.0157** · HemoTwin **+0.0441**.
+
+**Two claims this supports (and only these two):**
+1. **0.0410 is not a knife-edge.** The net-benefit-optimal threshold at pt = 0.10 is **0.0500**, worth +0.0442 — statistically indistinguishable from the frozen 0.0410 at +0.0441. A threshold frozen on validation lands on the same plateau as the one chosen on test.
+2. **The model beats "alarm on everyone" across the whole tested cost range** (pt = 0.05, 0.10 and 0.20 all favour the model over both trivial policies), not only at one operating point.
+
+**Do not overstate this.** Net benefit is computed on the test split for *reporting*; the threshold itself was frozen on validation, before any test set was touched. Never describe the threshold as "optimised on test".
+
 **Calibration:** isotonic regression is fitted on one half of validation and evaluated on the other. ECE **0.214 raw → 0.0008 calibrated** on the held-out half; **patient-disjoint test ECE 0.0017**; Brier **0.0235** on test. Caveat: the two validation halves are split by anchor row, not by patient, so the 0.0008 is optimistic. The test ECE is the stronger number.
 
 ## Twin validation (the layer that makes this a twin)

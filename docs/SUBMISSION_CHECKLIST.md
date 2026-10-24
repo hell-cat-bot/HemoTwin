@@ -7,13 +7,13 @@ Everything below must be true before the link is submitted. Each row is a gate, 
 
 ## 0. Fill the placeholders first
 
-| Placeholder | Where it appears | Owner |
-|---|---|---|
-| `HemoTwin_TeamName_CollegeName` (folder name) | repository root | Team leader |
-| `[Team Name]`, `[College / Incubator]` | README, video, deck | Team leader |
-| `[Member 1 — role]` … `[Member 4 — role]`, phone, email | README, deck | Team leader |
-| `[City, State]`, `[DD Month 2026]` | README | Team leader |
-| `[Unlisted YouTube link]` | README | Video owner |
+| Placeholder | Where it appears | Owner | Status |
+|---|---|---|---|
+| `HemoTwin_TeamName_CollegeName` (folder name) | repository root | Team leader | ✅ renamed to `HemoTwin` |
+| `[Team Name]`, `[College / Incubator]` | README, video, deck | Team leader | ✅ `Ozz` · NIT Silchar — in README and deck |
+| `[Member — role]`, phone, email | README, deck | Team leader | ✅ Ayandeep Bharadwaj (leader) + Prasenjeet Tiwari |
+| `[City, State]`, `[DD Month 2026]` | README | Team leader | ✅ Silchar, Assam · 24 October 2026 |
+| `[Unlisted YouTube link]` | README | Video owner | ⬜ **still open — paste before submitting** |
 
 No square brackets may survive in the final repository. Run a search for `[` before submitting.
 

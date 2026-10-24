@@ -5,7 +5,7 @@
 | **Model name** | HemoTwin event model (v1) with volume-refill twin |
 | **Version** | 1.0 |
 | **Date** | 24 October 2026 |
-| **Owner** | HemoTwin Team, `[College / Incubator]` |
+| **Owner** | HemoTwin Team (`Ozz`) — National Institute of Technology, Silchar |
 | **License** | Code MIT; training data CC BY 4.0 |
 | **Status** | Research prototype. Not a medical device. Not for clinical use. |
 | **Paper or report** | This document, plus `docs/FACTS.md` and `docs/ARCHITECTURE.md` |

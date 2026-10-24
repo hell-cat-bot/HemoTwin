@@ -49,6 +49,16 @@ def main() -> None:
     out.write_text(json.dumps(bundle, indent=2))
     print(f"wrote {len(bundle['chairs'])} sessions -> {out}")
 
+    # Re-derive the threshold sweep / decision curve from the same test
+    # predictions and embed it, so the committed bundle always carries the
+    # operating-point trade-off.
+    try:
+        from scripts.threshold_sweep import build_report, embed_in_bundle
+        sweep_report = build_report(preds)
+        embed_in_bundle(sweep_report, out)
+    except Exception as exc:  # noqa: BLE001
+        print(f"warning: threshold sweep not embedded ({exc})")
+
     for c in bundle["chairs"]:
         w = {p["policy"]: p for p in c["whatif"]}
         left = w["taper25"]["fluid_left_L"]

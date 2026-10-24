@@ -160,7 +160,7 @@ def header(b: dict):
         </div>
       </div>
       <div class="ht-meta">
-        Shift B · 08:00–16:00 · 8 chairs<br>
+        Team Ozz · NIT Silchar · Shift B · 8 chairs<br>
         Event model AUROC <b>{m['auroc']:.3f}</b> · threshold {b['meta']['threshold']:.2f}<br>
         Research prototype · not a medical device
       </div>
@@ -398,13 +398,67 @@ def session_view(b: dict, c: dict):
 
 
 # ---------------------------------------------------------------------------
+def decision_curve(b: dict) -> go.Figure:
+    """Net benefit of alarming, per session, against the two trivial policies.
+
+    The horizontal axis is the threshold probability of benefit: how much a
+    nurse would rather catch a crash than absorb one false alarm. The model
+    curve is only worth using where it sits above both flat baselines.
+    """
+    sw = b.get("threshold_sweep")
+    if not sw:
+        return None
+    rows = sw["sweep"]
+    thr = [r["threshold"] for r in rows]
+    base = sw["baselines"]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=thr, y=[base["treat_all"]["0.10"]] * len(thr), mode="lines",
+        name="Alarm on everyone",
+        line=dict(color=MUTED, width=1.6, dash="dash")))
+    fig.add_trace(go.Scatter(
+        x=thr, y=[0.0] * len(thr), mode="lines", name="Never alarm",
+        line=dict(color="#CBD5E1", width=1.6, dash="dot")))
+    fig.add_trace(go.Scatter(
+        x=thr, y=[r["net_benefit"]["0.10"] for r in rows], mode="lines+markers",
+        name="HemoTwin",
+        line=dict(color=TEAL, width=2.4), marker=dict(size=6)))
+
+    frozen = sw["frozen_threshold"]
+    fig.add_vline(x=frozen, line=dict(color=AMBER, width=1.6, dash="dash"),
+                  annotation_text="operating point 0.041",
+                  annotation_position="top right",
+                  annotation_font=dict(size=10, color=AMBER))
+
+    # Keep "alarm on everyone" (which sits below zero) inside the frame, so
+    # the comparison with the null policy is visible rather than implied.
+    vals = [r["net_benefit"]["0.10"] for r in rows]
+    lo = min(min(vals), base["treat_all"]["0.10"], 0.0) - 0.01
+    hi = max(vals) + 0.012
+
+    fig.update_layout(
+        height=290, margin=dict(l=8, r=8, t=18, b=8),
+        plot_bgcolor=CARD, paper_bgcolor=CARD,
+        xaxis=dict(title="alarm threshold (calibrated probability)",
+                   gridcolor="#F1F5F9", title_font=dict(size=10),
+                   type="log", tickvals=[0.005, 0.01, 0.02, 0.05, 0.1, 0.3],
+                   ticktext=["0.005", "0.01", "0.02", "0.05", "0.10", "0.30"]),
+        yaxis=dict(title="net benefit per session",
+                   gridcolor="#F1F5F9", title_font=dict(size=10),
+                   range=[lo, hi]),
+        font=dict(family="system-ui", size=10.5, color=INK),
+        legend=dict(orientation="h", y=1.14, x=0, font=dict(size=10)),
+    )
+    return fig
+
+
 def trust_tab(b: dict):
     m = b["metrics"]
     t, ev, ppv = m["test"], m["event_level"], m["session_ppv"]
     r1, r2 = m["baselines"]["r1"], m["baselines"]["r2"]
     cal = m["calibration"]
     tw = m["twin"]
-
     st.markdown('<div class="ht-sec">Event model · patient-disjoint test split</div>',
                 unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
@@ -515,6 +569,59 @@ def trust_tab(b: dict):
     </div>
     """, unsafe_allow_html=True)
 
+    # ---- operating point: why 0.0410 -------------------------------------
+    sw = b.get("threshold_sweep")
+    if sw:
+        fz = sw["frozen_row"]
+        bl = sw["baselines"]
+        nb_all = bl["treat_all"]["0.10"]
+        nb_frozen = fz["net_benefit"]["0.10"]
+        st.markdown('<div class="ht-sec">Choosing the alarm threshold · '
+                    'why 0.0410</div>', unsafe_allow_html=True)
+        c1, c2, c3, c4 = st.columns(4)
+        for col, (v, l) in zip([c1, c2, c3, c4], [
+            (f"{100*fz['detection_rate_all_sessions']:.1f}%",
+             "of all crash sessions flagged ≥15 min early"),
+            (f"{100*fz['false_alarm_session_rate']:.1f}%",
+             "uncomplicated sessions raise an alarm"),
+            (f"{fz['false_alarms_per_1000_sessions']:.0f}",
+             "false alarms per 1,000 sessions"),
+            (f"{nb_frozen:+.3f}", "net benefit per session (pt = 0.10)"),
+        ]):
+            with col:
+                st.markdown(f'<div class="ht-kpi"><div class="v">{v}</div>'
+                            f'<div class="l">{l}</div></div>', unsafe_allow_html=True)
+
+        left, right = st.columns([1.25, 1])
+        with left:
+            dc = decision_curve(b)
+            if dc is not None:
+                st.plotly_chart(dc, width="stretch",
+                                config={"displayModeBar": False})
+        with right:
+            st.markdown(f"""
+            <div class="ht-panel" style="font-size:12.5px;line-height:1.7">
+              The threshold is a <b>staffing decision</b>, so we show the whole
+              trade-off instead of asserting one number. Sweeping the alarm
+              threshold over the held-out patient-disjoint test split
+              ({sw['n_sessions']:,} sessions, {sw['n_idh_sessions']:,} with an
+              IDH event), the operating point <b>0.0410</b> sits on the flat
+              part of the net-benefit curve — it is not a knife-edge choice.
+              <br><br>
+              At a 1-in-10 cost ratio (a missed crash is worth ten false
+              alarms), our net benefit is <b>{nb_frozen:+.3f}</b> per session,
+              against <b>{nb_all:+.3f}</b> for alarming on every session and
+              <b>0.000</b> for never alarming. <b>We beat the trivial
+              policies across the whole plausible range</b> of that cost
+              ratio, not only at one operating point.
+              <br><br>
+              Detected {fz['detected']:,} · missed {fz['missed']:,} ·
+              {fz['no_anchor_window']} with no usable anchor ·
+              {fz['sessions_flagged']:,} sessions flagged, of which
+              {100*fz['session_ppv']:.0f}% truly crashed.
+            </div>
+            """, unsafe_allow_html=True)
+
     st.markdown('<div class="ht-warn" style="margin-top:14px">'
                 '<b>What this is not.</b> This is a research prototype. The cohort is '
                 'Taiwanese and the model is internally validated. The Spanish '
@@ -573,31 +680,39 @@ def main():
     header(b)
     kpi_strip(b, chairs)
 
-    tab_console, tab_trust, tab_about = st.tabs(
-        ["Console", "Validation & trust", "About the twin"])
-
-    with tab_console:
-        st.markdown('<div class="ht-sec">Chair board</div>', unsafe_allow_html=True)
-        cols = st.columns(4)
-        for i, c in enumerate(chairs):
-            with cols[i % 4]:
-                selected = st.session_state.get("sel") == c["session_id"]
-                chair_card(c, selected)
-                if st.button("Open", key=f"open_{c['session_id']}",
-                             width="stretch"):
-                    st.session_state["sel"] = c["session_id"]
-                    selected = True
-        st.write("")
-
-        sel = st.session_state.get("sel", chairs[0]["session_id"])
-        c = next((x for x in chairs if x["session_id"] == sel), chairs[0])
-        session_view(b, c)
-
-    with tab_trust:
+    # ?view=trust / ?view=about renders a single pane (deep links and
+    # screenshots); the default is the three-tab console.
+    view = st.query_params.get("view", "")
+    if view == "trust":
         trust_tab(b)
-
-    with tab_about:
+    elif view == "about":
         about_tab(b)
+    else:
+        tab_console, tab_trust, tab_about = st.tabs(
+            ["Console", "Validation & trust", "About the twin"])
+
+        with tab_console:
+            st.markdown('<div class="ht-sec">Chair board</div>', unsafe_allow_html=True)
+            cols = st.columns(4)
+            for i, c in enumerate(chairs):
+                with cols[i % 4]:
+                    selected = st.session_state.get("sel") == c["session_id"]
+                    chair_card(c, selected)
+                    if st.button("Open", key=f"open_{c['session_id']}",
+                                 width="stretch"):
+                        st.session_state["sel"] = c["session_id"]
+                        selected = True
+            st.write("")
+
+            sel = st.session_state.get("sel", chairs[0]["session_id"])
+            c = next((x for x in chairs if x["session_id"] == sel), chairs[0])
+            session_view(b, c)
+
+        with tab_trust:
+            trust_tab(b)
+
+        with tab_about:
+            about_tab(b)
 
     st.markdown(
         '<div class="ht-foot">HemoTwin · research prototype · not a medical device · '

@@ -12,7 +12,7 @@ One page. Everything here maps to code in `src/`, artifacts in `artifacts/`, and
 flowchart LR
     subgraph DATA["Data sources"]
         A1["HEMOBP telemetry<br/>vip.csv 4.19M rows"]
-        A2["HEMOBP session record<br/>d1.csv 165,858 sessions"]
+        A2["HEMOBP session record<br/>d1.csv 205,482 sessions"]
         A3["HEMOBP patient record<br/>idp.csv 1,072 patients"]
         A4["Mendeley Dialysis DB<br/>97,640 sessions, Spain<br/>external cohort, different task"]
     end
@@ -24,7 +24,7 @@ flowchart LR
     end
 
     subgraph STORE["Label / feature store"]
-        C1["Label builder<br/>first IDH, SBP<90<br/>onset in t+15 to t+30"]
+        C1["Label builder<br/>first IDH, SBP<90<br/>onset in t+15 to t+60"]
         C2["40 causal features<br/>shift(1) history"]
         C3["Patient-disjoint split<br/>70 / 15 / 15"]
     end
@@ -152,7 +152,8 @@ The pipeline holds intermediate frames in memory and persists only what the dash
 | Isotonic knots (JSON) | `src/model.py` `save()` | calibration portability, serving | `artifacts/hemotwin_isotonic.json` |
 | Model metadata (JSON): feature list, best iteration, calibration summary, test metrics | `src/model.py` `save()` | training report, dashboard | `artifacts/hemotwin_meta.json` |
 | Train report (JSON): event-level detection, session PPV, rule baselines, twin population, band, volume check, runtime | `scripts/train.py` | README, model card, trust panel | `artifacts/train_report.json` |
-| Frozen demo bundle (JSON): 8 sessions with trajectories, forecasts, what-if cards, drivers, metrics | `scripts/train.py` | dashboard | `demo/demo_bundle.json` |
+| Threshold sweep (JSON): operating-point trade-off, decision curve, trivial-policy baselines | `scripts/threshold_sweep.py` | README, deck slide 12, trust panel | `artifacts/threshold_sweep.json` (also embedded in the demo bundle) |
+| Frozen demo bundle (JSON): 8 sessions with trajectories, forecasts, what-if cards, drivers, metrics, threshold sweep | `scripts/train.py` | dashboard | `demo/demo_bundle.json` |
 | Session store (in memory) | `src/data.py` `build_session_store()` | features, twin | not persisted |
 | Anchor table and feature matrix (in memory) | `src/labels.py`, `src/features.py` | training, evaluation | not persisted |
 

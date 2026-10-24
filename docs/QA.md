@@ -110,7 +110,7 @@ Shadow mode on one Indian unit: retrain on local data, measure alarm burden per 
 
 ### 18. "How do you handle missing BP?"
 
-Anchors with no BP in the label window are dropped, not filled. The twin propagates state from the last measured value and widens its interval as the gap grows. At ~30-minute cuffing, **228** crash sessions had no usable warning anchor — we report them.
+Anchors with no BP in the label window are dropped, not filled. The twin propagates state from the last measured value and widens its interval as the gap grows. At ~30-minute cuffing, **281** crash sessions had no usable warning anchor — we report them.
 
 ---
 
@@ -129,6 +129,30 @@ Two. A patient whose refill collapses faster than the prior allows: the twin lag
 ### 21. "Did you validate externally?"
 
 Yes, and it failed. A reduced session-level model scored **0.720** on held-out HEMOBP patients and **0.474** on 97,633 Spanish sessions. The cause is label semantics: HEMOBP uses nadir SBP < 90, Spain records clinician-defined symptomatic hypotension. We publish the analysis and claim **internal validity only**. Retraining on the partner's label is the deployment path.
+
+---
+
+### 22. "Why 0.0410? That looks like an odd number."
+
+Because it was **not chosen by hand**. It was frozen on the validation split at 85% sensitivity, before the test set was touched. We then swept the whole threshold range on the test split and published the trade-off curve: at 0.0410 you get **75.7%** of all crash sessions caught at a **20.6%** false-alarm rate. And it is not a knife-edge — the net-benefit optimum is 0.0500, worth +0.0442 against our +0.0441. The threshold is a **staffing decision**, so we show the curve and let a partner retune it.
+
+---
+
+### 23. "What's net benefit, and why should I care?"
+
+It is the value of using the model, measured against two trivial policies: alarm on every session, or never alarm. At a 1-in-10 cost ratio — a missed crash is worth ten false alarms — we score **+0.0441** per session, against **0.0000** for never alarming and **−0.0157** for alarming on everything. Alarming on everyone is literally worse than silence, because a 20% true-crash rate does not survive a 1-in-10 penalty for false alarms. That is the argument for a calibrated model, in one number.
+
+---
+
+### 24. "Did you tune the threshold on the test set?"
+
+No. The threshold was **frozen on validation** at 0.0410, before the test split was scored for anything. The sweep we publish is a *reporting* exercise on the test split, and it is where we **re-derive the frozen row independently** — it reproduces the headline detection and false-alarm numbers exactly, which is a check on the pipeline, not a way to pick a number. If you want the threshold moved, that is a decision for the ward, using the curve we hand them.
+
+---
+
+### 25. "Why is the false-alarm rate so high?"
+
+Because the label is hard, not because the model is bad. IDH here is nadir SBP below 90, and a lot of patients drift near 90 without crossing it. At **20.6%** we are catching **75.7%** of all crash sessions at least 15 minutes early. That is the trade we are offering, made explicit — and the curve shows what a different ward should choose. We would rather argue about the operating point in public than hide it.
 
 ---
 

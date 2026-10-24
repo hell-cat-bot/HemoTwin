@@ -8,11 +8,63 @@
 
 A remote-operations digital twin for haemodialysis that predicts intradialytic hypotension (IDH) 15–60 minutes ahead, then simulates holding, tapering, or stopping ultrafiltration and shows the blood-pressure gain against the fluid left behind.
 
-> **REPLACE the folder name `HemoTwin_TeamName_CollegeName` with `YourTeamName_YourCollegeName` before submitting.**
+---
 
-![HemoTwin remote-operations console](docs/dashboard.png)
+## Read this first — the 60-second version
 
-*The console on a real held-out session: 50% risk, a 25% taper still projects a nadir of 77 mmHg, and stopping UF clears 90 at a cost of 1.79 L.*
+**The problem.** A dialysis machine pulls fluid out of a patient's blood over about four hours. Pull too little and the patient stays fluid-overloaded. Pull too fast and their blood pressure collapses. That collapse is **intradialytic hypotension (IDH)**, and it is the thing that ends a session early, in saline and a stretcher.
+
+**Why it is hard to fix in time.** The machine only measures blood pressure when the cuff inflates — roughly every 30 minutes. The crash takes minutes. So the monitor alarms *after* the event has started, and the nurse is left guessing.
+
+**What we built.** Two things, in one console:
+
+| | What it does | Why a plain alarm cannot do this |
+|---|---|---|
+| **The event model** | Predicts "this patient will crash in the next 15–60 minutes", calibrated so a 50% really means 50 in 100. | Gives lead time instead of a post-mortem. |
+| **The twin** | Holds a per-patient fluid state and simulates what happens under each of the three real options — **hold**, **taper 25%**, or **stop and give 250 mL** — and prices each one in litres of fluid left behind. | Turns a score into a **trade-off**: pressure gained vs fluid forgone. |
+
+**The insight that shapes the product.** We measured 32,565 real sessions: **87.2%** of them already taper ultrafiltration mid-session. So "reduce the fluid removal" is not a new idea — it is what staff already do. The open question is **when** to do it, and what that timing costs. HemoTwin answers that question.
+
+**The honest result.** On a **patient-disjoint** held-out split: **AUROC 0.916**, catches **75.7% of all crash sessions** (86.0% of those with a usable warning window) at least 15 minutes before onset, at the cost of a **20.6%** false-alarm session rate. We also report a **failed** external validation rather than hide it. Details and caveats: [Results](#results).
+
+> **Research prototype, not a medical device.** It does not diagnose, prescribe, or act on its own. It shows a nurse a trade-off and a reason, and the nurse decides.
+
+---
+
+## Screenshots
+
+**The console** — eight chairs ranked by risk, exception-first for a supervisor covering several units.
+
+![HemoTwin chair board](docs/dashboard_console.png)
+
+**The what-if** — the same session under three policies, each with its nadir, its interval, and the fluid it leaves behind. This is the product.
+
+![HemoTwin what-if frontier](docs/dashboard_whatif.png)
+
+**The trust panel** — validation, calibration, and the alarm-budget trade-off, all on one page.
+
+![HemoTwin validation and trust](docs/dashboard_validation.png)
+
+---
+
+## Plain-language glossary
+
+Judges and reviewers are not all nephrologists. These are the only terms you need.
+
+| Term | Meaning |
+|---|---|
+| **Dialysis / haemodialysis** | A 4-hour machine treatment that filters waste and fluid out of the blood, usually 3× a week. |
+| **Ultrafiltration (UF)** | The fluid-removal part of dialysis. The rate (L/h) is what the nurse controls. |
+| **Blood pressure (SBP / DBP)** | Systolic = the top number (e.g. 120). Diastolic = the bottom number (e.g. 80). |
+| **Nadir** | The lowest blood pressure reached in a session. The nadir is what we predict. |
+| **IDH** | Intradialytic hypotension — systolic blood pressure falling below 90 mmHg during the session. |
+| **Refill (`k_refill`)** | How fast the patient's tissues push fluid back into the bloodstream. Varies per patient. |
+| **β (`beta_bp`)** | How much blood pressure moves per litre of fluid removed. The number that differs most between patients. |
+| **A "twin"** | A model that carries a patient's state forward and answers *"what if we did X instead?"* — not just *"what is likely?"* |
+| **Counterfactual** | A simulated alternative to what actually happened. Here: what if we had tapered, or stopped? |
+| **Calibration** | Whether a predicted 50% really happens 50% of the time. A model can rank well and still be badly calibrated. |
+| **False-alarm rate** | Share of sessions that *did not* crash but still raised an alarm. This is the nursing-time cost. |
+| **Net benefit** | Value of using the model, versus two trivial policies: alarm on everyone, or never alarm. |
 
 ---
 
@@ -107,6 +159,7 @@ Five stages, left to right. Each column is a module in this repository; the twin
   1,070 patients      patient split    rule baselines   hold, taper, stop   what-if frontier
   Mendeley (Spain)    70 / 15 / 15     8.4x lift        90% band            trust panel
   97,640 sessions     causal shift(1)  calibr. held-out volume check        8 chairs, ranked
+                      ---- threshold sweep: net benefit vs alarm-on-everyone ----
 ```
 
 Full detail, including a Mermaid version and the artifact table: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Printable diagram: [`docs/architecture.svg`](docs/architecture.svg).
@@ -196,6 +249,42 @@ The residual band is wide, and the dashboard plots it. A two-parameter model fit
 
 **On the published comparator.** We do not claim to beat Zhang et al. (NDT 2023) on AUROC; our 15–60 min horizon is narrower than their 15–75 min horizon, and a nearer horizon is an easier task. What we claim instead is a different artifact: a UF-policy twin, a volume state checked against measured weight loss, and a patient-disjoint validation with event-level and alarm-burden reporting.
 
+### Choosing the alarm threshold — why 0.0410
+
+The operating threshold is a **staffing decision**, not a statistical one. A hospital that cannot absorb a false alarm should not run at 0.0410. So instead of asserting one number, we swept the threshold across the held-out patient-disjoint test split (**27,421 sessions**, 2,354 with an IDH event) and reported the whole trade-off.
+
+| Threshold | Crash sessions caught (all) | Of those warnable | False-alarm sessions | Session PPV | Net benefit @ pt=0.10 |
+|---|---|---|---|---|---|
+| 0.010 | 83.9% | 95.3% | 37.3% | 19.3% | 0.0342 |
+| 0.025 | 79.0% | 89.7% | 24.3% | 25.7% | 0.0431 |
+| **0.0410 (frozen)** | **75.7%** | **86.0%** | **20.6%** | **28.1%** | **0.0441** |
+| 0.050 | 70.4% | 79.9% | 16.0% | 31.8% | 0.0442 |
+| 0.100 | 58.3% | 66.2% | 10.0% | 38.1% | 0.0399 |
+| 0.200 | 26.4% | 30.0% | 2.7% | 50.3% | 0.0199 |
+
+**Net benefit** is the value of using the model, measured per session:
+
+```
+NB = (true positives / sessions) − (false positives / sessions) × (pt / (1 − pt))
+```
+
+`pt` is the threshold probability of benefit — how much a nurse would rather catch a crash than absorb one false alarm.
+
+The comparison that matters is against the two trivial policies:
+
+| Policy | Net benefit @ pt = 0.10 |
+|---|---|
+| Never alarm | 0.0000 |
+| **HemoTwin at the frozen 0.0410** | **+0.0441** |
+| Alarm on every session | −0.0157 |
+
+Two things follow, and both are the point of running the sweep rather than quoting a number:
+
+1. **0.0410 is not a knife-edge.** It sits on the flat part of the curve. The net-benefit-optimal threshold at pt = 0.10 is 0.0500, worth +0.0442 — statistically indistinguishable from +0.0441 at 0.0410. A threshold chosen on validation and frozen on test lands on the same plateau.
+2. **We beat "alarm on everyone" across the whole plausible range of the cost ratio** (pt = 0.05, 0.10 and 0.20 all favour the model), not only at one operating point. The threshold is exposed, so a partner unit can retune it to its own staffing cost without touching the model.
+
+Reproduce with `python scripts/threshold_sweep.py` — it reads the saved held-out predictions, so it needs no retraining. It also re-derives the frozen row independently and reproduces the headline detection and false-alarm numbers exactly, which is a check on the pipeline rather than a restatement of it.
+
 ### External cohort (different task, reported separately)
 
 | Metric | Mendeley Dialysis Database, Spain |
@@ -249,7 +338,7 @@ Five views, one console, no naked numbers. Every risk shows an interval, its dri
 | 2 | **Session view** | The real BP trace, cuff markers, UF rate, dialysate parameters, and the forecast band bending into the next hour. |
 | 3 | **Twin state** | Estimated volume removed against target, refill rate, `k_refill` and `beta_bp`, and the modelled-versus-measured UF check. |
 | 4 | **What-if frontier** | Three policy cards (hold, taper 25%, stop UF + 250 mL) and the frontier chart: nadir SBP on the y-axis, litres left behind on the x-axis. This is the demo moment. |
-| 5 | **Trust panel** | Reliability curve, the alarm budget with its false-alarm rate, the rule-baseline comparison, the external-validation note, and the plain-language drivers behind the current alert. |
+| 5 | **Trust panel** | Reliability curve, the alarm budget with its false-alarm rate, the rule-baseline comparison, the threshold sweep and its decision curve, the external-validation note, and the plain-language drivers behind the current alert. |
 
 The demo runs entirely from a frozen bundle of eight real held-out sessions. It needs no network and no raw data download.
 
@@ -260,8 +349,8 @@ The demo runs entirely from a frozen bundle of eight real held-out sessions. It 
 **Requirements:** Python 3.11 or newer, ~2 GB RAM for the dashboard, several GB for the full pipeline.
 
 ```bash
-git clone <your-repo-url>
-cd HemoTwin_YourTeamName_YourCollegeName
+git clone https://github.com/hell-cat-bot/HemoTwin.git
+cd HemoTwin
 python -m venv .venv
 
 # Windows
@@ -298,7 +387,12 @@ streamlit run app/streamlit_app.py
 
 `scripts/train.py` writes the booster, the isotonic knots, the metric report and `demo/demo_bundle.json`. A full run takes roughly 15–25 minutes on CPU; the 300-patient smoke test takes a few minutes. Raw CSVs are downloaded from the Figshare record cited below, so no manual step is required.
 
-Artifacts are written to `artifacts/` (git-ignored). The committed demo bundle is the only derived file in the repository. If `data/raw/` is absent, the app still runs from the bundle; there is no silent synthetic substitution.
+```bash
+# operating-point sweep + decision curve (no retraining, reads saved test predictions)
+python scripts/threshold_sweep.py
+```
+
+Artifacts are written to `artifacts/` (git-ignored). The committed demo bundle is the only derived file in the repository — it carries the metrics, the eight demo sessions and the threshold sweep, so the dashboard works with no download and no inference. If `data/raw/` is absent, the app still runs from the bundle; there is no silent synthetic substitution.
 
 ---
 
@@ -323,7 +417,7 @@ Raw data is **not** committed. `data/raw/` is git-ignored by design: the downloa
 
 Script, timings and shot list: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md).
 
-The video covers the problem, the India framing, the published baseline we do not claim to beat, the 87.2% insight, the architecture, a live 60-second demo, validation with both detection denominators, limitations, and the deployment path. It is unlisted, not private, so judges can open it without an account.
+The video covers the problem, the India framing, the published baseline we do not claim to beat, the 87.2% insight, the architecture, a live 60-second demo, validation with both detection denominators, the threshold sweep, limitations, and the deployment path. It is unlisted, not private, so judges can open it without an account.
 
 ---
 
@@ -349,7 +443,7 @@ The video covers the problem, the India framing, the published baseline we do no
 ## Repository structure
 
 ```
-HemoTwin_TeamName_CollegeName/
+HemoTwin/
 ├── README.md                  this file
 ├── LICENSE                    MIT (code and docs)
 ├── requirements.txt           pinned runtime dependencies
@@ -369,6 +463,7 @@ HemoTwin_TeamName_CollegeName/
 ├── scripts/
 │   ├── train.py               end-to-end pipeline
 │   ├── rebuild_demo.py        rebuild the bundle without retraining
+│   ├── threshold_sweep.py     operating-point sweep + decision curve
 │   ├── external_validation.py two-country transport check
 │   └── verify_submission.py   pre-flight checks
 ├── demo/
@@ -385,6 +480,9 @@ HemoTwin_TeamName_CollegeName/
 │   ├── EXTERNAL_VALIDATION.md failed transport check, reported in full
 │   ├── VIDEO_SCRIPT.md        timed 20-minute script
 │   ├── QA.md                  judge questions with short answers
+│   ├── dashboard_console.png  console screenshot
+│   ├── dashboard_whatif.png   what-if frontier screenshot
+│   ├── dashboard_validation.png validation & trust screenshot
 │   └── SUBMISSION_CHECKLIST.md
 └── deck/
     ├── deck.html              slide source

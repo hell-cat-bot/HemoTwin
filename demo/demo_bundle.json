@@ -3920,5 +3920,388 @@
       "action": "Holding the current rate projects a nadir of 75 mmHg within 54 min. Taper now. If systolic reaches 90, stop ultrafiltration and give 250 mL; escalate to the remote nephrologist.",
       "chair": 8
     }
-  ]
+  ],
+  "threshold_sweep": {
+    "source": "artifacts/predictions_test.parquet (held-out test split)",
+    "split": "patient-disjoint",
+    "warn_window_min": [
+      15,
+      60
+    ],
+    "frozen_threshold": 0.040957015409570155,
+    "n_sessions": 27421,
+    "n_idh_sessions": 2354,
+    "prevalence_session_level": 0.08584661390904781,
+    "baselines": {
+      "treat_all": {
+        "0.05": 0.03773327779899769,
+        "0.10": -0.015725984545502447,
+        "0.20": -0.14269173261369023
+      },
+      "treat_none": {
+        "0.05": 0.0,
+        "0.10": 0.0,
+        "0.20": 0.0
+      },
+      "n_sessions": 27421,
+      "n_idh_sessions": 2354
+    },
+    "sweep": [
+      {
+        "threshold": 0.005,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.8640611724723875,
+        "detection_rate_evaluable": 0.9811866859623734,
+        "n_idh_sessions": 2354,
+        "detected": 2034,
+        "missed": 39,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.5145011369529661,
+        "n_false_alarm_sessions": 12897,
+        "sessions_flagged": 15200,
+        "flagged_share": 0.5543196819955508,
+        "session_ppv": 0.15151315789473685,
+        "net_benefit": {
+          "0.05": 0.04942235973581524,
+          "0.10": 0.021917508478903037,
+          "0.20": -0.043406513256263435
+        },
+        "false_alarms_per_1000_sessions": 470.3329564931986
+      },
+      {
+        "threshold": 0.01,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.8394222599830077,
+        "detection_rate_evaluable": 0.9532079112397491,
+        "n_idh_sessions": 2354,
+        "detected": 1976,
+        "missed": 97,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.3731599313838912,
+        "n_false_alarm_sessions": 9354,
+        "sessions_flagged": 11595,
+        "flagged_share": 0.42285109952226396,
+        "session_ppv": 0.19327296248382925,
+        "net_benefit": {
+          "0.05": 0.05410758945794522,
+          "0.10": 0.034158734789638115,
+          "0.20": -0.013219795047591257
+        },
+        "false_alarms_per_1000_sessions": 341.1254148280515
+      },
+      {
+        "threshold": 0.015,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.8152081563296517,
+        "detection_rate_evaluable": 0.9257115291847564,
+        "n_idh_sessions": 2354,
+        "detected": 1919,
+        "missed": 154,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.29516894722144654,
+        "n_false_alarm_sessions": 7399,
+        "sessions_flagged": 9571,
+        "flagged_share": 0.3490390576565406,
+        "session_ppv": 0.22693553442691464,
+        "net_benefit": {
+          "0.05": 0.05578129708502319,
+          "0.10": 0.040001782899561966,
+          "0.20": 0.002525436709091569
+        },
+        "false_alarms_per_1000_sessions": 269.8296925713869
+      },
+      {
+        "threshold": 0.02,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.8139337298215803,
+        "detection_rate_evaluable": 0.924264351181862,
+        "n_idh_sessions": 2354,
+        "detected": 1916,
+        "missed": 157,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.29181792795308575,
+        "n_false_alarm_sessions": 7315,
+        "sessions_flagged": 9485,
+        "flagged_share": 0.34590277524525,
+        "session_ppv": 0.22878228782287824,
+        "net_benefit": {
+          "0.05": 0.05583312060099923,
+          "0.10": 0.04023274943372678,
+          "0.20": 0.003181867911454722
+        },
+        "false_alarms_per_1000_sessions": 266.7663469603588
+      },
+      {
+        "threshold": 0.025,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.7897196261682243,
+        "detection_rate_evaluable": 0.8967679691268693,
+        "n_idh_sessions": 2354,
+        "detected": 1859,
+        "missed": 214,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.24298879004268562,
+        "n_false_alarm_sessions": 6091,
+        "sessions_flagged": 8193,
+        "flagged_share": 0.29878560227562817,
+        "session_ppv": 0.2565604784572196,
+        "net_benefit": {
+          "0.05": 0.05610375451776299,
+          "0.10": 0.0431137530440984,
+          "0.20": 0.012262499544145003
+        },
+        "false_alarms_per_1000_sessions": 222.12902519966448
+      },
+      {
+        "threshold": 0.03,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.7786745964316057,
+        "detection_rate_evaluable": 0.8842257597684515,
+        "n_idh_sessions": 2354,
+        "detected": 1833,
+        "missed": 240,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.23002353692105157,
+        "n_false_alarm_sessions": 5766,
+        "sessions_flagged": 7843,
+        "flagged_share": 0.286021662229678,
+        "session_ppv": 0.2648221343873518,
+        "net_benefit": {
+          "0.05": 0.0557793776955426,
+          "0.10": 0.04348248908987029,
+          "0.20": 0.01427737865139856
+        },
+        "false_alarms_per_1000_sessions": 210.27679515699646
+      },
+      {
+        "threshold": 0.035,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.7574341546304163,
+        "detection_rate_evaluable": 0.8601061263868789,
+        "n_idh_sessions": 2354,
+        "detected": 1783,
+        "missed": 290,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.20608768500418878,
+        "n_false_alarm_sessions": 5166,
+        "sessions_flagged": 7182,
+        "flagged_share": 0.2619160497428978,
+        "session_ppv": 0.2807017543859649,
+        "net_benefit": {
+          "0.05": 0.055107591377334696,
+          "0.10": 0.04409029575872506,
+          "0.20": 0.017924218664527182
+        },
+        "false_alarms_per_1000_sessions": 188.39575507822474
+      },
+      {
+        "threshold": 0.040957015409570155,
+        "is_frozen": true,
+        "detection_rate_all_sessions": 0.7574341546304163,
+        "detection_rate_evaluable": 0.8601061263868789,
+        "n_idh_sessions": 2354,
+        "detected": 1783,
+        "missed": 290,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.20608768500418878,
+        "n_false_alarm_sessions": 5166,
+        "sessions_flagged": 7182,
+        "flagged_share": 0.2619160497428978,
+        "session_ppv": 0.2807017543859649,
+        "net_benefit": {
+          "0.05": 0.055107591377334696,
+          "0.10": 0.04409029575872506,
+          "0.20": 0.017924218664527182
+        },
+        "false_alarms_per_1000_sessions": 188.39575507822474
+      },
+      {
+        "threshold": 0.05,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.7039082412914188,
+        "detection_rate_evaluable": 0.799324650265316,
+        "n_idh_sessions": 2354,
+        "detected": 1657,
+        "missed": 416,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.15957234611241872,
+        "n_false_alarm_sessions": 4000,
+        "sessions_flagged": 5869,
+        "flagged_share": 0.21403304037051896,
+        "session_ppv": 0.31845288805588684,
+        "net_benefit": {
+          "0.05": 0.05275058109516525,
+          "0.10": 0.04421996118141408,
+          "0.20": 0.023959738886255057
+        },
+        "false_alarms_per_1000_sessions": 145.87360052514498
+      },
+      {
+        "threshold": 0.06,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.7039082412914188,
+        "detection_rate_evaluable": 0.799324650265316,
+        "n_idh_sessions": 2354,
+        "detected": 1657,
+        "missed": 416,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.15957234611241872,
+        "n_false_alarm_sessions": 4000,
+        "sessions_flagged": 5869,
+        "flagged_share": 0.21403304037051896,
+        "session_ppv": 0.31845288805588684,
+        "net_benefit": {
+          "0.05": 0.05275058109516525,
+          "0.10": 0.04421996118141408,
+          "0.20": 0.023959738886255057
+        },
+        "false_alarms_per_1000_sessions": 145.87360052514498
+      },
+      {
+        "threshold": 0.08,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.6117247238742566,
+        "detection_rate_evaluable": 0.6946454413892909,
+        "n_idh_sessions": 2354,
+        "detected": 1440,
+        "missed": 633,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.11297722104759245,
+        "n_false_alarm_sessions": 2832,
+        "sessions_flagged": 4447,
+        "flagged_share": 0.1621749753838299,
+        "session_ppv": 0.36316617944681806,
+        "net_benefit": {
+          "0.05": 0.04707878518000994,
+          "0.10": 0.041039106281074114,
+          "0.20": 0.026694868896101526
+        },
+        "false_alarms_per_1000_sessions": 103.27850917180263
+      },
+      {
+        "threshold": 0.1,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.5828377230246389,
+        "detection_rate_evaluable": 0.6618427399903521,
+        "n_idh_sessions": 2354,
+        "detected": 1372,
+        "missed": 701,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.10005186101248653,
+        "n_false_alarm_sessions": 2508,
+        "sessions_flagged": 4052,
+        "flagged_share": 0.14776995733197185,
+        "session_ppv": 0.3810463968410661,
+        "net_benefit": {
+          "0.05": 0.045220816162794934,
+          "0.10": 0.039872117476872956,
+          "0.20": 0.027168958097808248
+        },
+        "false_alarms_per_1000_sessions": 91.4627475292659
+      },
+      {
+        "threshold": 0.15,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.3857264231096007,
+        "detection_rate_evaluable": 0.4380125422093584,
+        "n_idh_sessions": 2354,
+        "detected": 908,
+        "missed": 1165,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.04787170383372562,
+        "n_false_alarm_sessions": 1200,
+        "sessions_flagged": 2216,
+        "flagged_share": 0.08081397469093031,
+        "session_ppv": 0.4584837545126354,
+        "net_benefit": {
+          "0.05": 0.03081003994249509,
+          "0.10": 0.028250853968369738,
+          "0.20": 0.022172787279822033
+        },
+        "false_alarms_per_1000_sessions": 43.76208015754349
+      },
+      {
+        "threshold": 0.2,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.26423109600679695,
+        "detection_rate_evaluable": 0.30004823926676316,
+        "n_idh_sessions": 2354,
+        "detected": 622,
+        "missed": 1451,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.027446443531336018,
+        "n_false_alarm_sessions": 688,
+        "sessions_flagged": 1385,
+        "flagged_share": 0.050508734181831445,
+        "session_ppv": 0.5032490974729242,
+        "net_benefit": {
+          "0.05": 0.02136280491901136,
+          "0.10": 0.01989553829384616,
+          "0.20": 0.016410780059078808
+        },
+        "false_alarms_per_1000_sessions": 25.090259290324934
+      },
+      {
+        "threshold": 0.3,
+        "is_frozen": false,
+        "detection_rate_all_sessions": 0.12914188615123195,
+        "detection_rate_evaluable": 0.14664737095996142,
+        "n_idh_sessions": 2354,
+        "detected": 304,
+        "missed": 1769,
+        "no_anchor_window": 281,
+        "false_alarm_session_rate": 0.010372202497307217,
+        "n_false_alarm_sessions": 260,
+        "sessions_flagged": 587,
+        "flagged_share": 0.021406950877065022,
+        "session_ppv": 0.5570698466780238,
+        "net_benefit": {
+          "0.05": 0.010587352374956574,
+          "0.10": 0.010032862080562747,
+          "0.20": 0.00871594763137741
+        },
+        "false_alarms_per_1000_sessions": 9.481784034134423
+      }
+    ],
+    "useful_threshold_range": [
+      0.005,
+      0.3
+    ],
+    "beats_treat_all_range": {
+      "0.05": [
+        0.005,
+        0.1
+      ],
+      "0.10": [
+        0.005,
+        0.3
+      ],
+      "0.20": [
+        0.005,
+        0.3
+      ]
+    },
+    "net_benefit_optimal_threshold": 0.05,
+    "frozen_row": {
+      "threshold": 0.040957015409570155,
+      "is_frozen": true,
+      "detection_rate_all_sessions": 0.7574341546304163,
+      "detection_rate_evaluable": 0.8601061263868789,
+      "n_idh_sessions": 2354,
+      "detected": 1783,
+      "missed": 290,
+      "no_anchor_window": 281,
+      "false_alarm_session_rate": 0.20608768500418878,
+      "n_false_alarm_sessions": 5166,
+      "sessions_flagged": 7182,
+      "flagged_share": 0.2619160497428978,
+      "session_ppv": 0.2807017543859649,
+      "net_benefit": {
+        "0.05": 0.055107591377334696,
+        "0.10": 0.04409029575872506,
+        "0.20": 0.017924218664527182
+      },
+      "false_alarms_per_1000_sessions": 188.39575507822474
+    }
+  }
 }
