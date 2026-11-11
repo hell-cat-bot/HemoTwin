@@ -1,9 +1,12 @@
 # Evidence status — authoritative claim boundary
 
-**Date:** 2026-11-11. **V2 package:** one console, four views; 228 package
-tests (0 failures; 28 heavy-artifact tests skip-gated in the lean package, 6 when
-the full portable data/artifact pack is present); claim-boundary verifier 14/14;
-G7 frozen and failed. The full lab suite in the research workspace is 241 tests.
+**Date:** 2026-11-11. **V2 package:** one console, five views; 235 package
+tests (0 failures; the heavy-artifact skip count is 18 in this workspace, 28 in
+the lean package, 6 with the full portable data/artifact pack); claim-boundary
+verifier 14/14; G7 frozen and failed. The full lab suite in the research
+workspace is 241 tests.
+The fifth view, Chair board, is a separate pre-session risk surface and does not
+change the G1–G7 twin verdict.
 
 ## Cohort and provenance
 
@@ -25,6 +28,28 @@ G7 frozen and failed. The full lab suite in the research workspace is 241 tests.
 - **Forecast-v2 oracle display:** 72 features including 13 observed future-UF
   features; fold-2 MAE **9.60**. It is a display-only forecast and is **not** the
   G2 baseline. A smaller oracle number is not a better twin.
+
+## Chair board — pre-session risk A2 (separate from G1–G7)
+
+The Chair board is a display-only, fixed-order overview of five patient-disjoint
+fold-2 Case Lab sessions. It uses **variant A2**, a feature-audit correction of
+the crashrisk secondary model: history, static patient fields and the planned UF
+goal only. It excludes `sbp_anchor` (the ~90-minute task anchor, not the starting
+BP; 466/3,109 fold-2 crashes had anchor SBP below 90) and `uf_ml_kg_h` (the
+current UF rate at that anchor). On untouched fold 2: **AUROC 0.8313, recall@25
+0.6015, PPV@25 0.5914, ECE10 0.0184**; high band ≥0.35 = 27.8% of sessions with
+57.0% crash rate; low band <0.20 = 59.5% with 8.9%; 21.5% of crashes were low.
+The primary B model (AUROC 0.8788) and secondary A (AUROC 0.8356) are anchor-time
+and are not used for this board.
+
+Crash shape is **not predicted** on this pre-session board. The pre-registered
+shape model uses anchor SBP/UF (AUROC 0.7716 vs baseline 0.7006); the no-anchor/
+no-UF ablation reaches only 0.7047 vs 0.7006 and is not shipped. The board shows
+the recorded onset only after the reveal. See [`CRASHRISK.md`](CRASHRISK.md).
+
+Claim boundary: low band is not safe; no alarm, treatment recommendation, chair
+allocation, or counterfactual. Single-centre, retrospective, one fold-2 read, no
+external validation; crash is SBP<90, not symptomatic IDH.
 
 ## What passed
 

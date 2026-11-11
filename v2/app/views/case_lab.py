@@ -22,60 +22,70 @@ ROLE_CODES = {
     "Nephrologist": "NEPHROLOGIST",
 }
 
+REGIME_LABELS = {
+    "hold": "hold",
+    "moderate": "moderate",
+    "aggressive": "aggressive",
+    "mixed": "mixed",
+    "pause": "paused UF",
+    "zero_reference": "paused UF",
+    "synthetic": "synthetic",
+}
+
+
+def _regime_label(regime: str) -> str:
+    return REGIME_LABELS.get(regime, regime.replace("_", " "))
+
 ARCHETYPES = [
-    ("stable_hold", "Stable", "No crash. The calm baseline."),
-    ("taper", "Taper", "The nurse reduced UF; observed stayed near forecast."),
-    ("pause", "Paused UF", "Observed 130 vs forecast 81 — the model under-reads a pause."),
-    ("true_crash", "True crash", "Observed nadir 59. The pathway says review now."),
+    ("stable_hold", "Stable", "No crash. Forecast within 1 mmHg."),
+    ("taper", "Taper", "UF tapered; observed within 1 mmHg of forecast."),
+    ("pause", "Paused UF", "UF paused and resumed; forecast within 1 mmHg."),
+    ("true_crash", "True crash", "Observed nadir 78. High pre-session risk."),
     ("stale_cuff", "Stale cuff", "42-minute-old reading. The guardrail refuses to guess."),
 ]
 
 EXTRA_CASES = [
-    ("mixed", "Mixed", "A high anchor with a large observed fall."),
-    ("g1_taper_showcase", "Showcase", "The case where the retired v3 twin missed badly."),
+    ("g1_taper_showcase", "Showcase", "v3 missed by 21 mmHg; v4 within 3."),
 ]
 
 CASE_NOTES = {
-    "stable_hold": ("A stable session. The calibrated forecast (115) and observed nadir "
-                    "(121) are close; nothing here needs an action. The value is the "
+    "stable_hold": ("Forecast 160 vs observed nadir 160; no crash. The value is the "
                     "calm baseline and the explicit fluid arithmetic.", ""),
-    "taper": ("The nurse tapered UF and the observed nadir (134) stayed above the "
-              "calibrated forecast (129). This is a good trade-off conversation, not "
-              "a crash prediction.", ""),
-    "pause": ("The observed SBP rose to 130 after a pause while the calibrated forecast "
-              "said 81. That gap is the honest limit of a model trained on observational "
-              "data; the bedside decision beat the forecast here.", "warn"),
-    "true_crash": ("The observed nadir is 59 mmHg. The protocol state is REVIEW_NOW. "
-                   "The product's job is to buy time to react and seek advice, not to "
-                   "prescribe a dose.", "fail"),
+    "taper": ("The nurse tapered UF and the observed nadir (129) met the forecast "
+              "(129). A good trade-off conversation, not a crash prediction.", ""),
+    "pause": ("UF paused and resumed; observed 117 vs forecast 118 — within 1 mmHg "
+              "and no crash. The model handled the pause.", ""),
+    "true_crash": ("Pre-session risk 70%; forecast 82; observed nadir 78. The "
+                   "protocol state is REVIEW_NOW. The product buys time to react "
+                   "and seek advice; it does not prescribe a dose.", "fail"),
     "stale_cuff": ("The last cuff is 42 minutes old. There is no current BP, so the "
                    "system returns INSUFFICIENT_INFORMATION instead of guessing. This "
                    "is the guardrail that keeps the demo honest.", "fail"),
-    "mixed": ("A high anchor followed by a large fall. The calibrated forecast and the "
-              "observed trajectory disagree; the chart keeps both visible.", "warn"),
-    "g1_taper_showcase": ("The retired v3 twin predicted 167 while the observed nadir was "
-                          "115. The v4 pre-anchor surface is much closer — but still not "
-                          "a treatment effect.", ""),
+    "g1_taper_showcase": ("v3 predicted 148; v4 predicted 124; observed 127. Within "
+                          "3 mmHg, and no crash.", ""),
 }
 
 
 @st.cache_data(show_spinner=False)
-def _load_json(path: str) -> dict:
+def _load_json(path: str, mtime: float) -> dict:
+    # mtime is part of the cache key so rebuilt evidence is picked up.
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def _demo() -> dict:
-    return _load_json(str(EVIDENCE / "demo_twin.json"))
+    path = EVIDENCE / "demo_twin.json"
+    return _load_json(str(path), path.stat().st_mtime)
 
 
 def _report() -> dict:
-    return _load_json(str(EVIDENCE / "benchmark_report.json"))
+    path = EVIDENCE / "benchmark_report.json"
+    return _load_json(str(path), path.stat().st_mtime)
 
 
 def _inspection() -> dict:
     if not INSPECTION.exists():
         return {}
-    return _load_json(str(INSPECTION))
+    return _load_json(str(INSPECTION), INSPECTION.stat().st_mtime)
 
 
 def _view_case(case: dict) -> dict:
@@ -234,8 +244,8 @@ def _protocol_panel(case: dict, role_code: str, stale: bool) -> None:
                 f"<span style='color:#93A4B8;font-size:12px'>Roles: "
                 f"{e(', '.join(step['roles']))} · {e(badge)}</span>",
                 unsafe_allow_html=True)
-    st.caption("The pathway is a configured research protocol. It is not a "
-               "validated workflow, not a prescription, and not a medical device.")
+    st.caption("Configured research protocol. Not a validated workflow, "
+               "prescription, or medical device.")
 
 
 def _state_inspector(case: dict) -> None:
@@ -325,6 +335,11 @@ def render() -> None:
         st.session_state["case_id"] = default["id"]
         st.session_state["case_select"] = display[default["name"]]
 
+    # Another view can set case_id without touching the widget-backed label.
+    expected = display[by_id[st.session_state["case_id"]]["name"]]
+    if st.session_state.get("case_select") != expected:
+        st.session_state["case_select"] = expected
+
     with st.sidebar:
         st.markdown("### Case lab controls")
         st.selectbox("All curated cases", options, key="case_select",
@@ -334,16 +349,13 @@ def render() -> None:
             "Show mechanism sketch",
             value=False,
             key="show_ill",
-            help="The dashed fan is an uncalibrated mechanism illustration, not "
-                 "a measured treatment effect.")
-        st.caption("The sketch is off by default. The solid calibrated forecast "
-                   "is the validated surface.")
-        st.caption("205,482 QC-eligible HEMOBP sessions · 303,122 combined raw "
-                   "scale · Spanish frame AUROC 0.474 (failed transport).")
+            help="Dashed fan: uncalibrated mechanism sketch, not a measured effect.")
+        st.caption("205,482 QC-eligible HEMOBP sessions · 303,122 raw · "
+                   "Spanish frame AUROC 0.474 (transport failed).")
         st.divider()
-        st.caption("**What this console is:** a research decision-support layer. "
-                   "It mirrors the session, shows fluid arithmetic, and structures "
-                   "review. It does not prescribe treatment.")
+        st.caption("**Research decision support.** Mirrors the session, shows "
+                   "fluid arithmetic, and structures review. It does not "
+                   "prescribe treatment.")
 
     case = by_id[st.session_state["case_id"]]
     stale = bool(case.get("synthetic_demo")) or (
@@ -366,8 +378,8 @@ def render() -> None:
 
     st.markdown(theme.section(
         "Case lab", "Pick a chair-side story",
-        "Five archetypes and two extra sessions. Each case is a real HEMOBP "
-        "session except the labelled synthetic stale-cuff guardrail."),
+        "Five archetypes plus a showcase. Every case is a real HEMOBP session "
+        "except the labelled synthetic stale-cuff guardrail."),
         unsafe_allow_html=True)
 
     cols = st.columns(5)
@@ -380,9 +392,9 @@ def render() -> None:
                 on_click=_pick, args=(item["id"], name))
             st.caption(desc)
 
-    with st.expander("More curated cases", expanded=False):
-        extra_cols = st.columns(2)
-        for col, (name, label, desc) in zip(extra_cols, EXTRA_CASES):
+    with st.expander("Showcase case", expanded=False):
+        col, _ = st.columns([1, 2])
+        for name, label, desc in EXTRA_CASES:
             item = by_name[name]
             with col:
                 st.button(
@@ -393,10 +405,11 @@ def render() -> None:
 
     st.markdown(theme.section(
         "Selected case", f"{case['name'].replace('_', ' ').title()} · {case['session_id']}",
-        f"Anchor at {case['t_anchor']:.0f} min · regime {case['regime']} · "
+        f"Anchor at {case['t_anchor']:.0f} min · regime "
+        f"{_regime_label(case['regime'])} · "
         f"{'synthetic guardrail' if case.get('synthetic_demo') else 'real HEMOBP session'}."),
         unsafe_allow_html=True)
-    chips = [pill(case["regime"].upper(), "info")]
+    chips = [pill(_regime_label(case["regime"]).upper(), "info")]
     if case.get("synthetic_demo"):
         chips.append(pill("Synthetic demo — not a patient record", "warn"))
     if stale:
@@ -443,13 +456,6 @@ def render() -> None:
                 "Dashed lines are an uncalibrated mechanism sketch at unit "
                 "gain. Do not read them as treatment effects.", "warn"),
                 unsafe_allow_html=True)
-        else:
-            st.markdown(theme.callout(
-                "Solid cyan is the validated pre-anchor forecast at gain 0. "
-                "The shaded band is the 90% nadir interval, widened along the "
-                "path for display; it is not a per-minute confidence band. "
-                "Amber diamonds are observed cuffs after the anchor — ground "
-                "truth, not model input.", ""), unsafe_allow_html=True)
         if cuffs:
             inspect_rel = (float(selected.get("rel") or 0.0)
                            if selected is not None and selected_idx != anchor_idx
@@ -531,9 +537,9 @@ def render() -> None:
 
     st.markdown(theme.section(
         "Fluid arithmetic", "What each policy changes",
-        "The calibrated +60 min projection is the same for every policy by "
-        "design: the pre-anchor model carries no UF→SBP treatment effect. What "
-        "changes is the UF schedule and the fluid carried forward."),
+        "The +60 min projection is policy-independent: the pre-anchor model "
+        "carries no UF→SBP treatment effect. The table shows the fluid each "
+        "policy leaves behind."),
         unsafe_allow_html=True)
 
     if stale:
@@ -561,8 +567,8 @@ def render() -> None:
                 else "Below the 90 mmHg floor",
                 "ok" if floor_ok else "fail"))
         st.markdown("".join(shared), unsafe_allow_html=True)
-        st.caption("Shared by every policy. The model applies calibrated gain 0, "
-                   "so it does not invent a policy-dependent SBP effect.")
+        st.caption("Shared by every policy; no invented policy-dependent SBP "
+                   "effect.")
 
         hold_left = hold.get("fluid_left_behind_l")
         has_fluid = any(
@@ -608,9 +614,8 @@ def render() -> None:
         st.dataframe(table, hide_index=True, width="stretch",
                      column_config=config)
         if has_fluid:
-            st.caption("The projection row above is policy-independent; the "
-                       "table is the fluid arithmetic it leaves behind. Not a "
-                       "prescription or a validated treatment effect.")
+            st.caption("Fluid arithmetic only; not a prescription or a validated "
+                       "treatment effect.")
         else:
             st.caption("This session has no recorded UF goal, so the "
                        "fluid-bank arithmetic is unavailable. The UF schedule "
@@ -632,8 +637,8 @@ def render() -> None:
 
     st.markdown(theme.section(
         "Decision support", "What the unit's protocol says next",
-        "Measured criteria activate a review state. The forecast never gates it, "
-        "and the shadow score has no alert authority."), unsafe_allow_html=True)
+        "Measured criteria set the review state; the forecast never gates it."),
+        unsafe_allow_html=True)
     _protocol_panel(case, ROLE_CODES[role_label], stale)
 
     with st.expander("4-block causal state vector · anchor only", expanded=False):

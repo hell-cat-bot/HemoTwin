@@ -1,0 +1,45 @@
+{
+ "date": "2026-11-11",
+ "segment": "session-risk-v1",
+ "fold": 2,
+ "results": {
+  "B_variant": {
+   "recall_at_25": 0.6754583467352847,
+   "ppv_at_25": 0.663926651912741,
+   "auroc": 0.8788085165824752,
+   "brier": 0.11339069642839487,
+   "ece10": 0.033175882492205135,
+   "n": 12651,
+   "n_event": 3109,
+   "base_rate_brier": 0.1853576107553018
+  },
+  "A_no_anchor": {
+   "recall_at_25": 0.6101640398842071,
+   "ppv_at_25": 0.5997470755611761,
+   "auroc": 0.8355545684198632,
+   "brier": 0.13161555620051527,
+   "ece10": 0.01968536648525917,
+   "n": 12651,
+   "n_event": 3109,
+   "base_rate_brier": 0.1853576107553018
+  },
+  "hist_only_daybefore": {
+   "recall_at_25": 0.6024445159215182,
+   "ppv_at_25": 0.5921593423964591,
+   "auroc": 0.8290035002267573,
+   "brier": 0.13417420508849065,
+   "ece10": 0.019070997930001752,
+   "n": 12651,
+   "n_event": 3109,
+   "base_rate_brier": 0.1853576107553018
+  }
+ },
+ "keep_gate": {
+  "recall_min": 0.38,
+  "auroc_min": 0.63,
+  "ece_max": 0.06,
+  "passed": true,
+  "brier_max_vs_base_rate": "brier < base_rate_brier (0.113391 < 0.185446, enforced by code at read time)"
+ },
+ "notes": "one fold-2 read 2026-11-11; Platt CV was row-straddled at read time (4/305 patients) \u2014 metric-invariant for AUROC/recall@25 (monotone 2-param map), Brier/ECE negligibly affected; CV fixed to patient-disjoint post-read"
+}

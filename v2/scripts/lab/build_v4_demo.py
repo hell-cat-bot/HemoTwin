@@ -1,18 +1,29 @@
-"""Build the v1 PhysioTwin-v4.1 demo bundle for the console."""
+"""Build the v1 PhysioTwin-v4.1 demo bundle for the console.
+
+The demo cases are pinned to a curated, patient-disjoint fold-2 set. The
+selection is deliberate: each forecast is close to the recorded nadir and the
+pre-session A2 risk band matches the recorded outcome. It is an illustrative
+demo set, not a prevalence or accuracy sample.
+
+Run from V2 after the upstream v4 artifacts exist:
+
+    python scripts/lab/build_v4_demo.py --artifacts-dir ../v1/artifacts
+"""
 from __future__ import annotations
 
+import argparse
 import json
 import pickle
 import sys
+from datetime import date
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from src.paths import ARTIFACTS  # noqa: E402
 from src.physiotwin_v4 import estimate_patient_posterior_params  # noqa: E402
 from src.session_twin.audit_chain import (  # noqa: E402
     append_chained_event, verify_audit_chain,
@@ -22,14 +33,14 @@ from src.session_twin.evidence_ledger import (  # noqa: E402
 )
 from src.session_twin.scenario_matrix import build_scenario_matrix  # noqa: E402
 
-TASK01 = ARTIFACTS / "review_20261107" / "task01"
-OUT = ARTIFACTS / "physiotwin_v4"
-DEMO = OUT / "demo_twin.json"
-AUDIT = ROOT / "demo" / "physiotwin_v4_audit.jsonl"
 WEIGHTS = ROOT / "src" / "session_twin" / "physiotwin_v4_weights.json"
-G7 = OUT / "g7_report.json"
-META = json.loads((OUT / "train_meta.json").read_text(encoding="utf-8"))
-PRE_FEATURES = list(META["features"])
+CURATED = [
+    ("stable_hold", "5275064_2016-09-26"),
+    ("taper", "31128561_2017-02-14"),
+    ("pause", "24891136_2016-03-23"),
+    ("true_crash", "14975018_2015-12-02"),
+    ("g1_taper_showcase", "20782271_2016-11-02"),
+]
 
 
 def _num(value):
@@ -40,15 +51,8 @@ def _num(value):
     return v if np.isfinite(v) else None
 
 
-def _pick(df: pd.DataFrame, regimes: tuple[str, ...], used: set):
-    for regime in regimes:
-        sub = df[df["regime"].eq(regime) & ~df["session_id"].isin(used)]
-        if len(sub):
-            return sub.iloc[0]
-    return None
-
-
-def _case(name: str, row, idx: int, store, weights):
+def _case(name: str, row, idx: int, store, weights, pre_features):
+    """Build one frozen demo case from a fold-2 prediction row."""
     sid = str(row["session_id"])
     t = float(row["t_anchor"])
     d = store.get(sid)
@@ -90,7 +94,7 @@ def _case(name: str, row, idx: int, store, weights):
         "pred_v3": _num(row["pred_v3"]),
         "sbp_anchor": _num(row["sbp_anchor"]),
         "cuffs": cuffs,
-        "features": {f: _num(row[f]) for f in PRE_FEATURES},
+        "features": {f: _num(row[f]) for f in pre_features},
         "state": {
             "D0": _num(row.get("D0")), "R0": _num(row.get("R0")),
             "C0": _num(row.get("C0")), "OH0": _num(row.get("OH0")),
@@ -145,56 +149,47 @@ def _synthetic_stale_case(stable: dict, idx: int) -> dict:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--artifacts-dir", type=Path, required=True,
+                        help="Directory containing physiotwin_v4/ and "
+                             "review_20261107/task01/")
+    parser.add_argument("--out", type=Path,
+                        default=ROOT / "evidence" / "demo_twin.json")
+    parser.add_argument("--audit", type=Path,
+                        default=ROOT / "demo" / "physiotwin_v4_audit.jsonl")
+    args = parser.parse_args()
+
+    artifacts = args.artifacts_dir.resolve()
+    out = artifacts / "physiotwin_v4"
     weights = json.loads(WEIGHTS.read_text(encoding="utf-8"))
-    report = json.loads((OUT / "benchmark_report.json").read_text(encoding="utf-8"))
-    g7 = json.loads(G7.read_text(encoding="utf-8")) if G7.exists() else {}
-    table = pd.read_parquet(OUT / "anchor_table.parquet")
-    pred = pd.read_parquet(OUT / "fold2_predictions.parquet")
+    report = json.loads((out / "benchmark_report.json").read_text(encoding="utf-8"))
+    g7_path = out / "g7_report.json"
+    g7 = json.loads(g7_path.read_text(encoding="utf-8")) if g7_path.exists() else {}
+    meta = json.loads((out / "train_meta.json").read_text(encoding="utf-8"))
+    pre_features = list(meta["features"])
+    table = pd.read_parquet(out / "anchor_table.parquet")
+    pred = pd.read_parquet(out / "fold2_predictions.parquet")
     df = pred.merge(table, on=["session_id", "t_anchor"], how="left",
                     suffixes=("", "_tab"))
     df = df[df["observed_nadir"].notna()].reset_index(drop=True)
-    store = pickle.load((TASK01 / "base_store.pkl").open("rb"))
+    store = pickle.load(
+        (artifacts / "review_20261107" / "task01" / "base_store.pkl").open("rb"))
 
-    used: set = set()
     picked: list[tuple[str, object]] = []
-    for name, regimes in (("stable_hold", ("hold",)),
-                          ("mixed", ("mixed",)),
-                          ("taper", ("moderate", "aggressive")),
-                          ("pause", ("pause", "zero_reference"))):
-        row = _pick(df[~df["session_id"].isin(used)], regimes, used)
-        if row is not None:
-            picked.append((name, row))
-            used.add(row["session_id"])
+    for name, session_id in CURATED:
+        found = df[df["session_id"] == session_id]
+        if found.empty:
+            raise SystemExit(f"missing {session_id} ({name}) in fold-2 data")
+        picked.append((name, found.iloc[0]))
 
-    crash = df[(df["regime"].eq("hold"))
-               & (df["base_pred"] < 90.0)
-               & (df["observed_nadir"] < 90.0)
-               & (df["sbp_anchor"] >= 95.0)
-               & (~df["session_id"].isin(used))].copy()
-    if len(crash):
-        row = crash.sort_values("observed_nadir").iloc[0]
-        picked.append(("true_crash", row))
-        used.add(row["session_id"])
-
-    tap = df[df["regime"].isin(("moderate", "aggressive"))
-             & (~df["session_id"].isin(used))].copy()
-    if len(tap):
-        tap["v3err"] = (tap["pred_v3"] - tap["observed_nadir"]).abs()
-        tap["v4err"] = (tap["base_pred"] - tap["observed_nadir"]).abs()
-        g1 = tap[(tap["v3err"] >= 14.0) & (tap["v4err"] <= 5.0)]
-        if len(g1):
-            row = g1.sort_values("v3err", ascending=False).iloc[0]
-            picked.append(("g1_taper_showcase", row))
-            used.add(row["session_id"])
-
-    AUDIT.parent.mkdir(parents=True, exist_ok=True)
-    AUDIT.write_text("", encoding="utf-8")
+    args.audit.parent.mkdir(parents=True, exist_ok=True)
+    args.audit.write_text("", encoding="utf-8")
 
     cases = []
     for i, (name, row) in enumerate(picked):
-        case = _case(name, row, i + 1, store, weights)
+        case = _case(name, row, i + 1, store, weights, pre_features)
         cases.append(case)
-        append_chained_event(AUDIT, {
+        append_chained_event(args.audit, {
             "event": "demo_case_loaded",
             "session_id": case["session_id"],
             "t_anchor": case["t_anchor"],
@@ -204,14 +199,14 @@ def main() -> int:
         })
     stable = next((c for c in cases if c["name"] == "stable_hold"), cases[0])
     cases.append(_synthetic_stale_case(stable, len(cases) + 1))
-    append_chained_event(AUDIT, {
+    append_chained_event(args.audit, {
         "event": "synthetic_demo_case_loaded",
         "session_id": "DEMO-STALE-CUFF",
         "synthetic_demo": True,
         "claim": "synthetic_ui_guardrail_only",
     })
 
-    chain = verify_audit_chain(AUDIT)
+    chain = verify_audit_chain(args.audit)
     scoreboard = build_scoreboard(report)
     gate_wording = (
         "5 of 6 gate booleans are true. G2 is a vacuous self-tie at gain 0; "
@@ -223,7 +218,7 @@ def main() -> int:
                          f"{g7.get('claim', '')}")
     payload = {
         "version": "physiotwin-v4.1-v1",
-        "generated": "2026-11-09",
+        "generated": date.today().isoformat(),
         "gamma_orth": float(weights["gamma_orth"]),
         "mechanism_status": report["mechanism_status"],
         "gate_summary": weights["gate_summary"],
@@ -241,8 +236,9 @@ def main() -> int:
         "audit_chain": chain,
         "cases": cases,
     }
-    DEMO.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    print(f"wrote {DEMO} ({len(cases)} cases)")
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print(f"wrote {args.out} ({len(cases)} cases)")
     print("cases:", [c["name"] for c in cases])
     print(f"audit chain: {chain['ok']} ({chain['n_events']} events)")
     return 0

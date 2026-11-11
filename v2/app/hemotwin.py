@@ -1,8 +1,8 @@
-"""HemoTwin V2 — one console, four views.
+"""HemoTwin V2 — one console, five views.
 
-Case lab (default), Live session, Session replay, Evidence & handoff. The
-entrypoint owns the page config, the cinematic theme, the brand header/footer,
-and the page nav.
+Case lab (default), Chair board, Live session, Session replay, Evidence &
+handoff. The entrypoint owns the page config, the cinematic theme, the brand
+header/footer, and the page nav.
 """
 from __future__ import annotations
 
@@ -32,6 +32,11 @@ pages = [
         title="Case lab",
         icon=":material/science:",
         default=True,
+    ),
+    st.Page(
+        "views/chair_board_page.py",
+        title="Chair board",
+        icon=":material/grid_view:",
     ),
     st.Page(
         "manual_app.py",

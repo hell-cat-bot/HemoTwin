@@ -1,0 +1,95 @@
+{
+ "date": "2026-11-11",
+ "segment": "chairs pre-session re-read",
+ "fold": 2,
+ "risk": {
+  "variant": "A2_pre_session_safe",
+  "pre_registered": "secondary feature-audit correction",
+  "official_A_anchor_time_uf": {
+   "recall_at_25": 0.6101640398842071,
+   "ppv_at_25": 0.5997470755611761,
+   "auroc": 0.8355545684198632,
+   "brier": 0.13161555620051527,
+   "ece10": 0.01968536648525917,
+   "n": 12651.0,
+   "n_event": 3109.0,
+   "base_rate_brier": 0.1853576107553018
+  },
+  "recomputed_A2": {
+   "n": 12651,
+   "n_event": 3109,
+   "base_rate": 0.24575132400600744,
+   "auroc": 0.831323540644638,
+   "recall_at_25": 0.601479575426182,
+   "ppv_at_25": 0.5913978494623656,
+   "brier": 0.13319650455661664,
+   "base_rate_brier": 0.1853576107553018,
+   "ece10": 0.018401162715526304,
+   "top25_threshold": 0.3913104103772179
+  },
+  "bands": {
+   "low": {
+    "n": 7526,
+    "share": 0.5948936842937317,
+    "events": 669,
+    "event_rate": 0.08889184161573213,
+    "share_of_events": 0.21518173045995498
+   },
+   "moderate": {
+    "n": 1610,
+    "share": 0.12726266698284722,
+    "events": 436,
+    "event_rate": 0.2708074534161491
+   },
+   "high": {
+    "n": 3515,
+    "share": 0.2778436487234211,
+    "events": 2004,
+    "event_rate": 0.5701280227596017,
+    "share_of_events": 0.6445802508845287
+   },
+   "thresholds": {
+    "moderate": 0.2,
+    "high": 0.35
+   }
+  }
+ },
+ "shape": {
+  "status": "not_shipped_pre_session",
+  "reason": "The pre-registered shape model uses anchor SBP and anchor UF rate. The no-anchor/no-UF ablation is barely above its clinical-prior baseline, so no pre-session shape prediction is shown.",
+  "anchor_model": {
+   "fold2_auroc": 0.7716,
+   "fold2_recall_at_25": 0.4626,
+   "fold2_ppv_at_25": 0.6615,
+   "fold2_ece10": 0.0575,
+   "dev_eval_auroc": 0.7655
+  },
+  "anchor_baseline_auroc": 0.7005842476139506,
+  "pre_session_ablation": {
+   "n": 3109,
+   "n_event": 1111,
+   "base_rate": 0.35734963010614346,
+   "auroc": 0.7047051552002047,
+   "recall_at_25": 0.4095409540954095,
+   "ppv_at_25": 0.5855855855855856,
+   "brier": 0.20266080453699084,
+   "base_rate_brier": 0.22965087196914594,
+   "ece10": 0.0361331086899728,
+   "top25_threshold": 0.4326298391444597,
+   "baseline_auroc": 0.7005842476139506
+  },
+  "display": "Recorded onset only after the reveal; never a prediction."
+ },
+ "feature_audit": {
+  "fold2_events": 3109,
+  "sbp_anchor_below_90": 466,
+  "sbp_anchor_share": 0.14988742360887744,
+  "uf_rate_is_anchor_time": true,
+  "excluded_features": [
+   "sbp_anchor",
+   "uf_ml_kg_h"
+  ],
+  "note": "sbp_anchor is the task01 anchor BP; uf_ml_kg_h is the current UF rate at that anchor. Neither is a pre-session feature. Variant A2 excludes both."
+ },
+ "notes": "Shape is shown only as a recorded outcome. The anchor-based shape model remains a separate research output, not a pre-session claim."
+}

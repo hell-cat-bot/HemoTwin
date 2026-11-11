@@ -8,6 +8,13 @@
 > and G7 fail. The counterfactual twin remains a labelled mechanism illustration;
 > the operational gain is 0. See [`EVIDENCE_STATUS.md`](EVIDENCE_STATUS.md).
 
+> **V2.1 Chair board addendum (2026-11-11):** the fifth view uses a separate
+> pre-session risk model, **variant A2** (history + static fields + planned UF
+> goal; no BP or current UF). Fold-2 AUROC 0.8313, recall@25 0.6015, PPV@25
+> 0.5914. The anchor-based primary risk and shape models are not used on this
+> board. Crash shape is recorded, not predicted. See
+> [`CRASHRISK.md`](CRASHRISK.md).
+
 > **Superseded evidence notice (2026-11-07):** Task 01 and Task 02 failed their
 > pre-registered utility gates. Quantitative treatment recommendations are
 > retired. Read [`EVIDENCE_STATUS.md`](EVIDENCE_STATUS.md) before using any
@@ -44,7 +51,7 @@ fluid-accounting workflow.
 
 **Intended population.** Adults on maintenance haemodialysis with intra-session blood-pressure telemetry at a cadence of roughly 30 minutes. The model was developed on a Taiwanese cohort with a median dialysis vintage of 9.6 years.
 
-**Intended decision.** Attention allocation across chairs. The model does not select dialysate composition, temperature, ultrafiltration rate, or drugs.
+**Intended decision.** Observational risk stratification for review attention across chairs. It is not a chair-allocation or assignment order. The model does not select dialysate composition, temperature, ultrafiltration rate, or drugs.
 
 **What it explicitly does not do.** It does not diagnose hypotension, does not recommend a specific UF rate in mL/h, does not authorise a treatment change, and does not claim to reduce adverse events.
 
@@ -305,7 +312,7 @@ threshold.
 | **Not a medical device** | Research prototype. No regulatory approval in any jurisdiction. No diagnosis, treatment, or prescription. |
 | **Human authority** | The nurse decides. The historical simulated policies were advisory, carried an interval and a fluid cost, and could be overridden. The policy simulator is retired; the current page offers no treatment action. An override log is a requirement for any pilot. |
 | **Automation bias** | A confident-looking nadir can anchor a clinician. Mitigations: always show the interval, show the measured-versus-modelled check, and show the false-alarm rate alongside the alert. |
-| **Deskilling and attention** | The retired chair board could have reduced vigilance if treated as complete; it ranked chairs and did not certify the unranked ones as safe. The active session-twin page shows a review state and missing-data flags, and must not be read as a safety certificate either. |
+| **Deskilling and attention** | The retired chair board could have reduced vigilance if treated as complete; it ranked chairs and did not certify the unranked ones as safe. The current Chair board is fixed-order, does not rank or allocate, and does not certify unranked chairs as safe. The session-twin page shows a review state and missing-data flags, and must not be read as a safety certificate either. |
 | **Privacy and law** | Only CC BY 4.0 de-identified research data is used. No protected health information is processed. A clinical pilot falls under the DPDP Act 2023 (India) and would require ethics approval, a data-processing agreement, and a security review; HIPAA would apply in the US. |
 | **Equity** | The cohort is Taiwanese and Spanish and long-vintage. Performance in Indian district hospitals, in younger patients, or with different machine vendors is unknown. Deploying without local validation would export a calibration from one health system to another. |
 | **Data attribution** | HEMOBP (Lin et al., *Scientific Data* 2019, DOI 10.1038/s41597-019-0319-8) and the Mendeley Dialysis Database, both CC BY 4.0. Attribution is mandatory and preserved in the README. |

@@ -11,12 +11,14 @@ ask a second question.
 
 ### 1. "What is HemoTwin?"
 
-One console with four views for the dialysis chair: **Case lab** (seven curated
-stories and the calibrated chart), **Live session** (enter a real session, get a
-protocol state and the fluid arithmetic), **Session replay** (watch the forecast,
-then the recorded cuffs and UF steps roll forward), and **Evidence & handoff**
-(gates, G7, FHIR, audit, pod triage). It mirrors the session, structures the
-review, and makes the fluid trade-off explicit. It does not prescribe.
+One console with five views for the dialysis chair: **Case lab** (six curated
+stories and the calibrated chart), **Chair board** (five patient-disjoint fold-2
+sessions with a truly pre-session risk band and recorded crash shape behind a
+reveal), **Live session** (enter a real session, get a protocol state and the
+fluid arithmetic), **Session replay** (watch the forecast, then the recorded
+cuffs and UF steps roll forward), and **Evidence & handoff** (gates, G7, FHIR,
+audit). It mirrors the session, structures the review, and makes the fluid
+trade-off explicit. It does not prescribe.
 
 ### 2. "Why not just predict IDH?"
 
@@ -84,6 +86,17 @@ A validated counterfactual or treatment effect from the twin; that any UF policy
 will raise SBP, prevent IDH, or is minimum effective; alert utility, clinical
 benefit, or a safety layer; prospective, external, symptomatic-IDH, or Indian-unit
 validation; a prescription, a default dose, or autonomous machine action.
+
+### 11. "Is the Chair board a triage or allocation tool?"
+
+No. It is a fixed-order, display-only pre-session risk view, not a priority list
+and not a chair-assignment order. The score uses history, static fields and the
+planned UF goal only; it does not read BP or the current UF rate. A low band is
+not safe (21.5% of fold-2 crashes were low-band), and the shape is recorded only
+after the reveal, never predicted. The five cases are a curated fold-2 story, not
+an accuracy estimate. The anchor-based primary model (AUROC 0.879) is not used
+because its anchor BP and UF rate are intra-session; the board uses the A2
+feature-audit correction (AUROC 0.831).
 
 ---
 

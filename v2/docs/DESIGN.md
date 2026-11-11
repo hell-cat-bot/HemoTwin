@@ -14,9 +14,10 @@ generous space, one focal point per screen.
 
 ## UX principles
 
-1. **One console, four views.** Case lab is the showpiece; Live session is the
-   working console; Session replay is the retrospective; Evidence & handoff is the
-   proof. No second app, no ambiguous "current demo".
+1. **One console, five views.** Case lab is the showpiece; Chair board is the
+   pre-session overview; Live session is the working console; Session replay is
+   the retrospective; Evidence & handoff is the proof. No second app, no
+   ambiguous "current demo".
 2. **One primary action per screen.** Pick a case, or evaluate a session, or open
    the evidence. Secondary controls stay in the sidebar or behind an expander.
 3. **Progressive disclosure.** The chart, state and arithmetic are visible first;
@@ -67,12 +68,12 @@ updates the twin-state panel for that minute.
 - Top brand bar: mark + HEMOTWIN + "Chair-side session twin"; research-prototype
   and decision-support pills.
 - Sidebar: page navigation, then view-specific controls (case selector, role,
-  illustration toggle, handoff case, pod budget).
+  illustration toggle, handoff case).
 - Main: view content, with a consistent footer (research prototype, data
   provenance, no treatment recommendation).
-- Pages: `/` Case lab, `/manual_app` Live session, `/replay_page` Session replay,
-  `/evidence_page` Evidence & handoff. Deep links use the default Streamlit paths;
-  navigation is through the sidebar.
+- Pages: `/` Case lab, `/chair_board_page` Chair board, `/manual_app` Live
+  session, `/replay_page` Session replay, `/evidence_page` Evidence & handoff.
+  Deep links use the default Streamlit paths; navigation is through the sidebar.
 
 ## View notes
 
@@ -82,6 +83,14 @@ protocol panel → expanders (state vector, SHAP) → evidence CTA. The illustra
 are off by default. Hovering a cuff shows the calibrated and observed SBP;
 clicking it shows SBP, DBP, UF, and the twin state at that minute.
 
+**Chair board.** A fixed-order six-bay rail with five patient-disjoint fold-2
+sessions. Each card shows a pre-session A2 risk band and calibrated probability;
+clicking a chair opens the model inputs, the claim boundary and the recorded
+session. Outcomes are hidden by default. The reveal adds the recorded crash shape
+as a factual strip; it is never a pre-session shape prediction. High risk is cyan,
+moderate amber, low muted; coral appears only on the two recorded crashes. The
+board is not sorted by risk and not an allocation order.
+
 **Live session.** The existing manual console, wrapped in the V2 shell and
 restyled. Widget labels and session-state keys are preserved for testability. The
 old twin panel and playback shortcut are not shipped; the Case lab carries the v4
@@ -90,32 +99,38 @@ surface. The shadow risk is real when the event model scores the session, and
 
 **Evidence & handoff.** Gate cards, forecast lineage table, G7 forest plot,
 P6a/P6b cards, temporal-order chart, frozen protocol hash, claim boundary, then
-tabs for FHIR, bilingual handoff, audit and pod triage.
+tabs for FHIR, bilingual handoff and audit.
 
 ## Demo script (3 minutes)
 
-1. **Open on Case lab** (Taper default). "This is the chair-side view. The solid
-   cyan line is the validated forecast; amber diamonds are what actually happened.
-   Click a cuff to read SBP, DBP, UF, and the twin state at that minute."
-2. **True crash.** "Observed nadir 59. The protocol says REVIEW NOW. The product
-   buys time to react and call for advice."
+1. **Open on Chair board.** "Five chairs before the first cuff. One high, four
+   low. No BP or current UF was read — this is history and the planned UF goal.
+   The order is fixed; it is not an allocation list." Reveal: "The high chair
+   crashed; the four low chairs did not. Five curated chairs are a story, not an
+   accuracy estimate."
+2. **Case lab** (Taper or True crash). "The solid cyan line is the validated
+   forecast; amber diamonds are what actually happened. Click a cuff to read SBP,
+   DBP, UF, and the twin state at that minute." True crash: "Forecast 82, observed
+   nadir 78. The protocol says REVIEW NOW. The product buys time to react and
+   call for advice."
 3. **Fluid arithmetic.** "At calibrated gain 0 the projection is the same across
    policies. The arithmetic is what changes: fluid left and next-session UF."
 4. **Evidence.** "Seven pre-registered gates. Five pass, G7 fails. The twin is a
    labelled illustration, not a treatment effect."
 5. **Live session.** "This is not a mockup: enter cuffs, evaluate, get the state,
    the arithmetic and a display-only forecast."
-6. **Handoff.** "FHIR, bilingual handoff, hash-chained local audit, 12-chair pod."
+6. **Handoff.** "FHIR, bilingual handoff, and a hash-chained local audit."
 
 ## Testing
 
-- `python -m unittest discover -s tests -t .` — 228 tests, 0 failures; 28
-  skip-gated heavy lab tests in the lean package, 6 with the full portable
-  data/artifact pack.
+- `python -m unittest discover -s tests -t .` — 235 tests, 0 failures; the
+  heavy-lab skip count is 18 in this workspace, 28 in the lean package, 6 with
+  the full portable data/artifact pack.
 - AppTest covers the shell, case selection, stale guardrail, true crash, live
-  evaluation, session replay and evidence page.
-- Playwright covers every view, the archetype buttons, the live example and the
-  evidence CTA at 1440×900.
+  evaluation, session replay, evidence page, the Chair board reveal and the
+  Case Lab link; it also pins the case-label sync after a page switch.
+- Playwright covers every view, the archetype buttons, the chair board at
+  1440×1000 and 390×844, the live example and the evidence CTA.
 - The deck is rendered to PDF/PNG and visually inspected before delivery.
 
 ## What not to do

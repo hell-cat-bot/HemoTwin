@@ -95,7 +95,7 @@ class ChartAndSelectionTest(unittest.TestCase):
         fig = charts.fan_figure({**case, "cuffs": cuffs})
         after = next(t for t in fig.data
                      if t.name == "Observed cuffs · ground truth")
-        self.assertEqual(len(after.customdata), 2)
+        self.assertEqual(len(after.customdata), 4)
         index, dbp, uf, calibrated = after.customdata[1]
         self.assertEqual(cuffs[index]["phase"], "after")
         self.assertIsNotNone(dbp)
@@ -117,7 +117,7 @@ class ChartAndSelectionTest(unittest.TestCase):
             case_lab._selection_index(Event([{"customdata": [6, "63", "0.34"]}]),
                                       cuffs), 6)
         self.assertEqual(
-            case_lab._selection_index(Event([{"x": 35.0}]), cuffs), 6)
+            case_lab._selection_index(Event([{"x": 37.0}]), cuffs), 8)
         self.assertIsNone(case_lab._selection_index(Event([]), cuffs))
         self.assertIsNone(
             case_lab._selection_index(Event([{"x": -20.0}]), cuffs))

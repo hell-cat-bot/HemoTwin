@@ -24,8 +24,8 @@ The gap is not another score. It is **time** and a **shared trade-off**. HemoTwi
 mirrors the session, structures the unit's review pathway, and makes the fluid
 arithmetic explicit so the team can react and seek advice earlier.
 
-**The product:** one console, four views — Case lab, Live session, Session
-replay, and Evidence & handoff.
+**The product:** one console, five views — Case lab, Chair board, Live session,
+Session replay, and Evidence & handoff.
 
 ### What “G1–G7” means (plain language)
 
@@ -93,9 +93,15 @@ the sham control fails; P6a gets worse out of sample. The operational gain stays
 
 | View | What it does |
 |---|---|
-| **Case lab** | Seven curated chair-side stories: stable hold, taper, paused UF, true crash, stale cuff, mixed, and a taper showcase. Calibrated fan chart, observed ground truth, per-cuff click inspection (SBP/DBP/UF + twin state), fluid arithmetic, protocol state, 4-block causal state vector, and TreeSHAP attribution. |
+| **Case lab** | Six curated chair-side stories: stable hold, taper, paused UF, true crash, stale cuff, and a taper showcase. Calibrated fan chart, observed ground truth, per-cuff click inspection (SBP/DBP/UF + twin state), fluid arithmetic, protocol state, 4-block causal state vector, and TreeSHAP attribution. |
+| **Chair board** | Five patient-disjoint fold-2 chairs at session start. Pre-session A2 risk (history + static fields + planned UF goal; no BP or current UF), fixed chair order, and recorded crash shape behind a reveal. Display-only; not an allocation order. |
 | **Live session** | Enter a real session and cuffs (or import CSV). Validation, stale-cuff guardrail, deterministic protocol state, arithmetic fluid scenario, display-only forecast, and local audit append. |
-| **Evidence & handoff** | checks scoreboard, twin-test forest plot, mechanism checks, temporal-order diagnostic, frozen protocol hash, claim boundary, FHIR R4 bundle, bilingual English/हिन्दी handoff card, SHA-256 audit chain, and 12-chair pod triage. |
+| **Evidence & handoff** | checks scoreboard, twin-test forest plot, mechanism checks, temporal-order diagnostic, frozen protocol hash, claim boundary, FHIR R4 bundle, bilingual English/हिन्दी handoff card, and SHA-256 audit chain. |
+
+The Chair board's model card, feature audit and claim boundary are in
+[`docs/CRASHRISK.md`](docs/CRASHRISK.md). The board uses A2 (no anchor BP, no
+anchor-time UF rate); the crash shape is recorded only after the reveal, not
+predicted.
 
 The app has **no authentication, no role enforcement, no machine integration, no
 external notification, and no network call at runtime**. The audit chain is a
@@ -131,30 +137,36 @@ Validated with Python 3.14 and the versions in `requirements.txt`
 ### Tests and checks
 
 ```bash
-python -m unittest discover -s tests -t .     # 228 tests, 0 failures
+python -m unittest discover -s tests -t .     # 235 tests, 0 failures
 python scripts/verify_claim_boundary.py       # frozen gates + claim boundary
 python scripts/verify_package.py              # assets, links, deck, package size
 ```
 
-The lean app package skips 28 heavy lab-artifact tests. With the full portable
-data/artifact pack beside `v2/`, 22 of those run and pass; 6 remain skip-gated
-because their optional derived playback artifacts are not included. The full lab
-suite in the research workspace is 241 tests.
+The chair-board tests are bundled and run in every pack level. The heavy-lab
+skip count depends on the optional artifacts present: **18 in this workspace,
+28 in the lean package, 6 with the full portable data/artifact pack** (whose
+remaining skips are optional derived playback artifacts). The full lab suite in
+the research workspace is 241 tests.
 
 ### Three-minute demo
 
-1. **Case lab** → pick *Taper (G1)* or *True crash*. Hover a cuff for the
+1. **Chair board** → five fold-2 chairs, outcomes hidden. "Pre-session risk:
+   one high, four low. Click the high chair; no BP or current UF was read."
+   Reveal the record: the high chair crashed; the four low chairs did not.
+   "This is a curated story, not an accuracy estimate."
+2. **Case lab** → pick *Taper (G1)* or *True crash*. Hover a cuff for the
    calibrated and observed SBP; click it for SBP, DBP, UF, and the twin state at
    that minute.
-2. **Fluid arithmetic** → the calibrated +60 min projection is shared by every
+3. **Fluid arithmetic** → the calibrated +60 min projection is shared by every
    policy; the table shows what changes in the UF schedule and fluid carried
    forward.
-3. **Protocol** → switch to *True crash*: observed nadir 59, state **REVIEW NOW**.
-4. **Evidence & handoff** → open the twin test (G7), the claim boundary, the FHIR bundle, the audit
-   chain, and the 12-chair pod.
-5. **Session replay** → watch the forecast, then the recorded cuffs and UF steps
+4. **Protocol** → switch to *True crash*: forecast 82, observed nadir 78, state
+   **REVIEW NOW**.
+5. **Evidence & handoff** → open the twin test (G7), the claim boundary, the FHIR
+   bundle, and the audit chain.
+6. **Session replay** → watch the forecast, then the recorded cuffs and UF steps
    roll forward; click a cuff or try a what-if card.
-6. **Live session** → load the example cuffs and evaluate; the forecast is
+7. **Live session** → load the example cuffs and evaluate; the forecast is
    `manual_limited` and the state is computed only from measured rules.
 
 ---
@@ -179,18 +191,20 @@ The boundary is part of the product. It is why the rest is trustworthy.
 
 ```
 v2/
-├── app/                 one Streamlit app: shell + four views
+├── app/                 one Streamlit app: shell + five views
 │   ├── hemotwin.py      entrypoint and navigation
 │   ├── manual_app.py    Live session body
 │   ├── ui/              theme, charts, shell
-│   └── views/           Case lab, Session replay, Evidence & handoff
+│   └── views/           Case lab, Chair board, Session replay, Evidence & handoff
 ├── assets/              brand/3D art + replay/replay.html
 ├── src/                 forecast serving, protocol engine, fluid arithmetic,
 │                        v4 twin, G7 identification, FHIR, audit
-├── models/              bundled model weights (no raw data)
-├── evidence/            frozen reports, G7 protocol + hash, demo + per-cuff JSON, figures
+├── models/              bundled model weights (no raw data), incl. crashrisk A2
+├── evidence/            frozen reports, G7 protocol + hash, demo + per-cuff JSON,
+│                        chair_risk.json, crashrisk confirm files, figures
 ├── demo/                curated playback bundle + audit files
 ├── config/              versioned research protocol
+├── docs/                design, architecture, model card, CRASHRISK, QA
 ├── tests/               package test suite
 ├── scripts/             verifiers, deck/asset builders, lab provenance tools
 ├── report/              HemoTwin_Project_Overview.pdf + source HTML

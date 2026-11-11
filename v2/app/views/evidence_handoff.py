@@ -1,4 +1,4 @@
-"""Evidence & handoff: gates, G7, claim boundary, FHIR, audit, pod triage."""
+"""Evidence & handoff: gates, G7, claim boundary, FHIR, and audit."""
 from __future__ import annotations
 
 import json
@@ -17,20 +17,24 @@ EVIDENCE = ROOT / "evidence"
 
 
 @st.cache_data(show_spinner=False)
-def _load_json(path: str) -> dict:
+def _load_json(path: str, mtime: float) -> dict:
+    # mtime is part of the cache key so rebuilt evidence is picked up.
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def _demo() -> dict:
-    return _load_json(str(EVIDENCE / "demo_twin.json"))
+    path = EVIDENCE / "demo_twin.json"
+    return _load_json(str(path), path.stat().st_mtime)
 
 
 def _report() -> dict:
-    return _load_json(str(EVIDENCE / "benchmark_report.json"))
+    path = EVIDENCE / "benchmark_report.json"
+    return _load_json(str(path), path.stat().st_mtime)
 
 
 def _g7() -> dict:
-    return _load_json(str(EVIDENCE / "g7_report.json"))
+    path = EVIDENCE / "g7_report.json"
+    return _load_json(str(path), path.stat().st_mtime)
 
 
 def _fmt(value, nd: int = 1, suffix: str = "") -> str:
@@ -319,30 +323,6 @@ def _audit_tab() -> None:
                "schema; it is not merged into this chain.")
 
 
-def _pod_tab(demo: dict) -> None:
-    from src.session_twin.pod_triage import build_pod_board
-
-    budget = st.slider("Nurse-attention budget (false alerts/session)",
-                       0.0, 1.0, 0.26, 0.01, key="pod_budget")
-    rows = []
-    for case in demo["cases"]:
-        rows.append({
-            "session_id": case["session_id"],
-            "pid": case["session_id"].split("_")[0],
-            "sbp_now": case.get("sbp_anchor"),
-            "projected_nadir": case.get("base_nadir"),
-            "cuff_age_min": case.get("cuff_age_min", 10),
-        })
-    board = build_pod_board(rows, n_chairs=12, fa_per_session=budget)
-    cols = st.columns(3)
-    cols[0].metric("Occupied chairs", f"{board['occupied']}/12")
-    cols[1].metric("Budget", f"{budget:.2f} FA/session")
-    cols[2].metric("Expected false alarms/shift",
-                   f"{board['budget']['expected_false_alerts_per_shift']:.1f}")
-    st.dataframe(pd.DataFrame(board["board"]), hide_index=True, width="stretch")
-    st.caption(board["governance"])
-
-
 def render() -> None:
     demo = _demo()
     report = _report()
@@ -395,20 +375,18 @@ def render() -> None:
 
     st.markdown(theme.section(
         "Handoff", "Carry the state, not a prescription",
-        "A FHIR bundle, a bilingual shift card, a local hash chain and a "
-        "12-chair workflow sort — all explicitly decision-support only."),
+        "A FHIR bundle, a bilingual shift card, and a local hash chain — "
+        "all explicitly decision-support only."),
         unsafe_allow_html=True)
     selected_label = st.session_state.get("handoff_case")
     selected_name = next((name for name in names if display[name] == selected_label),
                          names[0])
     selected = next((c for c in demo["cases"] if c["name"] == selected_name),
                     demo["cases"][0])
-    tabs = st.tabs(["FHIR R4", "Shift handoff", "Audit trail", "12-chair pod"])
+    tabs = st.tabs(["FHIR R4", "Shift handoff", "Audit trail"])
     with tabs[0]:
         _fhir_tab(selected)
     with tabs[1]:
         _handoff_tab(selected)
     with tabs[2]:
         _audit_tab()
-    with tabs[3]:
-        _pod_tab(demo)

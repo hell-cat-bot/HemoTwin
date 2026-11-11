@@ -14,20 +14,24 @@
 3. **Calibrated forecast.** The fair pre-anchor model produces the calibrated
    nadir mean and the 90% conformal band. Fold-2 MAE is 10.99; coverage is
    89.2% HOLD / 90.1% TAPER.
-4. **Console.** One Streamlit entrypoint with four views:
+4. **Console.** One Streamlit entrypoint with five views:
    - **Case lab** — curated archetypes, fan chart with per-cuff click
      inspection, fluid arithmetic, protocol state, 4-block state vector, TreeSHAP.
+   - **Chair board** — five patient-disjoint fold-2 sessions; A2 pre-session risk
+     (history + static fields + planned UF goal, no BP or current UF), fixed
+     chair order, recorded crash shape behind a reveal, model card.
    - **Live session** — manual/CSV entry, validation, stale-cuff guardrail,
      protocol state, fluid arithmetic, display-only forecast, local audit.
    - **Session replay** — curated retrospective replay inside the app shell;
      progressive forecast/observed readings, clickable cuffs and UF steps.
    - **Evidence & handoff** — gates, G7, lineage, claim boundary, FHIR, bilingual
-     handoff, audit chain, pod triage.
+     handoff, audit chain.
 5. **Decision support.** The protocol engine is deterministic and versioned. The
    forecast never gates the state. The shadow risk score is display-only and has
    no alert authority. The fluid arithmetic is not a prescription.
-6. **Handoff.** FHIR R4 bundle, English/हिन्दी shift card, local SHA-256 audit
-   chain, 12-chair workflow sort. The audit is demo-only and says so.
+6. **Handoff.** FHIR R4 bundle, English/हिन्दी shift card, and local SHA-256
+   audit chain. The audit is demo-only and says so. The chair board is separate
+   from handoff and is not an allocation order.
 7. **Evidence.** G1–G7 are pre-registered. Five of six gate booleans pass; G3 and
    G7 fail. The claim boundary is a first-class output, not a footnote.
 
@@ -35,10 +39,10 @@
 
 | Layer | Responsibility | Does not |
 |---|---|---|
-| `app/` | Shell, theme, four views | Train models or call the network |
+| `app/` | Shell, theme, five views | Train models or call the network |
 | `src/` | Forecast serving, protocol, fluid arithmetic, v4/G7, FHIR, audit | Make clinical recommendations |
-| `models/` | Small frozen bundles (v4, Forecast-v2, event model) | Contain raw data |
-| `evidence/` | Frozen reports, G7 protocol/hash, demo JSON, figures | Change after estimation |
+| `models/` | Small frozen bundles (v4, Forecast-v2, event model, crashrisk A2) | Contain raw data |
+| `evidence/` | Frozen reports, G7 protocol/hash, demo JSON, chair risk sidecar, figures | Change after estimation |
 | `scripts/` | Verifiers, deck/asset builders, lab provenance | Run in the app runtime |
 | `tests/` | Package test suite with explicit lab-artifact skips | Hide missing heavy artifacts |
 

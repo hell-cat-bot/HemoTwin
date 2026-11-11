@@ -1,0 +1,23 @@
+{
+ "date": "2026-11-11",
+ "segment": "session-shape-v1",
+ "fold": 2,
+ "n_fold2_crash": 3109,
+ "n_fold2_early": 1111,
+ "results": {
+  "recall_at_25": 0.46264626462646263,
+  "ppv_at_25": 0.6615186615186616,
+  "auroc": 0.7715785092022716,
+  "brier": 0.1857934151388033,
+  "ece10": 0.05749132230195033,
+  "n": 3109,
+  "n_event": 1111,
+  "base_rate_brier": 0.22965087196914594
+ },
+ "baseline_b2_auroc": 0.7005842476139506,
+ "keep_gate": {
+  "auroc_min": 0.59,
+  "brier_max_vs_base_rate": "brier < base_rate_brier (enforced by code at read time)",
+  "passed": true
+ }
+}

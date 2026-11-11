@@ -25,7 +25,7 @@ class ShellAndCaseLabTest(unittest.TestCase):
     def test_shell_loads_case_lab_without_exception(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()
         self.assertEqual(list(at.exception), [])
-        self.assertEqual(at.session_state["case_id"].split(".")[0], "3")
+        self.assertEqual(at.session_state["case_id"].split(".")[0], "2")
         self.assertEqual(at.session_state["case_select"], "Taper")
         self.assertTrue(any("See the pressure falling" in m.value for m in at.markdown))
 
