@@ -1,0 +1,20 @@
+{
+  "calibration": "none",
+  "note": "These boosters emit the raw substrate prediction (pred_gbdt / pred_gbdt_30 / pred_gbdt_60 in predictions_outer_v2.parquet). No isotonic or affine calibration is applied at this stage: the linear-stack corrector (src/forecast_corrector.py) is fit downstream on TUNE rows per segment forecast-v2 governance, and its coefficients live in artifacts/review_20261108/ once the benchmark re-init runs.",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "n_features": 72,
+  "training": {
+    "objective": "regression",
+    "metric": "l2",
+    "learning_rate": 0.05,
+    "num_leaves": 31,
+    "min_child_samples": 50,
+    "feature_fraction": 0.9,
+    "bagging_fraction": 1.0
+  },
+  "num_threads": 8
+}

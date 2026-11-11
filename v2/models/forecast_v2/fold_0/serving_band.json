@@ -1,0 +1,17 @@
+{
+  "artifact": "forecast-v2 fold-0 serving band",
+  "created": "2026-11-08",
+  "source": "artifacts/review_20261108/predictions_outer_v2.parquet",
+  "protocol": "central 95% empirical residual band of the fold-0 3-seed refit (observed_nadir - pred_gbdt), quantiles [0.025, 0.975] on the TUNE half (odd pid_int) of dev folds 0+1; coverage reported on the EVAL half; fold 2 untouched. Same dev protocol as the retired forecast-v1 corrector band.",
+  "band_quantiles": [
+    0.025,
+    0.975
+  ],
+  "band_lo": -28.922318874267432,
+  "band_hi": 25.887775124267588,
+  "n_tune": 10943,
+  "n_eval": 14549,
+  "eval_band_coverage_95": 0.958,
+  "tune_mean_residual": 0.1159,
+  "claim": "Empirical observational band around the raw refit prediction (calibration.json: calibration=none). Not a validated interval; not a safety layer."
+}

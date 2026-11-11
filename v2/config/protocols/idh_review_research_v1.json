@@ -1,0 +1,102 @@
+{
+  "protocol_id": "hemotwin.idh-review",
+  "version": "1.0.0",
+  "status": "research",
+  "label": "Research protocol - not approved for routine clinical use",
+  "owner": "Local dialysis unit must replace this research configuration",
+  "escalation_rules": {
+    "urgent": [
+      {
+        "id": "clinician_concern",
+        "all": [{"field": "clinician_concern", "op": "is_true"}],
+        "reason": "The clinician has flagged immediate concern."
+      },
+      {
+        "id": "sbp_below_90",
+        "all": [{"field": "sbp", "op": "lt", "value": 90}],
+        "reason": "Current observed SBP is below 90 mmHg."
+      },
+      {
+        "id": "symptomatic_low_bp",
+        "all": [
+          {"field": "symptom_any", "op": "is_true"},
+          {"field": "sbp", "op": "lt", "value": 100}
+        ],
+        "reason": "Symptoms are present with SBP below 100 mmHg."
+      }
+    ],
+    "review": [
+      {
+        "id": "large_relative_drop",
+        "all": [
+          {"field": "sbp_drop_from_session_baseline", "op": "ge", "value": 20},
+          {"field": "sbp", "op": "le", "value": 110}
+        ],
+        "reason": "SBP has fallen at least 20 mmHg from the session baseline and is at or below 110 mmHg."
+      }
+    ]
+  },
+  "pathways": {
+    "urgent": [
+      "assess_patient",
+      "repeat_bp",
+      "red_flags",
+      "uf_review",
+      "fluid_review",
+      "recheck_document"
+    ],
+    "review": ["assess_patient", "repeat_bp", "uf_review", "recheck_document"],
+    "routine": ["assess_patient"],
+    "insufficient": ["assess_patient", "repeat_bp"]
+  },
+  "steps": [
+    {
+      "id": "assess_patient",
+      "sequence": 1,
+      "title": "Assess the patient at the chair",
+      "instruction": "Look at the patient, check consciousness and reported symptoms, and note position. Follow the local emergency pathway immediately for unresponsiveness or another red flag.",
+      "roles": ["TECH", "RN", "NEPHROLOGIST"],
+      "requires": []
+    },
+    {
+      "id": "repeat_bp",
+      "sequence": 2,
+      "title": "Repeat and verify blood pressure",
+      "instruction": "Repeat the measurement using the unit's routine technique. Record cuff size, arm position, and whether the reading is observed or interpolated.",
+      "roles": ["TECH", "RN", "NEPHROLOGIST"],
+      "requires": []
+    },
+    {
+      "id": "red_flags",
+      "sequence": 3,
+      "title": "Screen for red flags and alternative causes",
+      "instruction": "Use the locally approved protocol to check for bleeding, chest pain, syncope, hypoglycaemia, and other causes requiring separate escalation. Do not attribute every fall in BP to ultrafiltration.",
+      "roles": ["RN", "NEPHROLOGIST"],
+      "requires": []
+    },
+    {
+      "id": "uf_review",
+      "sequence": 4,
+      "title": "Review the UF state",
+      "instruction": "Review the current UF goal, volume removed, remaining volume, and rate against the locally approved protocol. Only authorized roles may change machine settings.",
+      "roles": ["RN", "NEPHROLOGIST"],
+      "requires": ["uf_rate_Lh", "uf_goal_L", "uf_removed_L"]
+    },
+    {
+      "id": "fluid_review",
+      "sequence": 5,
+      "title": "Review locally authorized fluid options",
+      "instruction": "If the unit has an approved standing order, review the permitted fluid options and required confirmation. This console supplies no default dose and no patient-specific fluid recommendation.",
+      "roles": ["RN", "NEPHROLOGIST"],
+      "requires": []
+    },
+    {
+      "id": "recheck_document",
+      "sequence": 6,
+      "title": "Recheck, document, and plan the next review",
+      "instruction": "Recheck per the locally approved protocol, record the action and response, and schedule the next cuff. Add any carry-forward fluid to the next-session review rather than silently changing a prescription.",
+      "roles": ["RN", "NEPHROLOGIST"],
+      "requires": []
+    }
+  ]
+}

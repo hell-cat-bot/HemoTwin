@@ -1,0 +1,118 @@
+{
+  "date": "2026-11-09",
+  "segment": "PhysioTwin-v4.1 (v1 product)",
+  "gamma_orth": 0.0,
+  "mechanism_status": "REJECTED_ON_DEV",
+  "all_pass": false,
+  "g2_as_plan_written_pass": false,
+  "gates": {
+    "G1": {
+      "pass": true,
+      "n_taper": 374,
+      "v4_mae": 11.594909211884882,
+      "v3_mae": 15.550072636002879,
+      "ratio": 0.7456498424990853,
+      "v4_bias": -0.31177913406551555,
+      "v3_bias": 9.690752651456812
+    },
+    "G2": {
+      "pass": true,
+      "plan_written_pass": false,
+      "fold2_v4_mae": 10.985512866875297,
+      "fold2_base_mae": 10.985512866875297,
+      "fold2_oracle_mae": 9.600822913300828,
+      "dev_v4_mae": 11.384885620227742
+    },
+    "G3": {
+      "pass": false,
+      "n_intervention": 397,
+      "actual_mae": 11.543483570374928,
+      "hold_mae": 11.543483570374928,
+      "bootstrap_ci": [
+        0.0,
+        0.0
+      ]
+    },
+    "G4": {
+      "pass": true,
+      "violations": 0,
+      "checks": 3086844,
+      "continuity": 0.0
+    },
+    "G5": {
+      "pass": true,
+      "hold_coverage": 0.8915608663181479,
+      "taper_coverage": 0.9010695187165776
+    },
+    "G6": {
+      "pass": true,
+      "cold_start_n": 284,
+      "future_invariance": [
+        200,
+        200
+      ]
+    }
+  },
+  "plan_floor_gamma_0.25": {
+    "dev": {
+      "n": 12629,
+      "mae": 11.434158296448535,
+      "rmse": 15.04038267770223,
+      "bias": -3.4101773042861154
+    },
+    "fold2": {
+      "n": 12651,
+      "mae": 11.042199983858145,
+      "rmse": 14.729446886186516,
+      "bias": -2.4320845496052863
+    }
+  },
+  "sign_diagnostic": {
+    "best_gamma": -0.5,
+    "best_mae": 11.319980751331864,
+    "note": "The best dev gain is negative; the data support a confounder proxy (the nurse reacts to symptoms), not the plan's positive UF effect. Negative gains are reported only and are never adopted."
+  },
+  "g4_unit_gain": {
+    "pass": true,
+    "violations": 0,
+    "checks": 3086844
+  },
+  "claim_boundary": "Retrospective HEMOBP evaluation only. The ODE correction's calibrated gain is 0; every positive gain worsens MAE and the actual-vs-hold gate fails. The delivered model is a calibrated pre-anchor forecast plus a clearly labelled mechanism illustration \u2014 not a validated counterfactual twin, treatment effect, safety layer, or autonomous prescription. Forecast-v2 is oracle-assisted and is not the fair G2 baseline.",
+  "g7": {
+    "protocol_sha256": "9ec625eca753144ae492e60fc359d7cd1cc3fc2d2503c469c33d261973c2fd73",
+    "verdict": "FAIL",
+    "stage0": {
+      "n4_matched_events": 581,
+      "n4_patients": 158,
+      "mde80_mmHg": 2.3286125569003526,
+      "fold2_events": 65,
+      "fold2_at_anchor_events": 28
+    },
+    "tau30_per_0.25_l_h": 0.12690663668778712,
+    "tau30_ci95": [-2.6318369926950145, 3.058308706443948],
+    "gamma_struct": 0.2795481726926105,
+    "gamma_struct_ci95": [-1.3168154730049835, 1.744898643005971],
+    "pre_trend": 0.15845031691801878,
+    "sham_mean_mmHg": 2.909235107507931,
+    "sham_ci95": [2.3081418294299216, 3.5388733021403915],
+    "p6a_status": "FAIL",
+    "p6a_delta_mae_mmHg": 0.426036158310227,
+    "p6a_n": 65,
+    "p6b_status": "INCONCLUSIVE",
+    "p6b_n": 28,
+    "temporal_order": {
+      "at_anchor_no_drop": 234,
+      "at_anchor_after_drop": 76,
+      "intermediate_after_drop": 12,
+      "intermediate_no_drop": 5,
+      "no_cut": 70
+    }
+  },
+  "deviations": [
+    "Reported nadir is the 60-minute bridge endpoint B(60); the raw trajectory minimum is also saved. The plan's min-over-[15,60] identity is false when mu > SBP_anchor, because the nadir label excludes the anchor cuff.",
+    "The bridge baseline is pre-anchor-only (59 features). Forecast-v2's 72 features include the observed future-UF oracle.",
+    "gamma=0 is allowed; the plan's [0.25, 1.25] floor was tested and worsens dev MAE (see plan_floor_gamma_0.25), so it was not adopted.",
+    "beta_vol bound widened to 24 mmHg/L to include the repo's own fitted population value (19.6).",
+    "The FE-2SLS instrument stage is replaced by a within-patient covariate-informed prior plus James-Stein shrinkage; the counterfactual gain is calibrated out-of-fold."
+  ]
+}

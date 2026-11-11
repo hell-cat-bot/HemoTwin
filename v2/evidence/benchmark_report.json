@@ -1,0 +1,336 @@
+{
+  "date": "2026-11-09",
+  "segment": "PhysioTwin-v4.1 (v1 product)",
+  "gamma_orth": 0.0,
+  "gamma_grid": [
+    {
+      "n": 12629,
+      "mae": 11.384885620227742,
+      "rmse": 14.971549265934767,
+      "bias": -3.419120071642376,
+      "gamma": 0.0
+    },
+    {
+      "n": 12629,
+      "mae": 11.434158296448535,
+      "rmse": 15.04038267770223,
+      "bias": -3.4101773042861154,
+      "gamma": 0.25
+    },
+    {
+      "n": 12629,
+      "mae": 11.494579494163139,
+      "rmse": 15.122249444240909,
+      "bias": -3.4012345369298553,
+      "gamma": 0.5
+    },
+    {
+      "n": 12629,
+      "mae": 11.565683055181134,
+      "rmse": 15.216939209600254,
+      "bias": -3.3922917695735957,
+      "gamma": 0.75
+    },
+    {
+      "n": 12629,
+      "mae": 11.64545501366274,
+      "rmse": 15.3242142720663,
+      "bias": -3.383349002217336,
+      "gamma": 1.0
+    },
+    {
+      "n": 12629,
+      "mae": 11.733665060370566,
+      "rmse": 15.443812375719835,
+      "bias": -3.3744062348610755,
+      "gamma": 1.25
+    }
+  ],
+  "n_dev": 12629,
+  "n_fold2": 12651,
+  "gates": {
+    "G1": {
+      "n_taper": 374,
+      "v4": {
+        "n": 374,
+        "mae": 11.594909211884882,
+        "rmse": 16.007205963135895,
+        "bias": -0.31177913406551555
+      },
+      "v3": {
+        "n": 374,
+        "mae": 15.550072636002879,
+        "rmse": 23.289222607533198,
+        "bias": 9.690752651456812
+      },
+      "mae_ratio_v4_over_v3": 0.7456498424990853,
+      "pass": true,
+      "criteria": "MAE_v4 <= 0.80*MAE_v3 and |bias_v4| <= 3.0"
+    },
+    "G2": {
+      "dev_eval": {
+        "n": 12629,
+        "v4": {
+          "n": 12629,
+          "mae": 11.384885620227742,
+          "rmse": 14.971549265934767,
+          "bias": -3.419120071642376
+        },
+        "base": {
+          "n": 12629,
+          "mae": 11.384885620227742,
+          "rmse": 14.971549265934767,
+          "bias": -3.419120071642376
+        },
+        "oracle_forecast_v2": {
+          "n": 12629,
+          "mae": 9.29359502369034,
+          "rmse": 12.643257423759751,
+          "bias": -0.3532869204054768
+        },
+        "mae_delta_vs_base": 0.0,
+        "rmse_delta_vs_base": 0.0,
+        "pass_vs_base": true,
+        "pass_vs_oracle_forecast_v2": false
+      },
+      "fold2": {
+        "n": 12651,
+        "v4": {
+          "n": 12651,
+          "mae": 10.985512866875297,
+          "rmse": 14.652341491477461,
+          "bias": -2.416892938456691
+        },
+        "base": {
+          "n": 12651,
+          "mae": 10.985512866875297,
+          "rmse": 14.652341491477461,
+          "bias": -2.416892938456691
+        },
+        "oracle_forecast_v2": {
+          "n": 12651,
+          "mae": 9.600822913300828,
+          "rmse": 13.153030423656459,
+          "bias": 0.15080386611173277
+        },
+        "mae_delta_vs_base": 0.0,
+        "rmse_delta_vs_base": 0.0,
+        "pass_vs_base": true,
+        "pass_vs_oracle_forecast_v2": false
+      },
+      "pass": true,
+      "criteria": "MAE and RMSE <= the pre-anchor baseline on dev-eval and fold 2; Forecast-v2 is reported separately because its 72 features include the future-UF oracle",
+      "pass_as_plan_written": false
+    },
+    "G3": {
+      "n_intervention": 397,
+      "actual": {
+        "n": 397,
+        "mae": 11.543483570374928,
+        "rmse": 15.986730143655505,
+        "bias": -0.11296587072427738
+      },
+      "hold": {
+        "n": 397,
+        "mae": 11.543483570374928,
+        "rmse": 15.986730143655505,
+        "bias": -0.11296587072427738
+      },
+      "bootstrap": {
+        "delta_mae": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "p_delta_lt_0": 0.0,
+        "n_boot": 1000,
+        "n_patients": 96
+      },
+      "pass": false,
+      "criteria": "MAE(actual) < MAE(hold) and patient-clustered 95% CI of the paired delta upper bound < 0"
+    },
+    "G4": {
+      "gamma": 0.0,
+      "n_anchors": 12651,
+      "n_pairwise_minute_checks": 3086844,
+      "violations": 0,
+      "continuity_max_abs_error": 0.0,
+      "pass": true,
+      "criteria": "SBP(frac_low) >= SBP(frac_high) at every minute for nested fractions; SBP(0) == SBP_anchor within 1e-9"
+    },
+    "G5": {
+      "regimes": {
+        "HOLD": {
+          "n_dev": 7393,
+          "n_fold2": 6695,
+          "q05": -14.694475412734228,
+          "q95": 25.522414490771855,
+          "coverage_fold2": 0.8915608663181479,
+          "pass": true
+        },
+        "TAPER": {
+          "n_dev": 360,
+          "n_fold2": 374,
+          "q05": -23.790413429305918,
+          "q95": 28.64837404769425,
+          "coverage_fold2": 0.9010695187165776,
+          "pass": true
+        }
+      },
+      "pass": true,
+      "criteria": "empirical 90% band coverage in 88-92% for HOLD and TAPER"
+    },
+    "G6": {
+      "cold_start_n": 284,
+      "cold_start_finite_and_bounded": true,
+      "future_invariance_n": 200,
+      "future_invariance_bitwise_equal": 200,
+      "pass": true,
+      "criteria": "n_prior=0 finite/bounded; future UF records do not change the pre-anchor state bitwise"
+    }
+  },
+  "g2_as_plan_written_pass": false,
+  "plan_floor_gamma_0.25": {
+    "dev": {
+      "n": 12629,
+      "mae": 11.434158296448535,
+      "rmse": 15.04038267770223,
+      "bias": -3.4101773042861154
+    },
+    "fold2": {
+      "n": 12651,
+      "mae": 11.042199983858145,
+      "rmse": 14.729446886186516,
+      "bias": -2.4320845496052863
+    }
+  },
+  "sign_diagnostic": {
+    "dev_grid": [
+      {
+        "n": 12629,
+        "mae": 11.319980751331864,
+        "rmse": 14.873672060442992,
+        "bias": -3.4370056063548957,
+        "gamma": -0.5
+      },
+      {
+        "n": 12629,
+        "mae": 11.34685263616244,
+        "rmse": 14.915929647380489,
+        "bias": -3.4280628389986365,
+        "gamma": -0.25
+      },
+      {
+        "n": 12629,
+        "mae": 11.384885620227742,
+        "rmse": 14.971549265934767,
+        "bias": -3.419120071642376,
+        "gamma": 0.0
+      },
+      {
+        "n": 12629,
+        "mae": 11.434158296448535,
+        "rmse": 15.04038267770223,
+        "bias": -3.4101773042861154,
+        "gamma": 0.25
+      },
+      {
+        "n": 12629,
+        "mae": 11.494579494163139,
+        "rmse": 15.122249444240909,
+        "bias": -3.4012345369298553,
+        "gamma": 0.5
+      },
+      {
+        "n": 12629,
+        "mae": 11.565683055181134,
+        "rmse": 15.216939209600254,
+        "bias": -3.3922917695735957,
+        "gamma": 0.75
+      },
+      {
+        "n": 12629,
+        "mae": 11.64545501366274,
+        "rmse": 15.3242142720663,
+        "bias": -3.383349002217336,
+        "gamma": 1.0
+      },
+      {
+        "n": 12629,
+        "mae": 11.733665060370566,
+        "rmse": 15.443812375719835,
+        "bias": -3.3744062348610755,
+        "gamma": 1.25
+      }
+    ],
+    "best_gamma": -0.5,
+    "best_mae": 11.319980751331864,
+    "note": "The best dev gain is negative; the data support a confounder proxy (the nurse reacts to symptoms), not the plan's positive UF effect. Negative gains are reported only and are never adopted."
+  },
+  "g3_diagnostics": {
+    "gamma_+0.25": {
+      "actual": {
+        "n": 397,
+        "mae": 11.600351644703,
+        "rmse": 16.06402078109647,
+        "bias": 0.28328637123224104
+      },
+      "hold": {
+        "n": 397,
+        "mae": 11.615911907415258,
+        "rmse": 16.007310302803436,
+        "bias": 0.10460332604111879
+      },
+      "mae_delta": -0.015560262712257966
+    },
+    "gamma_-0.25": {
+      "actual": {
+        "n": 397,
+        "mae": 11.552648853328757,
+        "rmse": 15.957403942592618,
+        "bias": -0.5092181126807955
+      },
+      "hold": {
+        "n": 397,
+        "mae": 11.550527722244528,
+        "rmse": 16.01900494277064,
+        "bias": -0.3305350674896733
+      },
+      "mae_delta": 0.0021211310842286224
+    },
+    "gamma_-0.50": {
+      "actual": {
+        "n": 397,
+        "mae": 11.614872063499998,
+        "rmse": 15.9763063114889,
+        "bias": -0.9054703546373134
+      },
+      "hold": {
+        "n": 397,
+        "mae": 11.612927852817359,
+        "rmse": 16.10381691219747,
+        "bias": -0.5481042642550699
+      },
+      "mae_delta": 0.0019442106826392802
+    }
+  },
+  "g4_unit_gain": {
+    "gamma": 1.0,
+    "n_anchors": 12651,
+    "n_pairwise_minute_checks": 3086844,
+    "violations": 0,
+    "continuity_max_abs_error": 0.0,
+    "pass": true,
+    "criteria": "SBP(frac_low) >= SBP(frac_high) at every minute for nested fractions; SBP(0) == SBP_anchor within 1e-9"
+  },
+  "mechanism_status": "REJECTED_ON_DEV",
+  "all_pass": false,
+  "claim_boundary": "Retrospective HEMOBP evaluation only. The ODE correction's calibrated gain is 0; every positive gain worsens MAE and the actual-vs-hold gate fails. The delivered model is a calibrated pre-anchor forecast plus a clearly labelled mechanism illustration \u2014 not a validated counterfactual twin, treatment effect, safety layer, or autonomous prescription. Forecast-v2 is oracle-assisted and is not the fair G2 baseline.",
+  "deviations": [
+    "Reported nadir is the 60-minute bridge endpoint B(60); the raw trajectory minimum is also saved. The plan's min-over-[15,60] identity is false when mu > SBP_anchor, because the nadir label excludes the anchor cuff.",
+    "The bridge baseline is pre-anchor-only (59 features). Forecast-v2's 72 features include the observed future-UF oracle.",
+    "gamma=0 is allowed; the plan's [0.25, 1.25] floor was tested and worsens dev MAE (see plan_floor_gamma_0.25), so it was not adopted.",
+    "beta_vol bound widened to 24 mmHg/L to include the repo's own fitted population value (19.6).",
+    "The FE-2SLS instrument stage is replaced by a within-patient covariate-informed prior plus James-Stein shrinkage; the counterfactual gain is calibrated out-of-fold."
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "protocol_sha256": "9ec625eca753144ae492e60fc359d7cd1cc3fc2d2503c469c33d261973c2fd73",
+  "generated": "2026-11-09",
+  "stage0": {
+    "n_sessions": {
+      "dev": 138828,
+      "fold2": 66285
+    },
+    "n_sessions_with_step": {
+      "dev": 10277,
+      "fold2": 4469
+    },
+    "n1_any_step_sessions": 10277,
+    "n2_pre_window_events": 1340,
+    "n3_stability_events": 649,
+    "n4_matched_events": 581,
+    "n4_patients": 158,
+    "n4a_e1a": 0,
+    "n4b_e1b": 581,
+    "n_control_candidates": 26073,
+    "outcome_availability": {
+      "15": 300,
+      "30": 649,
+      "45": 377
+    },
+    "fold2_events": 65,
+    "fold2_outcome_availability": {
+      "15": 43,
+      "30": 65,
+      "45": 22
+    },
+    "fold2_at_anchor_events": 28,
+    "power": {
+      "sigma": 19.43814131457919,
+      "icc": 0.011862802597828882,
+      "deff": 1.0635185506187546,
+      "se": 0.831647341750126,
+      "mde80": 2.3286125569003526,
+      "n": 581
+    },
+    "stage0_ok": true,
+    "product_power_ok": false,
+    "gates": {
+      "n4_ge_200": true,
+      "patients_ge_50": true,
+      "mde_le_2_5": true,
+      "mde_le_1_5": false
+    }
+  },
+  "temporal_order": {
+    "n_g3_rows": 397,
+    "classes": {
+      "no_cut": 70,
+      "at_anchor_after_drop": 76,
+      "intermediate_no_drop": 5,
+      "at_anchor_no_drop": 234,
+      "intermediate_after_drop": 12
+    },
+    "cuff_density": {
+      "zero": 0,
+      "one": 0,
+      "two_or_more": 397
+    }
+  },
+  "stage": "estimate",
+  "estimates": {
+    "tau30_per_0.25_l_h": {
+      "n": 581,
+      "slope": 0.12690663668778712,
+      "intercept": -0.3048649364032337,
+      "se": 1.22937320163302,
+      "sigma": 19.221438068363724,
+      "n_patients": 158
+    },
+    "tau30_bootstrap": {
+      "ci95": [
+        -2.6318369926950145,
+        3.058308706443948
+      ],
+      "p_le_0": 0.43,
+      "n_boot": 1000
+    },
+    "tau_pre": {
+      "n": 353,
+      "slope": 0.15845031691801878,
+      "intercept": -4.171017216039198,
+      "se": 1.1283159619572023,
+      "sigma": 13.32635568154629,
+      "n_patients": 125
+    },
+    "tau_pre_bootstrap": {
+      "ci95": [
+        -2.4239119368079827,
+        2.3458465443518364
+      ],
+      "p_le_0": 0.456,
+      "n_boot": 1000
+    },
+    "sham": {
+      "mean": 2.909235107507931,
+      "ci95": [
+        2.3081418294299216,
+        3.5388733021403915
+      ],
+      "n_sessions": 5674
+    },
+    "gamma_struct": {
+      "n": 581,
+      "slope": 0.2795481726926105,
+      "intercept": -0.9189199193444932,
+      "se": 0.5796497206105905,
+      "sigma": 19.217742673246686,
+      "n_patients": 158
+    },
+    "gamma_struct_bootstrap": {
+      "ci95": [
+        -1.3168154730049835,
+        1.744898643005971
+      ],
+      "p_le_0": 0.34,
+      "n_boot": 1000
+    },
+    "gamma_plug": 0.06771502456646317,
+    "controls_pass": false
+  },
+  "p6a_fold2_trajectory": {
+    "15": {
+      "status": "INCONCLUSIVE",
+      "n": 43
+    },
+    "30": {
+      "delta_mae": 0.426036158310227,
+      "ci95": [
+        0.1548281989854648,
+        0.6511864276338947
+      ],
+      "n": 65,
+      "n_patients": 38,
+      "pass": false,
+      "status": "FAIL"
+    },
+    "45": {
+      "status": "INCONCLUSIVE",
+      "n": 22
+    }
+  },
+  "p6b_fold2_anchor_fan": {
+    "15": {
+      "status": "INCONCLUSIVE",
+      "n": 20
+    },
+    "30": {
+      "status": "INCONCLUSIVE",
+      "n": 28
+    },
+    "45": {
+      "status": "INCONCLUSIVE",
+      "n": 26
+    }
+  },
+  "verdict": "FAIL",
+  "claim": "The non-reactive step-down experiment did not support a positive effect."
+}

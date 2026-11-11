@@ -1,0 +1,5409 @@
+{
+  "meta": {
+    "product": "HemoTwin",
+    "hook": "Predict the crash. Price the fix.",
+    "generated": "2026-11-06T05:27:10",
+    "dataset": "HEMOBP (Lin et al., Sci Data 2019), CC BY 4.0",
+    "threshold": 0.03937007874015748,
+    "horizon_min": [
+      15,
+      60
+    ],
+    "bp_projection_min": 60,
+    "n_sessions_demo": 8,
+    "band": {
+      "lo": -22.074999999999996,
+      "hi": 14.400000000000006,
+      "median": 3.0999999999999943,
+      "mae": 8.304327375352775,
+      "n": 2126
+    },
+    "policies": [
+      "hold",
+      "taper25",
+      "cool10",
+      "pause"
+    ]
+  },
+  "metrics": {
+    "test": {
+      "auroc": 0.922797605524585,
+      "auroc_ci": [
+        0.9055300523916964,
+        0.9373112733863065
+      ],
+      "auprc": 0.24956633350186092,
+      "prevalence": 0.028047617365502136,
+      "lift": 8.897951303657658,
+      "sens_at_spec90": 0.7206129303106633,
+      "brier": 0.023260721854243063,
+      "n": 169854,
+      "positives": 4764,
+      "threshold": 0.03937007874015748,
+      "sens_at_thr": 0.8492863140218304,
+      "alarm_rate_at_thr": 0.16773228772946178,
+      "ppv_at_thr": 0.142014742014742,
+      "calibration": {
+        "ece": 0.0024010969426015794
+      },
+      "auroc_by_horizon": {
+        "onset_15_30": {
+          "auroc": 0.9333019537748084,
+          "n_pos": 1576
+        },
+        "onset_30_60": {
+          "auroc": 0.9332879434343296,
+          "n_pos": 3188
+        }
+      }
+    },
+    "event_level": {
+      "detected": 1769,
+      "missed": 304,
+      "no_anchor_window": 281,
+      "n_idh_sessions": 2354,
+      "detection_rate_evaluable": 0.8533526290400386,
+      "detection_rate_all_sessions": 0.7514868309260833,
+      "false_alarm_session_rate": 0.18171300913551683,
+      "warn_lo": 15,
+      "warn_hi": 60
+    },
+    "session_ppv": {
+      "sessions_flagged": 6563,
+      "flagged_and_true": 2008,
+      "session_ppv": 0.3059576413225659,
+      "flagged_share": 0.23934211006163159
+    },
+    "baselines": {
+      "r1": {
+        "auroc": 0.7867904469480275,
+        "auroc_ci": [
+          0.7484543506487514,
+          0.8209794072501424
+        ],
+        "auprc": 0.10985617693627342,
+        "prevalence": 0.028047617365502136,
+        "lift": 3.9167739457039854,
+        "sens_at_spec90": 0.42044500419815284
+      },
+      "r2": {
+        "auroc": 0.7380971827238828,
+        "auroc_ci": [
+          0.7144267442661939,
+          0.7590987359171603
+        ],
+        "auprc": 0.06661235486357239,
+        "prevalence": 0.028047617365502136,
+        "lift": 2.3749737453814497,
+        "sens_at_spec90": 0.32472712006717047
+      }
+    },
+    "calibration": {
+      "ece_raw_holdout": 0.2034342761517272,
+      "ece_cal_holdout": 0.000661064874238833,
+      "reliability": [
+        {
+          "bin_mid": 0.05,
+          "predicted": 0.011372902877751499,
+          "observed": 0.011244424252436809,
+          "n": 96848
+        },
+        {
+          "bin_mid": 0.15000000000000002,
+          "predicted": 0.14651034083360434,
+          "observed": 0.14485912376456705,
+          "n": 6779
+        },
+        {
+          "bin_mid": 0.25,
+          "predicted": 0.251366752233658,
+          "observed": 0.25758754863813227,
+          "n": 2570
+        },
+        {
+          "bin_mid": 0.35000000000000003,
+          "predicted": 0.34974745274954405,
+          "observed": 0.3615548455804047,
+          "n": 1878
+        },
+        {
+          "bin_mid": 0.45,
+          "predicted": 0.4789735201467765,
+          "observed": 0.44086021505376344,
+          "n": 186
+        },
+        {
+          "bin_mid": 0.55,
+          "predicted": 0.5517355717426882,
+          "observed": 0.5172413793103449,
+          "n": 29
+        },
+        {
+          "bin_mid": 0.75,
+          "predicted": 0.7010631867715638,
+          "observed": 0.0,
+          "n": 1
+        },
+        {
+          "bin_mid": 0.95,
+          "predicted": 1.0,
+          "observed": 0.5,
+          "n": 2
+        }
+      ],
+      "threshold": 0.03937007874015748
+    },
+    "twin": {
+      "population": {
+        "k_refill": 0.24482758620689657,
+        "beta_bp": 16.15591926161461,
+        "k_iqr": [
+          0.1,
+          1.403448275862069
+        ],
+        "beta_iqr": [
+          7.4772746906962855,
+          32.17021234117819
+        ],
+        "n": 5209
+      },
+      "band": {
+        "lo": -22.074999999999996,
+        "hi": 14.400000000000006,
+        "median": 3.0999999999999943,
+        "mae": 8.304327375352775,
+        "n": 2126
+      },
+      "volume": {
+        "n": 16591,
+        "median_modelled_L": 2.2850000907977424,
+        "median_measured_L": 2.200000000000003,
+        "median_difference_L": 0.07250008595486657,
+        "mae_L": 0.3974105961787494,
+        "within_0_5L_share": 0.7500452052317521,
+        "correlation": 0.7682227716151857
+      }
+    },
+    "twin_benchmark": {
+      "variants": {
+        "v1": {
+          "mae": 10.503229296241704,
+          "bias": 1.9018419882875692,
+          "recall90": 0.35344827586206895,
+          "false90": 0.018722749422928956
+        },
+        "v1c": {
+          "mae": 10.503229296241704,
+          "bias": 1.9018419882875692,
+          "recall90": 0.35344827586206895,
+          "false90": 0.018722749422928956
+        },
+        "rec": {
+          "mae": 17.935230871860895,
+          "bias": 8.320612415309535,
+          "recall90": 0.1896551724137931,
+          "false90": 0.06181072069761477
+        },
+        "blend": {
+          "mae": 17.834748418041162,
+          "bias": 8.663098031181429,
+          "recall90": 0.23275862068965517,
+          "false90": 0.06437548089253654
+        },
+        "trend": {
+          "mae": 8.850175953377253,
+          "bias": -0.5673388948947237,
+          "recall90": 0.3017241379310345,
+          "false90": 0.00615542446781226
+        },
+        "trend_rec": {
+          "mae": 15.85680664821804,
+          "bias": 5.6390242575977885,
+          "recall90": 0.20689655172413793,
+          "false90": 0.03744549884585791
+        },
+        "v2": {
+          "mae": 15.763656997947777,
+          "bias": 5.981509873469683,
+          "recall90": 0.21551724137931033,
+          "false90": 0.038214926904334444
+        }
+      },
+      "chosen": "trend",
+      "band": {
+        "lo": -22.13672004170501,
+        "hi": 17.899561253820526,
+        "coverage": 0.9014925373134328,
+        "n": 4015
+      },
+      "strata": {
+        "new_lt10": {
+          "n": 225,
+          "lo": -15.300883819499386,
+          "hi": 14.089086775576282,
+          "mae": 6.580206197893424,
+          "coverage": 0.9379310344827586
+        },
+        "established_ge10": {
+          "n": 3790,
+          "lo": -22.13672004170501,
+          "hi": 17.941685296224616,
+          "mae": 8.984936690840014,
+          "coverage": 0.8941176470588236
+        }
+      }
+    }
+  },
+  "chairs": [
+    {
+      "session_id": "12776336_2018-06-27",
+      "pid": "12776336",
+      "age": 81.0,
+      "sex": "M",
+      "dm": 0.0,
+      "vintage_years": 9.818,
+      "dry_weight": 65.2,
+      "pre_weight": 69.2,
+      "uf_goal_L": 4.0,
+      "dia_temp_presc": null,
+      "t_now_min": 90.0,
+      "elapsed_min": 235.0,
+      "sbp_now": 102.0,
+      "dbp_now": 48.0,
+      "risk": 0.4966,
+      "label": 1,
+      "session_idh": true,
+      "onset_min": 130.0,
+      "detected": true,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 119.0,
+          "dbp": 54.0,
+          "uf": 0.0,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 1.0,
+          "sbp": 116.0,
+          "dbp": 53.0,
+          "uf": 0.94,
+          "cum_uf": 0.01
+        },
+        {
+          "t": 22.0,
+          "sbp": 102.0,
+          "dbp": 46.0,
+          "uf": 0.94,
+          "cum_uf": 0.34
+        },
+        {
+          "t": 50.0,
+          "sbp": 92.0,
+          "dbp": 45.0,
+          "uf": 0.94,
+          "cum_uf": 0.78
+        },
+        {
+          "t": 57.0,
+          "sbp": 92.0,
+          "dbp": 45.0,
+          "uf": 0.0,
+          "cum_uf": 0.83
+        },
+        {
+          "t": 66.0,
+          "sbp": 114.0,
+          "dbp": 50.0,
+          "uf": 0.9,
+          "cum_uf": 0.83
+        },
+        {
+          "t": 70.0,
+          "sbp": 110.0,
+          "dbp": 45.0,
+          "uf": 0.9,
+          "cum_uf": 0.89
+        },
+        {
+          "t": 90.0,
+          "sbp": 102.0,
+          "dbp": 48.0,
+          "uf": 0.9,
+          "cum_uf": 1.19
+        }
+      ],
+      "forecast": [
+        {
+          "t": 90.0,
+          "sbp": 101.6
+        },
+        {
+          "t": 92.0,
+          "sbp": 100.9
+        },
+        {
+          "t": 94.0,
+          "sbp": 100.2
+        },
+        {
+          "t": 96.0,
+          "sbp": 99.5
+        },
+        {
+          "t": 98.0,
+          "sbp": 98.8
+        },
+        {
+          "t": 100.0,
+          "sbp": 98.1
+        },
+        {
+          "t": 102.0,
+          "sbp": 97.4
+        },
+        {
+          "t": 104.0,
+          "sbp": 96.7
+        },
+        {
+          "t": 106.0,
+          "sbp": 96.1
+        },
+        {
+          "t": 108.0,
+          "sbp": 95.4
+        },
+        {
+          "t": 110.0,
+          "sbp": 94.8
+        },
+        {
+          "t": 112.0,
+          "sbp": 94.2
+        },
+        {
+          "t": 114.0,
+          "sbp": 93.6
+        },
+        {
+          "t": 116.0,
+          "sbp": 93.0
+        },
+        {
+          "t": 118.0,
+          "sbp": 92.4
+        },
+        {
+          "t": 120.0,
+          "sbp": 91.9
+        },
+        {
+          "t": 122.0,
+          "sbp": 91.3
+        },
+        {
+          "t": 124.0,
+          "sbp": 90.7
+        },
+        {
+          "t": 126.0,
+          "sbp": 90.2
+        },
+        {
+          "t": 128.0,
+          "sbp": 89.7
+        },
+        {
+          "t": 130.0,
+          "sbp": 89.1
+        },
+        {
+          "t": 132.0,
+          "sbp": 88.6
+        },
+        {
+          "t": 134.0,
+          "sbp": 88.1
+        },
+        {
+          "t": 136.0,
+          "sbp": 87.6
+        },
+        {
+          "t": 138.0,
+          "sbp": 87.2
+        },
+        {
+          "t": 140.0,
+          "sbp": 86.7
+        },
+        {
+          "t": 142.0,
+          "sbp": 86.2
+        },
+        {
+          "t": 144.0,
+          "sbp": 85.8
+        },
+        {
+          "t": 146.0,
+          "sbp": 85.3
+        },
+        {
+          "t": 148.0,
+          "sbp": 84.9
+        },
+        {
+          "t": 150.0,
+          "sbp": 84.4
+        }
+      ],
+      "twin": {
+        "k_refill": 0.47,
+        "beta_bp": 35.53,
+        "n_prior_sessions": 10,
+        "v_removed_L": 1.19,
+        "v_target_L": 4.0,
+        "innovation_mmHg": -21.2,
+        "n_cuffs": 8
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 84.4,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.78,
+          "fluid_removed_L": 3.22,
+          "uf_rate_Lh": 0.9,
+          "path": [
+            {
+              "t": 90.0,
+              "sbp": 101.6
+            },
+            {
+              "t": 95.0,
+              "sbp": 99.8
+            },
+            {
+              "t": 100.0,
+              "sbp": 98.1
+            },
+            {
+              "t": 105.0,
+              "sbp": 96.4
+            },
+            {
+              "t": 110.0,
+              "sbp": 94.8
+            },
+            {
+              "t": 115.0,
+              "sbp": 93.3
+            },
+            {
+              "t": 120.0,
+              "sbp": 91.9
+            },
+            {
+              "t": 125.0,
+              "sbp": 90.5
+            },
+            {
+              "t": 130.0,
+              "sbp": 89.1
+            },
+            {
+              "t": 135.0,
+              "sbp": 87.9
+            },
+            {
+              "t": 140.0,
+              "sbp": 86.7
+            },
+            {
+              "t": 145.0,
+              "sbp": 85.5
+            },
+            {
+              "t": 150.0,
+              "sbp": 84.4
+            }
+          ],
+          "next_uf_ml_kg_h": 0.3,
+          "lo": 62.3,
+          "hi": 98.8
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 88.8,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 1.29,
+          "fluid_removed_L": 2.71,
+          "uf_rate_Lh": 0.67,
+          "path": [
+            {
+              "t": 90.0,
+              "sbp": 101.7
+            },
+            {
+              "t": 95.0,
+              "sbp": 100.4
+            },
+            {
+              "t": 100.0,
+              "sbp": 99.1
+            },
+            {
+              "t": 105.0,
+              "sbp": 97.8
+            },
+            {
+              "t": 110.0,
+              "sbp": 96.6
+            },
+            {
+              "t": 115.0,
+              "sbp": 95.5
+            },
+            {
+              "t": 120.0,
+              "sbp": 94.4
+            },
+            {
+              "t": 125.0,
+              "sbp": 93.4
+            },
+            {
+              "t": 130.0,
+              "sbp": 92.4
+            },
+            {
+              "t": 135.0,
+              "sbp": 91.4
+            },
+            {
+              "t": 140.0,
+              "sbp": 90.5
+            },
+            {
+              "t": 145.0,
+              "sbp": 89.6
+            },
+            {
+              "t": 150.0,
+              "sbp": 88.8
+            }
+          ],
+          "next_uf_ml_kg_h": 0.3,
+          "lo": 66.7,
+          "hi": 103.2
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 80.9,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.78,
+          "fluid_removed_L": 3.22,
+          "uf_rate_Lh": 0.9,
+          "path": [
+            {
+              "t": 90.0,
+              "sbp": 101.6
+            },
+            {
+              "t": 95.0,
+              "sbp": 98.1
+            },
+            {
+              "t": 100.0,
+              "sbp": 94.6
+            },
+            {
+              "t": 105.0,
+              "sbp": 92.9
+            },
+            {
+              "t": 110.0,
+              "sbp": 91.3
+            },
+            {
+              "t": 115.0,
+              "sbp": 89.8
+            },
+            {
+              "t": 120.0,
+              "sbp": 88.4
+            },
+            {
+              "t": 125.0,
+              "sbp": 87.0
+            },
+            {
+              "t": 130.0,
+              "sbp": 85.6
+            },
+            {
+              "t": 135.0,
+              "sbp": 84.4
+            },
+            {
+              "t": 140.0,
+              "sbp": 83.2
+            },
+            {
+              "t": 145.0,
+              "sbp": 82.0
+            },
+            {
+              "t": 150.0,
+              "sbp": 80.9
+            }
+          ],
+          "next_uf_ml_kg_h": 0.3,
+          "lo": 58.8,
+          "hi": 95.3
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 110.1,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.0,
+          "fluid_removed_L": 4.0,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 90.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 95.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 100.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 105.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 110.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 115.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 120.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 125.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 130.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 135.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 140.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 145.0,
+              "sbp": 110.9
+            },
+            {
+              "t": 150.0,
+              "sbp": 110.1
+            }
+          ],
+          "next_uf_ml_kg_h": 0.3,
+          "lo": 88.0,
+          "hi": 124.5
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 84.4,
+          "fluid_left_L": 0.78
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 85.3,
+          "fluid_left_L": 0.88
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 86.2,
+          "fluid_left_L": 0.98
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 87.1,
+          "fluid_left_L": 1.09
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 87.9,
+          "fluid_left_L": 1.19
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 88.8,
+          "fluid_left_L": 1.29
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 89.7,
+          "fluid_left_L": 1.39
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 90.6,
+          "fluid_left_L": 1.49
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 91.5,
+          "fluid_left_L": 1.59
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 92.3,
+          "fluid_left_L": 1.69
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 93.2,
+          "fluid_left_L": 1.79
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 94.1,
+          "fluid_left_L": 1.89
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 95.0,
+          "fluid_left_L": 1.99
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 95.9,
+          "fluid_left_L": 2.1
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 96.7,
+          "fluid_left_L": 2.2
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 97.6,
+          "fluid_left_L": 2.3
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 98.5,
+          "fluid_left_L": 2.4
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 99.4,
+          "fluid_left_L": 2.5
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 100.2,
+          "fluid_left_L": 2.6
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 101.1,
+          "fluid_left_L": 2.7
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 102.0,
+          "fluid_left_L": 2.8
+        }
+      ],
+      "met": {
+        "taper_frac": 0.35,
+        "nadir": 90.6,
+        "fluid_left_L": 1.49
+      },
+      "delta_nadir": 4.4,
+      "drivers": [
+        {
+          "feature": "hist_idh_rate10",
+          "label": "IDH rate, last 10 sessions",
+          "unit": "",
+          "value": 1.0,
+          "contribution": 0.9147,
+          "direction": "raises"
+        },
+        {
+          "feature": "twin_pred_nadir",
+          "label": "Hold-projected nadir (twin)",
+          "unit": "mmHg",
+          "value": 84.343,
+          "contribution": 0.896,
+          "direction": "raises"
+        },
+        {
+          "feature": "hist_mean_nadir3",
+          "label": "Mean nadir, last 3 sessions",
+          "unit": "mmHg",
+          "value": 75.333,
+          "contribution": 0.7372,
+          "direction": "raises"
+        },
+        {
+          "feature": "sbp_min_120",
+          "label": "sbp min 120",
+          "unit": "",
+          "value": 92.0,
+          "contribution": 0.6325,
+          "direction": "raises"
+        }
+      ],
+      "action": "Holding projects a nadir of 84 mmHg. Minimum effective action: taper UF by 35% now \u2014 projected nadir 91 mmHg, leaving 1.49 L behind. If systolic reaches 90 anyway, give 250 mL (RN) and escalate to the remote nephrologist. If an episode happens anyway: feet up, recheck BP every 5 min, and a standing BP before discharge \u2014 the walk out is a fall risk.",
+      "hist_nadir_typical": 80.5,
+      "hist_early_share": 0.25,
+      "sbp_trend_30": -12.0,
+      "cuff_cadence_min": 9.0,
+      "uf_rate_now_Lh": 0.9,
+      "hold_nadir": 84.4,
+      "triage": "act_now",
+      "chair": 1
+    },
+    {
+      "session_id": "6066588_2016-11-12",
+      "pid": "6066588",
+      "age": 56.0,
+      "sex": "F",
+      "dm": 0.0,
+      "vintage_years": 3.368,
+      "dry_weight": 63.2,
+      "pre_weight": 65.9,
+      "uf_goal_L": 2.7,
+      "dia_temp_presc": 36.6,
+      "t_now_min": 95.0,
+      "elapsed_min": 232.0,
+      "sbp_now": 98.0,
+      "dbp_now": 58.0,
+      "risk": 0.3976,
+      "label": 0,
+      "session_idh": false,
+      "onset_min": null,
+      "detected": true,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 124.0,
+          "dbp": 70.0,
+          "uf": 0.7,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 1.0,
+          "sbp": 129.0,
+          "dbp": 81.0,
+          "uf": 0.7,
+          "cum_uf": 0.01
+        },
+        {
+          "t": 31.0,
+          "sbp": 129.0,
+          "dbp": 81.0,
+          "uf": 1.05,
+          "cum_uf": 0.45
+        },
+        {
+          "t": 32.0,
+          "sbp": 129.0,
+          "dbp": 81.0,
+          "uf": 1.1,
+          "cum_uf": 0.47
+        },
+        {
+          "t": 54.0,
+          "sbp": 101.0,
+          "dbp": 63.0,
+          "uf": 1.1,
+          "cum_uf": 0.87
+        },
+        {
+          "t": 73.0,
+          "sbp": 101.0,
+          "dbp": 63.0,
+          "uf": 1.1,
+          "cum_uf": 1.22
+        },
+        {
+          "t": 84.0,
+          "sbp": 98.0,
+          "dbp": 58.0,
+          "uf": 1.1,
+          "cum_uf": 1.42
+        },
+        {
+          "t": 88.0,
+          "sbp": 98.0,
+          "dbp": 58.0,
+          "uf": 0.84,
+          "cum_uf": 1.48
+        },
+        {
+          "t": 95.0,
+          "sbp": 98.0,
+          "dbp": 58.0,
+          "uf": 0.8,
+          "cum_uf": 1.58
+        }
+      ],
+      "forecast": [
+        {
+          "t": 95.0,
+          "sbp": 97.7
+        },
+        {
+          "t": 97.0,
+          "sbp": 97.2
+        },
+        {
+          "t": 99.0,
+          "sbp": 96.8
+        },
+        {
+          "t": 101.0,
+          "sbp": 96.3
+        },
+        {
+          "t": 103.0,
+          "sbp": 95.8
+        },
+        {
+          "t": 105.0,
+          "sbp": 95.4
+        },
+        {
+          "t": 107.0,
+          "sbp": 95.0
+        },
+        {
+          "t": 109.0,
+          "sbp": 94.6
+        },
+        {
+          "t": 111.0,
+          "sbp": 94.2
+        },
+        {
+          "t": 113.0,
+          "sbp": 93.8
+        },
+        {
+          "t": 115.0,
+          "sbp": 93.4
+        },
+        {
+          "t": 117.0,
+          "sbp": 93.1
+        },
+        {
+          "t": 119.0,
+          "sbp": 92.8
+        },
+        {
+          "t": 121.0,
+          "sbp": 92.4
+        },
+        {
+          "t": 123.0,
+          "sbp": 92.1
+        },
+        {
+          "t": 125.0,
+          "sbp": 91.8
+        },
+        {
+          "t": 127.0,
+          "sbp": 91.6
+        },
+        {
+          "t": 129.0,
+          "sbp": 91.3
+        },
+        {
+          "t": 131.0,
+          "sbp": 91.0
+        },
+        {
+          "t": 133.0,
+          "sbp": 90.8
+        },
+        {
+          "t": 135.0,
+          "sbp": 90.5
+        },
+        {
+          "t": 137.0,
+          "sbp": 90.3
+        },
+        {
+          "t": 139.0,
+          "sbp": 90.1
+        },
+        {
+          "t": 141.0,
+          "sbp": 89.9
+        },
+        {
+          "t": 143.0,
+          "sbp": 89.7
+        },
+        {
+          "t": 145.0,
+          "sbp": 89.6
+        },
+        {
+          "t": 147.0,
+          "sbp": 89.4
+        },
+        {
+          "t": 149.0,
+          "sbp": 89.2
+        },
+        {
+          "t": 151.0,
+          "sbp": 89.1
+        },
+        {
+          "t": 153.0,
+          "sbp": 89.0
+        },
+        {
+          "t": 155.0,
+          "sbp": 88.9
+        }
+      ],
+      "twin": {
+        "k_refill": 0.454,
+        "beta_bp": 27.38,
+        "n_prior_sessions": 1,
+        "v_removed_L": 1.58,
+        "v_target_L": 2.7,
+        "innovation_mmHg": -22.0,
+        "n_cuffs": 9
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 88.9,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.32,
+          "fluid_removed_L": 2.38,
+          "uf_rate_Lh": 0.8,
+          "path": [
+            {
+              "t": 95.0,
+              "sbp": 97.7
+            },
+            {
+              "t": 100.0,
+              "sbp": 96.5
+            },
+            {
+              "t": 105.0,
+              "sbp": 95.4
+            },
+            {
+              "t": 110.0,
+              "sbp": 94.4
+            },
+            {
+              "t": 115.0,
+              "sbp": 93.4
+            },
+            {
+              "t": 120.0,
+              "sbp": 92.6
+            },
+            {
+              "t": 125.0,
+              "sbp": 91.8
+            },
+            {
+              "t": 130.0,
+              "sbp": 91.2
+            },
+            {
+              "t": 135.0,
+              "sbp": 90.5
+            },
+            {
+              "t": 140.0,
+              "sbp": 90.0
+            },
+            {
+              "t": 145.0,
+              "sbp": 89.6
+            },
+            {
+              "t": 150.0,
+              "sbp": 89.2
+            },
+            {
+              "t": 155.0,
+              "sbp": 88.9
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 66.8,
+          "hi": 103.3
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 91.1,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.52,
+          "fluid_removed_L": 2.18,
+          "uf_rate_Lh": 0.6,
+          "path": [
+            {
+              "t": 95.0,
+              "sbp": 97.8
+            },
+            {
+              "t": 100.0,
+              "sbp": 96.9
+            },
+            {
+              "t": 105.0,
+              "sbp": 96.1
+            },
+            {
+              "t": 110.0,
+              "sbp": 95.3
+            },
+            {
+              "t": 115.0,
+              "sbp": 94.6
+            },
+            {
+              "t": 120.0,
+              "sbp": 94.0
+            },
+            {
+              "t": 125.0,
+              "sbp": 93.4
+            },
+            {
+              "t": 130.0,
+              "sbp": 92.9
+            },
+            {
+              "t": 135.0,
+              "sbp": 92.4
+            },
+            {
+              "t": 140.0,
+              "sbp": 92.0
+            },
+            {
+              "t": 145.0,
+              "sbp": 91.7
+            },
+            {
+              "t": 150.0,
+              "sbp": 91.4
+            },
+            {
+              "t": 155.0,
+              "sbp": 91.1
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 69.0,
+          "hi": 105.5
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 85.4,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.32,
+          "fluid_removed_L": 2.38,
+          "uf_rate_Lh": 0.8,
+          "path": [
+            {
+              "t": 95.0,
+              "sbp": 97.7
+            },
+            {
+              "t": 100.0,
+              "sbp": 94.8
+            },
+            {
+              "t": 105.0,
+              "sbp": 91.9
+            },
+            {
+              "t": 110.0,
+              "sbp": 90.9
+            },
+            {
+              "t": 115.0,
+              "sbp": 89.9
+            },
+            {
+              "t": 120.0,
+              "sbp": 89.1
+            },
+            {
+              "t": 125.0,
+              "sbp": 88.3
+            },
+            {
+              "t": 130.0,
+              "sbp": 87.7
+            },
+            {
+              "t": 135.0,
+              "sbp": 87.0
+            },
+            {
+              "t": 140.0,
+              "sbp": 86.5
+            },
+            {
+              "t": 145.0,
+              "sbp": 86.1
+            },
+            {
+              "t": 150.0,
+              "sbp": 85.7
+            },
+            {
+              "t": 155.0,
+              "sbp": 85.4
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 63.3,
+          "hi": 99.8
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 104.6,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.0,
+          "fluid_removed_L": 2.7,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 95.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 100.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 105.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 110.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 115.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 120.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 125.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 130.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 135.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 140.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 145.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 150.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 155.0,
+              "sbp": 104.6
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 82.5,
+          "hi": 119.0
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 88.9,
+          "fluid_left_L": 0.32
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 89.3,
+          "fluid_left_L": 0.36
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 89.8,
+          "fluid_left_L": 0.4
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 90.2,
+          "fluid_left_L": 0.44
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 90.7,
+          "fluid_left_L": 0.48
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 91.1,
+          "fluid_left_L": 0.52
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 91.6,
+          "fluid_left_L": 0.56
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 92.1,
+          "fluid_left_L": 0.6
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 92.5,
+          "fluid_left_L": 0.64
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 93.0,
+          "fluid_left_L": 0.68
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 93.4,
+          "fluid_left_L": 0.72
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 93.9,
+          "fluid_left_L": 0.76
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 94.3,
+          "fluid_left_L": 0.8
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 94.8,
+          "fluid_left_L": 0.84
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 95.3,
+          "fluid_left_L": 0.88
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 95.7,
+          "fluid_left_L": 0.92
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 96.2,
+          "fluid_left_L": 0.96
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 96.6,
+          "fluid_left_L": 1.0
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 97.1,
+          "fluid_left_L": 1.04
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 97.5,
+          "fluid_left_L": 1.08
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 98.0,
+          "fluid_left_L": 1.12
+        }
+      ],
+      "met": {
+        "taper_frac": 0.15,
+        "nadir": 90.2,
+        "fluid_left_L": 0.44
+      },
+      "delta_nadir": 2.2,
+      "drivers": [
+        {
+          "feature": "hist_idh_rate10",
+          "label": "IDH rate, last 10 sessions",
+          "unit": "",
+          "value": 1.0,
+          "contribution": 0.9297,
+          "direction": "raises"
+        },
+        {
+          "feature": "twin_pred_nadir",
+          "label": "Hold-projected nadir (twin)",
+          "unit": "mmHg",
+          "value": 88.764,
+          "contribution": 0.7651,
+          "direction": "raises"
+        },
+        {
+          "feature": "hist_mean_nadir3",
+          "label": "Mean nadir, last 3 sessions",
+          "unit": "mmHg",
+          "value": 84.0,
+          "contribution": 0.5855,
+          "direction": "raises"
+        },
+        {
+          "feature": "beta_pat",
+          "label": "BP sensitivity (patient twin)",
+          "unit": "mmHg/L",
+          "value": 27.066,
+          "contribution": 0.5607,
+          "direction": "raises"
+        }
+      ],
+      "action": "Holding projects a nadir of 89 mmHg. Minimum effective action: taper UF by 15% now \u2014 projected nadir 90 mmHg, leaving 0.44 L behind. If systolic reaches 90 anyway, give 250 mL (RN) and escalate to the remote nephrologist. If an episode happens anyway: feet up, recheck BP every 5 min, and a standing BP before discharge \u2014 the walk out is a fall risk.",
+      "hist_nadir_typical": null,
+      "hist_early_share": null,
+      "sbp_trend_30": -3.0,
+      "cuff_cadence_min": 15.0,
+      "uf_rate_now_Lh": 0.8,
+      "hold_nadir": 88.9,
+      "triage": "act_now",
+      "chair": 2
+    },
+    {
+      "session_id": "45707145_2013-11-26",
+      "pid": "45707145",
+      "age": 58.0,
+      "sex": "F",
+      "dm": 1.0,
+      "vintage_years": 1.405,
+      "dry_weight": 49.5,
+      "pre_weight": 53.25,
+      "uf_goal_L": 3.75,
+      "dia_temp_presc": 36.8,
+      "t_now_min": 143.0,
+      "elapsed_min": 213.0,
+      "sbp_now": 110.0,
+      "dbp_now": 59.0,
+      "risk": 1.0,
+      "label": 1,
+      "session_idh": true,
+      "onset_min": 175.0,
+      "detected": true,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 135.0,
+          "dbp": 66.0,
+          "uf": 1.05,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 1.0,
+          "sbp": 156.0,
+          "dbp": 76.0,
+          "uf": 1.4,
+          "cum_uf": 0.02
+        },
+        {
+          "t": 34.0,
+          "sbp": 156.0,
+          "dbp": 76.0,
+          "uf": 1.3,
+          "cum_uf": 0.76
+        },
+        {
+          "t": 48.0,
+          "sbp": 156.0,
+          "dbp": 76.0,
+          "uf": 1.26,
+          "cum_uf": 1.06
+        },
+        {
+          "t": 67.0,
+          "sbp": 156.0,
+          "dbp": 76.0,
+          "uf": 1.2,
+          "cum_uf": 1.45
+        },
+        {
+          "t": 70.0,
+          "sbp": 118.0,
+          "dbp": 61.0,
+          "uf": 1.19,
+          "cum_uf": 1.51
+        },
+        {
+          "t": 83.0,
+          "sbp": 135.0,
+          "dbp": 68.0,
+          "uf": 1.15,
+          "cum_uf": 1.76
+        },
+        {
+          "t": 98.0,
+          "sbp": 119.0,
+          "dbp": 63.0,
+          "uf": 1.11,
+          "cum_uf": 2.05
+        },
+        {
+          "t": 101.0,
+          "sbp": 119.0,
+          "dbp": 63.0,
+          "uf": 1.1,
+          "cum_uf": 2.1
+        },
+        {
+          "t": 113.0,
+          "sbp": 126.0,
+          "dbp": 64.0,
+          "uf": 1.06,
+          "cum_uf": 2.32
+        },
+        {
+          "t": 128.0,
+          "sbp": 100.0,
+          "dbp": 61.0,
+          "uf": 1.02,
+          "cum_uf": 2.58
+        },
+        {
+          "t": 135.0,
+          "sbp": 100.0,
+          "dbp": 61.0,
+          "uf": 1.0,
+          "cum_uf": 2.69
+        },
+        {
+          "t": 143.0,
+          "sbp": 110.0,
+          "dbp": 59.0,
+          "uf": 0.97,
+          "cum_uf": 2.83
+        }
+      ],
+      "forecast": [
+        {
+          "t": 143.0,
+          "sbp": 109.7
+        },
+        {
+          "t": 145.0,
+          "sbp": 109.1
+        },
+        {
+          "t": 147.0,
+          "sbp": 108.6
+        },
+        {
+          "t": 149.0,
+          "sbp": 108.0
+        },
+        {
+          "t": 151.0,
+          "sbp": 107.5
+        },
+        {
+          "t": 153.0,
+          "sbp": 106.9
+        },
+        {
+          "t": 155.0,
+          "sbp": 106.4
+        },
+        {
+          "t": 157.0,
+          "sbp": 105.8
+        },
+        {
+          "t": 159.0,
+          "sbp": 105.3
+        },
+        {
+          "t": 161.0,
+          "sbp": 104.8
+        },
+        {
+          "t": 163.0,
+          "sbp": 104.2
+        },
+        {
+          "t": 165.0,
+          "sbp": 103.7
+        },
+        {
+          "t": 167.0,
+          "sbp": 103.2
+        },
+        {
+          "t": 169.0,
+          "sbp": 102.7
+        },
+        {
+          "t": 171.0,
+          "sbp": 102.2
+        },
+        {
+          "t": 173.0,
+          "sbp": 101.7
+        },
+        {
+          "t": 175.0,
+          "sbp": 101.2
+        },
+        {
+          "t": 177.0,
+          "sbp": 100.7
+        },
+        {
+          "t": 179.0,
+          "sbp": 100.2
+        },
+        {
+          "t": 181.0,
+          "sbp": 99.8
+        },
+        {
+          "t": 183.0,
+          "sbp": 99.3
+        },
+        {
+          "t": 185.0,
+          "sbp": 98.8
+        },
+        {
+          "t": 187.0,
+          "sbp": 98.4
+        },
+        {
+          "t": 189.0,
+          "sbp": 97.9
+        },
+        {
+          "t": 191.0,
+          "sbp": 97.5
+        },
+        {
+          "t": 193.0,
+          "sbp": 97.0
+        },
+        {
+          "t": 195.0,
+          "sbp": 96.6
+        },
+        {
+          "t": 197.0,
+          "sbp": 96.2
+        },
+        {
+          "t": 199.0,
+          "sbp": 95.7
+        },
+        {
+          "t": 201.0,
+          "sbp": 95.3
+        },
+        {
+          "t": 203.0,
+          "sbp": 94.9
+        }
+      ],
+      "twin": {
+        "k_refill": 0.114,
+        "beta_bp": 25.42,
+        "n_prior_sessions": 47,
+        "v_removed_L": 2.83,
+        "v_target_L": 3.75,
+        "innovation_mmHg": -43.9,
+        "n_cuffs": 13
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 94.9,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.02,
+          "fluid_removed_L": 3.73,
+          "uf_rate_Lh": 0.97,
+          "path": [
+            {
+              "t": 143.0,
+              "sbp": 109.7
+            },
+            {
+              "t": 148.0,
+              "sbp": 108.3
+            },
+            {
+              "t": 153.0,
+              "sbp": 106.9
+            },
+            {
+              "t": 158.0,
+              "sbp": 105.5
+            },
+            {
+              "t": 163.0,
+              "sbp": 104.2
+            },
+            {
+              "t": 168.0,
+              "sbp": 102.9
+            },
+            {
+              "t": 173.0,
+              "sbp": 101.7
+            },
+            {
+              "t": 178.0,
+              "sbp": 100.5
+            },
+            {
+              "t": 183.0,
+              "sbp": 99.3
+            },
+            {
+              "t": 188.0,
+              "sbp": 98.2
+            },
+            {
+              "t": 193.0,
+              "sbp": 97.0
+            },
+            {
+              "t": 198.0,
+              "sbp": 96.0
+            },
+            {
+              "t": 203.0,
+              "sbp": 94.9
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 72.8,
+          "hi": 109.3
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 98.7,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.16,
+          "fluid_removed_L": 3.59,
+          "uf_rate_Lh": 0.73,
+          "path": [
+            {
+              "t": 143.0,
+              "sbp": 109.8
+            },
+            {
+              "t": 148.0,
+              "sbp": 108.7
+            },
+            {
+              "t": 153.0,
+              "sbp": 107.7
+            },
+            {
+              "t": 158.0,
+              "sbp": 106.7
+            },
+            {
+              "t": 163.0,
+              "sbp": 105.7
+            },
+            {
+              "t": 168.0,
+              "sbp": 104.7
+            },
+            {
+              "t": 173.0,
+              "sbp": 103.8
+            },
+            {
+              "t": 178.0,
+              "sbp": 102.9
+            },
+            {
+              "t": 183.0,
+              "sbp": 102.0
+            },
+            {
+              "t": 188.0,
+              "sbp": 101.1
+            },
+            {
+              "t": 193.0,
+              "sbp": 100.3
+            },
+            {
+              "t": 198.0,
+              "sbp": 99.5
+            },
+            {
+              "t": 203.0,
+              "sbp": 98.7
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 76.6,
+          "hi": 113.1
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 91.4,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.02,
+          "fluid_removed_L": 3.73,
+          "uf_rate_Lh": 0.97,
+          "path": [
+            {
+              "t": 143.0,
+              "sbp": 109.7
+            },
+            {
+              "t": 148.0,
+              "sbp": 106.5
+            },
+            {
+              "t": 153.0,
+              "sbp": 103.4
+            },
+            {
+              "t": 158.0,
+              "sbp": 102.0
+            },
+            {
+              "t": 163.0,
+              "sbp": 100.7
+            },
+            {
+              "t": 168.0,
+              "sbp": 99.4
+            },
+            {
+              "t": 173.0,
+              "sbp": 98.2
+            },
+            {
+              "t": 178.0,
+              "sbp": 97.0
+            },
+            {
+              "t": 183.0,
+              "sbp": 95.8
+            },
+            {
+              "t": 188.0,
+              "sbp": 94.7
+            },
+            {
+              "t": 193.0,
+              "sbp": 93.5
+            },
+            {
+              "t": 198.0,
+              "sbp": 92.5
+            },
+            {
+              "t": 203.0,
+              "sbp": 91.4
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 69.3,
+          "hi": 105.8
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 115.2,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.22,
+          "fluid_removed_L": 3.53,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 143.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 148.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 153.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 158.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 163.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 168.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 173.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 178.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 183.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 188.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 193.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 198.0,
+              "sbp": 116.4
+            },
+            {
+              "t": 203.0,
+              "sbp": 115.2
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 93.1,
+          "hi": 129.6
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 94.9,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 95.7,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 96.4,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 97.2,
+          "fluid_left_L": 0.06
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 97.9,
+          "fluid_left_L": 0.11
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 98.7,
+          "fluid_left_L": 0.16
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 99.4,
+          "fluid_left_L": 0.21
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 100.2,
+          "fluid_left_L": 0.26
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 100.9,
+          "fluid_left_L": 0.32
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 101.7,
+          "fluid_left_L": 0.37
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 102.5,
+          "fluid_left_L": 0.42
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 103.2,
+          "fluid_left_L": 0.47
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 104.0,
+          "fluid_left_L": 0.52
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 104.7,
+          "fluid_left_L": 0.57
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 105.5,
+          "fluid_left_L": 0.62
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 106.2,
+          "fluid_left_L": 0.67
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 107.0,
+          "fluid_left_L": 0.72
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 107.7,
+          "fluid_left_L": 0.77
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 108.5,
+          "fluid_left_L": 0.82
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 109.2,
+          "fluid_left_L": 0.87
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 110.0,
+          "fluid_left_L": 0.92
+        }
+      ],
+      "met": {
+        "taper_frac": 0.0,
+        "nadir": 94.9,
+        "fluid_left_L": 0.02
+      },
+      "delta_nadir": 3.8,
+      "drivers": [
+        {
+          "feature": "hist_idh_rate10",
+          "label": "IDH rate, last 10 sessions",
+          "unit": "",
+          "value": 0.9,
+          "contribution": 0.7922,
+          "direction": "raises"
+        },
+        {
+          "feature": "hist_mean_nadir3",
+          "label": "Mean nadir, last 3 sessions",
+          "unit": "mmHg",
+          "value": 80.667,
+          "contribution": 0.6055,
+          "direction": "raises"
+        },
+        {
+          "feature": "twin_pred_nadir",
+          "label": "Hold-projected nadir (twin)",
+          "unit": "mmHg",
+          "value": 95.223,
+          "contribution": 0.5789,
+          "direction": "raises"
+        },
+        {
+          "feature": "beta_pat",
+          "label": "BP sensitivity (patient twin)",
+          "unit": "mmHg/L",
+          "value": 24.823,
+          "contribution": 0.5101,
+          "direction": "raises"
+        }
+      ],
+      "action": "Continue the current prescription. No projected fall below 90 mmHg in the next hour; recheck at the next cuff.",
+      "hist_nadir_typical": 99.0,
+      "hist_early_share": 0.07,
+      "sbp_trend_30": -16.0,
+      "cuff_cadence_min": 11.0,
+      "uf_rate_now_Lh": 0.97,
+      "hold_nadir": 94.9,
+      "triage": "watch",
+      "chair": 3
+    },
+    {
+      "session_id": "31936115_2017-09-08",
+      "pid": "31936115",
+      "age": 76.0,
+      "sex": "M",
+      "dm": 1.0,
+      "vintage_years": 3.524,
+      "dry_weight": 62.6,
+      "pre_weight": 65.1,
+      "uf_goal_L": 2.5,
+      "dia_temp_presc": null,
+      "t_now_min": 135.0,
+      "elapsed_min": 237.0,
+      "sbp_now": 106.0,
+      "dbp_now": 53.0,
+      "risk": 0.3818,
+      "label": 0,
+      "session_idh": false,
+      "onset_min": null,
+      "detected": true,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 139.0,
+          "dbp": 71.0,
+          "uf": 0.0,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 1.0,
+          "sbp": 132.0,
+          "dbp": 63.0,
+          "uf": 0.8,
+          "cum_uf": 0.01
+        },
+        {
+          "t": 58.0,
+          "sbp": 132.0,
+          "dbp": 66.0,
+          "uf": 0.8,
+          "cum_uf": 0.77
+        },
+        {
+          "t": 59.0,
+          "sbp": 125.0,
+          "dbp": 61.0,
+          "uf": 1.0,
+          "cum_uf": 0.78
+        },
+        {
+          "t": 74.0,
+          "sbp": 108.0,
+          "dbp": 59.0,
+          "uf": 1.0,
+          "cum_uf": 1.03
+        },
+        {
+          "t": 88.0,
+          "sbp": 101.0,
+          "dbp": 49.0,
+          "uf": 1.0,
+          "cum_uf": 1.27
+        },
+        {
+          "t": 103.0,
+          "sbp": 97.0,
+          "dbp": 57.0,
+          "uf": 0.0,
+          "cum_uf": 1.52
+        },
+        {
+          "t": 117.0,
+          "sbp": 97.0,
+          "dbp": 57.0,
+          "uf": 0.6,
+          "cum_uf": 1.59
+        },
+        {
+          "t": 118.0,
+          "sbp": 108.0,
+          "dbp": 55.0,
+          "uf": 0.8,
+          "cum_uf": 1.6
+        },
+        {
+          "t": 133.0,
+          "sbp": 102.0,
+          "dbp": 58.0,
+          "uf": 0.8,
+          "cum_uf": 1.8
+        },
+        {
+          "t": 135.0,
+          "sbp": 106.0,
+          "dbp": 53.0,
+          "uf": 0.8,
+          "cum_uf": 1.82
+        }
+      ],
+      "forecast": [
+        {
+          "t": 135.0,
+          "sbp": 105.8
+        },
+        {
+          "t": 137.0,
+          "sbp": 105.5
+        },
+        {
+          "t": 139.0,
+          "sbp": 105.3
+        },
+        {
+          "t": 141.0,
+          "sbp": 105.0
+        },
+        {
+          "t": 143.0,
+          "sbp": 104.7
+        },
+        {
+          "t": 145.0,
+          "sbp": 104.4
+        },
+        {
+          "t": 147.0,
+          "sbp": 104.1
+        },
+        {
+          "t": 149.0,
+          "sbp": 103.9
+        },
+        {
+          "t": 151.0,
+          "sbp": 103.6
+        },
+        {
+          "t": 153.0,
+          "sbp": 103.3
+        },
+        {
+          "t": 155.0,
+          "sbp": 103.1
+        },
+        {
+          "t": 157.0,
+          "sbp": 102.9
+        },
+        {
+          "t": 159.0,
+          "sbp": 102.6
+        },
+        {
+          "t": 161.0,
+          "sbp": 102.4
+        },
+        {
+          "t": 163.0,
+          "sbp": 102.1
+        },
+        {
+          "t": 165.0,
+          "sbp": 101.9
+        },
+        {
+          "t": 167.0,
+          "sbp": 101.7
+        },
+        {
+          "t": 169.0,
+          "sbp": 101.5
+        },
+        {
+          "t": 171.0,
+          "sbp": 101.3
+        },
+        {
+          "t": 173.0,
+          "sbp": 101.1
+        },
+        {
+          "t": 175.0,
+          "sbp": 100.9
+        },
+        {
+          "t": 177.0,
+          "sbp": 100.7
+        },
+        {
+          "t": 179.0,
+          "sbp": 100.5
+        },
+        {
+          "t": 181.0,
+          "sbp": 100.3
+        },
+        {
+          "t": 183.0,
+          "sbp": 100.1
+        },
+        {
+          "t": 185.0,
+          "sbp": 99.9
+        },
+        {
+          "t": 187.0,
+          "sbp": 99.8
+        },
+        {
+          "t": 189.0,
+          "sbp": 99.6
+        },
+        {
+          "t": 191.0,
+          "sbp": 99.4
+        },
+        {
+          "t": 193.0,
+          "sbp": 99.3
+        },
+        {
+          "t": 195.0,
+          "sbp": 99.1
+        }
+      ],
+      "twin": {
+        "k_refill": 0.221,
+        "beta_bp": 16.28,
+        "n_prior_sessions": 534,
+        "v_removed_L": 1.82,
+        "v_target_L": 2.5,
+        "innovation_mmHg": -16.3,
+        "n_cuffs": 11
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 99.1,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.01,
+          "fluid_removed_L": 2.49,
+          "uf_rate_Lh": 0.8,
+          "path": [
+            {
+              "t": 135.0,
+              "sbp": 105.8
+            },
+            {
+              "t": 140.0,
+              "sbp": 105.1
+            },
+            {
+              "t": 145.0,
+              "sbp": 104.4
+            },
+            {
+              "t": 150.0,
+              "sbp": 103.7
+            },
+            {
+              "t": 155.0,
+              "sbp": 103.1
+            },
+            {
+              "t": 160.0,
+              "sbp": 102.5
+            },
+            {
+              "t": 165.0,
+              "sbp": 101.9
+            },
+            {
+              "t": 170.0,
+              "sbp": 101.4
+            },
+            {
+              "t": 175.0,
+              "sbp": 100.9
+            },
+            {
+              "t": 180.0,
+              "sbp": 100.4
+            },
+            {
+              "t": 185.0,
+              "sbp": 99.9
+            },
+            {
+              "t": 190.0,
+              "sbp": 99.5
+            },
+            {
+              "t": 195.0,
+              "sbp": 99.1
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 77.0,
+          "hi": 113.5
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 100.8,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.01,
+          "fluid_removed_L": 2.49,
+          "uf_rate_Lh": 0.6,
+          "path": [
+            {
+              "t": 135.0,
+              "sbp": 105.9
+            },
+            {
+              "t": 140.0,
+              "sbp": 105.3
+            },
+            {
+              "t": 145.0,
+              "sbp": 104.8
+            },
+            {
+              "t": 150.0,
+              "sbp": 104.3
+            },
+            {
+              "t": 155.0,
+              "sbp": 103.8
+            },
+            {
+              "t": 160.0,
+              "sbp": 103.4
+            },
+            {
+              "t": 165.0,
+              "sbp": 102.9
+            },
+            {
+              "t": 170.0,
+              "sbp": 102.5
+            },
+            {
+              "t": 175.0,
+              "sbp": 102.2
+            },
+            {
+              "t": 180.0,
+              "sbp": 101.8
+            },
+            {
+              "t": 185.0,
+              "sbp": 101.5
+            },
+            {
+              "t": 190.0,
+              "sbp": 101.1
+            },
+            {
+              "t": 195.0,
+              "sbp": 100.8
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 78.7,
+          "hi": 115.2
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 95.6,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.01,
+          "fluid_removed_L": 2.49,
+          "uf_rate_Lh": 0.8,
+          "path": [
+            {
+              "t": 135.0,
+              "sbp": 105.8
+            },
+            {
+              "t": 140.0,
+              "sbp": 103.4
+            },
+            {
+              "t": 145.0,
+              "sbp": 100.9
+            },
+            {
+              "t": 150.0,
+              "sbp": 100.2
+            },
+            {
+              "t": 155.0,
+              "sbp": 99.6
+            },
+            {
+              "t": 160.0,
+              "sbp": 99.0
+            },
+            {
+              "t": 165.0,
+              "sbp": 98.4
+            },
+            {
+              "t": 170.0,
+              "sbp": 97.9
+            },
+            {
+              "t": 175.0,
+              "sbp": 97.4
+            },
+            {
+              "t": 180.0,
+              "sbp": 96.9
+            },
+            {
+              "t": 185.0,
+              "sbp": 96.4
+            },
+            {
+              "t": 190.0,
+              "sbp": 96.0
+            },
+            {
+              "t": 195.0,
+              "sbp": 95.6
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 73.5,
+          "hi": 110.0
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 109.9,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.0,
+          "fluid_removed_L": 2.5,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 135.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 140.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 145.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 150.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 155.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 160.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 165.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 170.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 175.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 180.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 185.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 190.0,
+              "sbp": 110.1
+            },
+            {
+              "t": 195.0,
+              "sbp": 109.9
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 87.8,
+          "hi": 124.3
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 99.1,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 99.5,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 99.8,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 100.2,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 100.5,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 100.8,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 101.2,
+          "fluid_left_L": 0.0
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 101.5,
+          "fluid_left_L": 0.05
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 101.9,
+          "fluid_left_L": 0.1
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 102.2,
+          "fluid_left_L": 0.15
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 102.6,
+          "fluid_left_L": 0.2
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 102.9,
+          "fluid_left_L": 0.25
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 103.2,
+          "fluid_left_L": 0.3
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 103.6,
+          "fluid_left_L": 0.34
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 103.9,
+          "fluid_left_L": 0.39
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 104.3,
+          "fluid_left_L": 0.44
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 104.6,
+          "fluid_left_L": 0.49
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 105.0,
+          "fluid_left_L": 0.54
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 105.3,
+          "fluid_left_L": 0.59
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 105.7,
+          "fluid_left_L": 0.64
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 106.0,
+          "fluid_left_L": 0.68
+        }
+      ],
+      "met": {
+        "taper_frac": 0.0,
+        "nadir": 99.1,
+        "fluid_left_L": 0.01
+      },
+      "delta_nadir": 1.7,
+      "drivers": [
+        {
+          "feature": "hist_idh_rate10",
+          "label": "IDH rate, last 10 sessions",
+          "unit": "",
+          "value": 0.5,
+          "contribution": 0.8892,
+          "direction": "raises"
+        },
+        {
+          "feature": "twin_pred_nadir",
+          "label": "Hold-projected nadir (twin)",
+          "unit": "mmHg",
+          "value": 99.125,
+          "contribution": 0.6128,
+          "direction": "raises"
+        },
+        {
+          "feature": "sbp_min_120",
+          "label": "sbp min 120",
+          "unit": "",
+          "value": 97.0,
+          "contribution": 0.5754,
+          "direction": "raises"
+        },
+        {
+          "feature": "hist_mean_nadir3",
+          "label": "Mean nadir, last 3 sessions",
+          "unit": "mmHg",
+          "value": 87.0,
+          "contribution": 0.5386,
+          "direction": "raises"
+        }
+      ],
+      "action": "Continue the current prescription. No projected fall below 90 mmHg in the next hour; recheck at the next cuff.",
+      "hist_nadir_typical": 113.0,
+      "hist_early_share": 0.07,
+      "sbp_trend_30": 9.0,
+      "cuff_cadence_min": 8.0,
+      "uf_rate_now_Lh": 0.8,
+      "hold_nadir": 99.1,
+      "triage": "watch",
+      "chair": 4
+    },
+    {
+      "session_id": "19222098_2014-09-24",
+      "pid": "19222098",
+      "age": 71.0,
+      "sex": "F",
+      "dm": 1.0,
+      "vintage_years": 3.233,
+      "dry_weight": 47.2,
+      "pre_weight": 50.4,
+      "uf_goal_L": 3.2,
+      "dia_temp_presc": 36.9,
+      "t_now_min": 176.0,
+      "elapsed_min": 238.0,
+      "sbp_now": 101.0,
+      "dbp_now": 54.0,
+      "risk": 0.3363,
+      "label": 1,
+      "session_idh": true,
+      "onset_min": 207.0,
+      "detected": true,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 118.0,
+          "dbp": 71.0,
+          "uf": 0.88,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 1.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 0.88,
+          "cum_uf": 0.01
+        },
+        {
+          "t": 5.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 0.88,
+          "cum_uf": 0.07
+        },
+        {
+          "t": 46.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 1.02,
+          "cum_uf": 0.72
+        },
+        {
+          "t": 47.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 1.02,
+          "cum_uf": 0.74
+        },
+        {
+          "t": 59.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 0.32,
+          "cum_uf": 0.94
+        },
+        {
+          "t": 60.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 0.32,
+          "cum_uf": 0.95
+        },
+        {
+          "t": 61.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 0.32,
+          "cum_uf": 0.95
+        },
+        {
+          "t": 62.0,
+          "sbp": 154.0,
+          "dbp": 85.0,
+          "uf": 0.32,
+          "cum_uf": 0.96
+        },
+        {
+          "t": 63.0,
+          "sbp": 159.0,
+          "dbp": 65.0,
+          "uf": 0.32,
+          "cum_uf": 0.96
+        },
+        {
+          "t": 66.0,
+          "sbp": 159.0,
+          "dbp": 65.0,
+          "uf": 0.52,
+          "cum_uf": 0.99
+        },
+        {
+          "t": 67.0,
+          "sbp": 153.0,
+          "dbp": 88.0,
+          "uf": 0.52,
+          "cum_uf": 0.99
+        },
+        {
+          "t": 100.0,
+          "sbp": 101.0,
+          "dbp": 58.0,
+          "uf": 0.52,
+          "cum_uf": 1.28
+        },
+        {
+          "t": 101.0,
+          "sbp": 101.0,
+          "dbp": 58.0,
+          "uf": 0.32,
+          "cum_uf": 1.29
+        },
+        {
+          "t": 112.0,
+          "sbp": 116.0,
+          "dbp": 66.0,
+          "uf": 0.32,
+          "cum_uf": 1.35
+        },
+        {
+          "t": 113.0,
+          "sbp": 116.0,
+          "dbp": 66.0,
+          "uf": 0.52,
+          "cum_uf": 1.35
+        },
+        {
+          "t": 117.0,
+          "sbp": 114.0,
+          "dbp": 59.0,
+          "uf": 0.52,
+          "cum_uf": 1.39
+        },
+        {
+          "t": 132.0,
+          "sbp": 108.0,
+          "dbp": 56.0,
+          "uf": 0.52,
+          "cum_uf": 1.52
+        },
+        {
+          "t": 147.0,
+          "sbp": 110.0,
+          "dbp": 63.0,
+          "uf": 0.52,
+          "cum_uf": 1.65
+        },
+        {
+          "t": 158.0,
+          "sbp": 110.0,
+          "dbp": 63.0,
+          "uf": 0.52,
+          "cum_uf": 1.74
+        },
+        {
+          "t": 161.0,
+          "sbp": 115.0,
+          "dbp": 55.0,
+          "uf": 0.52,
+          "cum_uf": 1.77
+        },
+        {
+          "t": 176.0,
+          "sbp": 101.0,
+          "dbp": 54.0,
+          "uf": 0.52,
+          "cum_uf": 1.9
+        }
+      ],
+      "forecast": [
+        {
+          "t": 176.0,
+          "sbp": 100.9
+        },
+        {
+          "t": 178.0,
+          "sbp": 100.6
+        },
+        {
+          "t": 180.0,
+          "sbp": 100.4
+        },
+        {
+          "t": 182.0,
+          "sbp": 100.2
+        },
+        {
+          "t": 184.0,
+          "sbp": 100.0
+        },
+        {
+          "t": 186.0,
+          "sbp": 99.7
+        },
+        {
+          "t": 188.0,
+          "sbp": 99.5
+        },
+        {
+          "t": 190.0,
+          "sbp": 99.3
+        },
+        {
+          "t": 192.0,
+          "sbp": 99.2
+        },
+        {
+          "t": 194.0,
+          "sbp": 99.0
+        },
+        {
+          "t": 196.0,
+          "sbp": 98.8
+        },
+        {
+          "t": 198.0,
+          "sbp": 98.6
+        },
+        {
+          "t": 200.0,
+          "sbp": 98.4
+        },
+        {
+          "t": 202.0,
+          "sbp": 98.3
+        },
+        {
+          "t": 204.0,
+          "sbp": 98.1
+        },
+        {
+          "t": 206.0,
+          "sbp": 98.0
+        },
+        {
+          "t": 208.0,
+          "sbp": 97.8
+        },
+        {
+          "t": 210.0,
+          "sbp": 97.7
+        },
+        {
+          "t": 212.0,
+          "sbp": 97.5
+        },
+        {
+          "t": 214.0,
+          "sbp": 97.4
+        },
+        {
+          "t": 216.0,
+          "sbp": 97.3
+        },
+        {
+          "t": 218.0,
+          "sbp": 97.1
+        },
+        {
+          "t": 220.0,
+          "sbp": 97.0
+        },
+        {
+          "t": 222.0,
+          "sbp": 96.9
+        },
+        {
+          "t": 224.0,
+          "sbp": 96.8
+        },
+        {
+          "t": 226.0,
+          "sbp": 96.7
+        },
+        {
+          "t": 228.0,
+          "sbp": 96.6
+        },
+        {
+          "t": 230.0,
+          "sbp": 96.4
+        },
+        {
+          "t": 232.0,
+          "sbp": 96.3
+        },
+        {
+          "t": 234.0,
+          "sbp": 96.2
+        },
+        {
+          "t": 236.0,
+          "sbp": 96.2
+        }
+      ],
+      "twin": {
+        "k_refill": 0.944,
+        "beta_bp": 20.28,
+        "n_prior_sessions": 18,
+        "v_removed_L": 1.9,
+        "v_target_L": 3.2,
+        "innovation_mmHg": -7.8,
+        "n_cuffs": 22
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 96.2,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.77,
+          "fluid_removed_L": 2.43,
+          "uf_rate_Lh": 0.52,
+          "path": [
+            {
+              "t": 176.0,
+              "sbp": 100.9
+            },
+            {
+              "t": 181.0,
+              "sbp": 100.3
+            },
+            {
+              "t": 186.0,
+              "sbp": 99.7
+            },
+            {
+              "t": 191.0,
+              "sbp": 99.2
+            },
+            {
+              "t": 196.0,
+              "sbp": 98.8
+            },
+            {
+              "t": 201.0,
+              "sbp": 98.4
+            },
+            {
+              "t": 206.0,
+              "sbp": 98.0
+            },
+            {
+              "t": 211.0,
+              "sbp": 97.6
+            },
+            {
+              "t": 216.0,
+              "sbp": 97.3
+            },
+            {
+              "t": 221.0,
+              "sbp": 96.9
+            },
+            {
+              "t": 226.0,
+              "sbp": 96.7
+            },
+            {
+              "t": 231.0,
+              "sbp": 96.4
+            },
+            {
+              "t": 236.0,
+              "sbp": 96.2
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 74.1,
+          "hi": 110.6
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 97.4,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.9,
+          "fluid_removed_L": 2.3,
+          "uf_rate_Lh": 0.39,
+          "path": [
+            {
+              "t": 176.0,
+              "sbp": 100.9
+            },
+            {
+              "t": 181.0,
+              "sbp": 100.5
+            },
+            {
+              "t": 186.0,
+              "sbp": 100.1
+            },
+            {
+              "t": 191.0,
+              "sbp": 99.7
+            },
+            {
+              "t": 196.0,
+              "sbp": 99.3
+            },
+            {
+              "t": 201.0,
+              "sbp": 99.0
+            },
+            {
+              "t": 206.0,
+              "sbp": 98.7
+            },
+            {
+              "t": 211.0,
+              "sbp": 98.4
+            },
+            {
+              "t": 216.0,
+              "sbp": 98.2
+            },
+            {
+              "t": 221.0,
+              "sbp": 98.0
+            },
+            {
+              "t": 226.0,
+              "sbp": 97.7
+            },
+            {
+              "t": 231.0,
+              "sbp": 97.5
+            },
+            {
+              "t": 236.0,
+              "sbp": 97.4
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 75.3,
+          "hi": 111.8
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 92.7,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.77,
+          "fluid_removed_L": 2.43,
+          "uf_rate_Lh": 0.52,
+          "path": [
+            {
+              "t": 176.0,
+              "sbp": 100.9
+            },
+            {
+              "t": 181.0,
+              "sbp": 98.5
+            },
+            {
+              "t": 186.0,
+              "sbp": 96.2
+            },
+            {
+              "t": 191.0,
+              "sbp": 95.7
+            },
+            {
+              "t": 196.0,
+              "sbp": 95.3
+            },
+            {
+              "t": 201.0,
+              "sbp": 94.9
+            },
+            {
+              "t": 206.0,
+              "sbp": 94.5
+            },
+            {
+              "t": 211.0,
+              "sbp": 94.1
+            },
+            {
+              "t": 216.0,
+              "sbp": 93.8
+            },
+            {
+              "t": 221.0,
+              "sbp": 93.4
+            },
+            {
+              "t": 226.0,
+              "sbp": 93.2
+            },
+            {
+              "t": 231.0,
+              "sbp": 92.9
+            },
+            {
+              "t": 236.0,
+              "sbp": 92.7
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 70.6,
+          "hi": 107.1
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 105.1,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 1.14,
+          "fluid_removed_L": 2.06,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 176.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 181.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 186.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 191.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 196.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 201.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 206.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 211.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 216.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 221.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 226.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 231.0,
+              "sbp": 106.1
+            },
+            {
+              "t": 236.0,
+              "sbp": 105.1
+            }
+          ],
+          "next_uf_ml_kg_h": 0.4,
+          "lo": 83.0,
+          "hi": 119.5
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 96.2,
+          "fluid_left_L": 0.77
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 96.4,
+          "fluid_left_L": 0.8
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 96.6,
+          "fluid_left_L": 0.82
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 96.9,
+          "fluid_left_L": 0.85
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 97.1,
+          "fluid_left_L": 0.88
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 97.4,
+          "fluid_left_L": 0.9
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 97.6,
+          "fluid_left_L": 0.93
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 97.8,
+          "fluid_left_L": 0.96
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 98.1,
+          "fluid_left_L": 0.98
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 98.3,
+          "fluid_left_L": 1.01
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 98.6,
+          "fluid_left_L": 1.04
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 98.8,
+          "fluid_left_L": 1.06
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 99.1,
+          "fluid_left_L": 1.09
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 99.3,
+          "fluid_left_L": 1.12
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 99.5,
+          "fluid_left_L": 1.15
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 99.8,
+          "fluid_left_L": 1.17
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 100.0,
+          "fluid_left_L": 1.2
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 100.3,
+          "fluid_left_L": 1.23
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 100.5,
+          "fluid_left_L": 1.25
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 100.8,
+          "fluid_left_L": 1.28
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 101.0,
+          "fluid_left_L": 1.31
+        }
+      ],
+      "met": {
+        "taper_frac": 0.0,
+        "nadir": 96.2,
+        "fluid_left_L": 0.77
+      },
+      "delta_nadir": 1.2,
+      "drivers": [
+        {
+          "feature": "hist_idh_rate10",
+          "label": "IDH rate, last 10 sessions",
+          "unit": "",
+          "value": 0.3,
+          "contribution": 0.7586,
+          "direction": "raises"
+        },
+        {
+          "feature": "hist_mean_nadir3",
+          "label": "Mean nadir, last 3 sessions",
+          "unit": "mmHg",
+          "value": 77.333,
+          "contribution": 0.6944,
+          "direction": "raises"
+        },
+        {
+          "feature": "twin_pred_nadir",
+          "label": "Hold-projected nadir (twin)",
+          "unit": "mmHg",
+          "value": 96.069,
+          "contribution": 0.6503,
+          "direction": "raises"
+        },
+        {
+          "feature": "beta_pat",
+          "label": "BP sensitivity (patient twin)",
+          "unit": "mmHg/L",
+          "value": 20.203,
+          "contribution": 0.4808,
+          "direction": "raises"
+        }
+      ],
+      "action": "Continue the current prescription. No projected fall below 90 mmHg in the next hour; recheck at the next cuff.",
+      "hist_nadir_typical": 117.5,
+      "hist_early_share": 0.0,
+      "sbp_trend_30": -9.0,
+      "cuff_cadence_min": 4.0,
+      "uf_rate_now_Lh": 0.52,
+      "hold_nadir": 96.2,
+      "triage": "watch",
+      "chair": 5
+    },
+    {
+      "session_id": "38926211_2014-08-04",
+      "pid": "38926211",
+      "age": 64.0,
+      "sex": "M",
+      "dm": 0.0,
+      "vintage_years": 1.503,
+      "dry_weight": 82.9,
+      "pre_weight": 89.0,
+      "uf_goal_L": 6.1,
+      "dia_temp_presc": 36.0,
+      "t_now_min": 100.0,
+      "elapsed_min": 190.0,
+      "sbp_now": 135.0,
+      "dbp_now": 75.0,
+      "risk": 0.0237,
+      "label": 0,
+      "session_idh": false,
+      "onset_min": null,
+      "detected": false,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 149.0,
+          "dbp": 80.0,
+          "uf": 1.31,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 1.0,
+          "sbp": 146.0,
+          "dbp": 81.0,
+          "uf": 1.31,
+          "cum_uf": 0.02
+        },
+        {
+          "t": 11.0,
+          "sbp": 150.0,
+          "dbp": 83.0,
+          "uf": 1.31,
+          "cum_uf": 0.24
+        },
+        {
+          "t": 20.0,
+          "sbp": 150.0,
+          "dbp": 83.0,
+          "uf": 1.5,
+          "cum_uf": 0.45
+        },
+        {
+          "t": 25.0,
+          "sbp": 150.0,
+          "dbp": 83.0,
+          "uf": 1.5,
+          "cum_uf": 0.58
+        },
+        {
+          "t": 40.0,
+          "sbp": 148.0,
+          "dbp": 86.0,
+          "uf": 1.5,
+          "cum_uf": 0.95
+        },
+        {
+          "t": 52.0,
+          "sbp": 141.0,
+          "dbp": 80.0,
+          "uf": 1.5,
+          "cum_uf": 1.25
+        },
+        {
+          "t": 55.0,
+          "sbp": 140.0,
+          "dbp": 76.0,
+          "uf": 1.5,
+          "cum_uf": 1.33
+        },
+        {
+          "t": 70.0,
+          "sbp": 149.0,
+          "dbp": 59.0,
+          "uf": 1.5,
+          "cum_uf": 1.7
+        },
+        {
+          "t": 85.0,
+          "sbp": 144.0,
+          "dbp": 78.0,
+          "uf": 1.5,
+          "cum_uf": 2.08
+        },
+        {
+          "t": 100.0,
+          "sbp": 135.0,
+          "dbp": 75.0,
+          "uf": 1.5,
+          "cum_uf": 2.45
+        }
+      ],
+      "forecast": [
+        {
+          "t": 100.0,
+          "sbp": 134.7
+        },
+        {
+          "t": 102.0,
+          "sbp": 134.2
+        },
+        {
+          "t": 104.0,
+          "sbp": 133.6
+        },
+        {
+          "t": 106.0,
+          "sbp": 133.0
+        },
+        {
+          "t": 108.0,
+          "sbp": 132.5
+        },
+        {
+          "t": 110.0,
+          "sbp": 132.0
+        },
+        {
+          "t": 112.0,
+          "sbp": 131.4
+        },
+        {
+          "t": 114.0,
+          "sbp": 130.9
+        },
+        {
+          "t": 116.0,
+          "sbp": 130.3
+        },
+        {
+          "t": 118.0,
+          "sbp": 129.8
+        },
+        {
+          "t": 120.0,
+          "sbp": 129.3
+        },
+        {
+          "t": 122.0,
+          "sbp": 128.8
+        },
+        {
+          "t": 124.0,
+          "sbp": 128.3
+        },
+        {
+          "t": 126.0,
+          "sbp": 127.8
+        },
+        {
+          "t": 128.0,
+          "sbp": 127.3
+        },
+        {
+          "t": 130.0,
+          "sbp": 126.8
+        },
+        {
+          "t": 132.0,
+          "sbp": 126.3
+        },
+        {
+          "t": 134.0,
+          "sbp": 125.8
+        },
+        {
+          "t": 136.0,
+          "sbp": 125.3
+        },
+        {
+          "t": 138.0,
+          "sbp": 124.8
+        },
+        {
+          "t": 140.0,
+          "sbp": 124.3
+        },
+        {
+          "t": 142.0,
+          "sbp": 123.8
+        },
+        {
+          "t": 144.0,
+          "sbp": 123.4
+        },
+        {
+          "t": 146.0,
+          "sbp": 122.9
+        },
+        {
+          "t": 148.0,
+          "sbp": 122.4
+        },
+        {
+          "t": 150.0,
+          "sbp": 122.0
+        },
+        {
+          "t": 152.0,
+          "sbp": 121.5
+        },
+        {
+          "t": 154.0,
+          "sbp": 121.0
+        },
+        {
+          "t": 156.0,
+          "sbp": 120.6
+        },
+        {
+          "t": 158.0,
+          "sbp": 120.1
+        },
+        {
+          "t": 160.0,
+          "sbp": 119.7
+        }
+      ],
+      "twin": {
+        "k_refill": 0.245,
+        "beta_bp": 16.16,
+        "n_prior_sessions": 0,
+        "v_removed_L": 2.45,
+        "v_target_L": 6.1,
+        "innovation_mmHg": -23.0,
+        "n_cuffs": 11
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 119.7,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 1.4,
+          "fluid_removed_L": 4.7,
+          "uf_rate_Lh": 1.5,
+          "path": [
+            {
+              "t": 100.0,
+              "sbp": 134.7
+            },
+            {
+              "t": 105.0,
+              "sbp": 133.3
+            },
+            {
+              "t": 110.0,
+              "sbp": 132.0
+            },
+            {
+              "t": 115.0,
+              "sbp": 130.6
+            },
+            {
+              "t": 120.0,
+              "sbp": 129.3
+            },
+            {
+              "t": 125.0,
+              "sbp": 128.0
+            },
+            {
+              "t": 130.0,
+              "sbp": 126.8
+            },
+            {
+              "t": 135.0,
+              "sbp": 125.5
+            },
+            {
+              "t": 140.0,
+              "sbp": 124.3
+            },
+            {
+              "t": 145.0,
+              "sbp": 123.1
+            },
+            {
+              "t": 150.0,
+              "sbp": 122.0
+            },
+            {
+              "t": 155.0,
+              "sbp": 120.8
+            },
+            {
+              "t": 160.0,
+              "sbp": 119.7
+            }
+          ],
+          "next_uf_ml_kg_h": 0.5,
+          "lo": 97.6,
+          "hi": 134.1
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 123.5,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 1.96,
+          "fluid_removed_L": 4.14,
+          "uf_rate_Lh": 1.12,
+          "path": [
+            {
+              "t": 100.0,
+              "sbp": 134.8
+            },
+            {
+              "t": 105.0,
+              "sbp": 133.7
+            },
+            {
+              "t": 110.0,
+              "sbp": 132.7
+            },
+            {
+              "t": 115.0,
+              "sbp": 131.7
+            },
+            {
+              "t": 120.0,
+              "sbp": 130.7
+            },
+            {
+              "t": 125.0,
+              "sbp": 129.8
+            },
+            {
+              "t": 130.0,
+              "sbp": 128.8
+            },
+            {
+              "t": 135.0,
+              "sbp": 127.9
+            },
+            {
+              "t": 140.0,
+              "sbp": 127.0
+            },
+            {
+              "t": 145.0,
+              "sbp": 126.1
+            },
+            {
+              "t": 150.0,
+              "sbp": 125.2
+            },
+            {
+              "t": 155.0,
+              "sbp": 124.4
+            },
+            {
+              "t": 160.0,
+              "sbp": 123.5
+            }
+          ],
+          "next_uf_ml_kg_h": 0.5,
+          "lo": 101.4,
+          "hi": 137.9
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 116.2,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 1.4,
+          "fluid_removed_L": 4.7,
+          "uf_rate_Lh": 1.5,
+          "path": [
+            {
+              "t": 100.0,
+              "sbp": 134.7
+            },
+            {
+              "t": 105.0,
+              "sbp": 131.6
+            },
+            {
+              "t": 110.0,
+              "sbp": 128.5
+            },
+            {
+              "t": 115.0,
+              "sbp": 127.1
+            },
+            {
+              "t": 120.0,
+              "sbp": 125.8
+            },
+            {
+              "t": 125.0,
+              "sbp": 124.5
+            },
+            {
+              "t": 130.0,
+              "sbp": 123.3
+            },
+            {
+              "t": 135.0,
+              "sbp": 122.0
+            },
+            {
+              "t": 140.0,
+              "sbp": 120.8
+            },
+            {
+              "t": 145.0,
+              "sbp": 119.6
+            },
+            {
+              "t": 150.0,
+              "sbp": 118.5
+            },
+            {
+              "t": 155.0,
+              "sbp": 117.3
+            },
+            {
+              "t": 160.0,
+              "sbp": 116.2
+            }
+          ],
+          "next_uf_ml_kg_h": 0.5,
+          "lo": 94.1,
+          "hi": 130.6
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 138.3,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 1.62,
+          "fluid_removed_L": 4.48,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 100.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 105.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 110.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 115.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 120.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 125.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 130.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 135.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 140.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 145.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 150.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 155.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 160.0,
+              "sbp": 138.3
+            }
+          ],
+          "next_uf_ml_kg_h": 0.5,
+          "lo": 116.2,
+          "hi": 152.7
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 119.7,
+          "fluid_left_L": 1.4
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 120.5,
+          "fluid_left_L": 1.51
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 121.2,
+          "fluid_left_L": 1.62
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 122.0,
+          "fluid_left_L": 1.74
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 122.8,
+          "fluid_left_L": 1.85
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 123.5,
+          "fluid_left_L": 1.96
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 124.3,
+          "fluid_left_L": 2.07
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 125.1,
+          "fluid_left_L": 2.19
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 125.8,
+          "fluid_left_L": 2.3
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 126.6,
+          "fluid_left_L": 2.41
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 127.4,
+          "fluid_left_L": 2.52
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 128.1,
+          "fluid_left_L": 2.64
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 128.9,
+          "fluid_left_L": 2.75
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 129.6,
+          "fluid_left_L": 2.86
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 130.4,
+          "fluid_left_L": 2.97
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 131.2,
+          "fluid_left_L": 3.09
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 131.9,
+          "fluid_left_L": 3.2
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 132.7,
+          "fluid_left_L": 3.31
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 133.5,
+          "fluid_left_L": 3.42
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 134.2,
+          "fluid_left_L": 3.54
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 135.0,
+          "fluid_left_L": 3.65
+        }
+      ],
+      "met": {
+        "taper_frac": 0.0,
+        "nadir": 119.7,
+        "fluid_left_L": 1.4
+      },
+      "delta_nadir": 3.8,
+      "drivers": [
+        {
+          "feature": "hist_idh_rate10",
+          "label": "IDH rate, last 10 sessions",
+          "unit": "",
+          "value": null,
+          "contribution": 0.7893,
+          "direction": "raises"
+        },
+        {
+          "feature": "uf_ml_kg_h",
+          "label": "Ultrafiltration intensity",
+          "unit": "mL/kg/h",
+          "value": 0.302,
+          "contribution": 0.575,
+          "direction": "raises"
+        },
+        {
+          "feature": "beta_pat",
+          "label": "BP sensitivity (patient twin)",
+          "unit": "mmHg/L",
+          "value": 15.781,
+          "contribution": -0.5589,
+          "direction": "lowers"
+        },
+        {
+          "feature": "hist_mean_nadir3",
+          "label": "Mean nadir, last 3 sessions",
+          "unit": "mmHg",
+          "value": null,
+          "contribution": 0.507,
+          "direction": "raises"
+        }
+      ],
+      "action": "Routine monitoring. Reassess at the next cuff.",
+      "hist_nadir_typical": null,
+      "hist_early_share": null,
+      "sbp_trend_30": -14.0,
+      "cuff_cadence_min": 10.0,
+      "uf_rate_now_Lh": 1.5,
+      "hold_nadir": 119.7,
+      "triage": "stable",
+      "chair": 6
+    },
+    {
+      "session_id": "17803189_2013-07-29",
+      "pid": "17803189",
+      "age": 51.0,
+      "sex": "F",
+      "dm": 0.0,
+      "vintage_years": 9.325,
+      "dry_weight": 48.0,
+      "pre_weight": 50.8,
+      "uf_goal_L": 2.8,
+      "dia_temp_presc": 36.3,
+      "t_now_min": 194.0,
+      "elapsed_min": 238.0,
+      "sbp_now": 127.0,
+      "dbp_now": 69.0,
+      "risk": 0.0237,
+      "label": 0,
+      "session_idh": false,
+      "onset_min": null,
+      "detected": false,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 133.0,
+          "dbp": 68.0,
+          "uf": 0.75,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 1.0,
+          "sbp": 137.0,
+          "dbp": 71.0,
+          "uf": 0.75,
+          "cum_uf": 0.01
+        },
+        {
+          "t": 60.0,
+          "sbp": 137.0,
+          "dbp": 71.0,
+          "uf": 0.75,
+          "cum_uf": 0.75
+        },
+        {
+          "t": 79.0,
+          "sbp": 165.0,
+          "dbp": 79.0,
+          "uf": 0.75,
+          "cum_uf": 0.99
+        },
+        {
+          "t": 134.0,
+          "sbp": 127.0,
+          "dbp": 69.0,
+          "uf": 0.75,
+          "cum_uf": 1.67
+        },
+        {
+          "t": 194.0,
+          "sbp": 127.0,
+          "dbp": 69.0,
+          "uf": 0.75,
+          "cum_uf": 2.42
+        }
+      ],
+      "forecast": [
+        {
+          "t": 194.0,
+          "sbp": 126.9
+        },
+        {
+          "t": 196.0,
+          "sbp": 126.7
+        },
+        {
+          "t": 198.0,
+          "sbp": 126.5
+        },
+        {
+          "t": 200.0,
+          "sbp": 126.4
+        },
+        {
+          "t": 202.0,
+          "sbp": 126.2
+        },
+        {
+          "t": 204.0,
+          "sbp": 126.0
+        },
+        {
+          "t": 206.0,
+          "sbp": 125.8
+        },
+        {
+          "t": 208.0,
+          "sbp": 125.7
+        },
+        {
+          "t": 210.0,
+          "sbp": 125.5
+        },
+        {
+          "t": 212.0,
+          "sbp": 125.3
+        },
+        {
+          "t": 214.0,
+          "sbp": 125.1
+        },
+        {
+          "t": 216.0,
+          "sbp": 125.0
+        },
+        {
+          "t": 218.0,
+          "sbp": 124.8
+        },
+        {
+          "t": 220.0,
+          "sbp": 124.6
+        },
+        {
+          "t": 222.0,
+          "sbp": 124.4
+        },
+        {
+          "t": 224.0,
+          "sbp": 124.5
+        },
+        {
+          "t": 226.0,
+          "sbp": 124.5
+        },
+        {
+          "t": 228.0,
+          "sbp": 124.5
+        },
+        {
+          "t": 230.0,
+          "sbp": 124.5
+        },
+        {
+          "t": 232.0,
+          "sbp": 124.5
+        },
+        {
+          "t": 234.0,
+          "sbp": 124.5
+        },
+        {
+          "t": 236.0,
+          "sbp": 124.5
+        },
+        {
+          "t": 238.0,
+          "sbp": 124.5
+        }
+      ],
+      "twin": {
+        "k_refill": 0.143,
+        "beta_bp": 10.42,
+        "n_prior_sessions": 12,
+        "v_removed_L": 2.42,
+        "v_target_L": 2.8,
+        "innovation_mmHg": -14.2,
+        "n_cuffs": 6
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 124.4,
+          "time_to_nadir_min": 28.0,
+          "fluid_left_L": 0.02,
+          "fluid_removed_L": 2.78,
+          "uf_rate_Lh": 0.75,
+          "path": [
+            {
+              "t": 194.0,
+              "sbp": 126.9
+            },
+            {
+              "t": 199.0,
+              "sbp": 126.5
+            },
+            {
+              "t": 204.0,
+              "sbp": 126.0
+            },
+            {
+              "t": 209.0,
+              "sbp": 125.6
+            },
+            {
+              "t": 214.0,
+              "sbp": 125.1
+            },
+            {
+              "t": 219.0,
+              "sbp": 124.7
+            },
+            {
+              "t": 224.0,
+              "sbp": 124.5
+            },
+            {
+              "t": 229.0,
+              "sbp": 124.5
+            },
+            {
+              "t": 234.0,
+              "sbp": 124.5
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 102.3,
+          "hi": 138.8
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 124.5,
+          "time_to_nadir_min": 38.0,
+          "fluid_left_L": 0.01,
+          "fluid_removed_L": 2.79,
+          "uf_rate_Lh": 0.56,
+          "path": [
+            {
+              "t": 194.0,
+              "sbp": 126.9
+            },
+            {
+              "t": 199.0,
+              "sbp": 126.6
+            },
+            {
+              "t": 204.0,
+              "sbp": 126.3
+            },
+            {
+              "t": 209.0,
+              "sbp": 125.9
+            },
+            {
+              "t": 214.0,
+              "sbp": 125.6
+            },
+            {
+              "t": 219.0,
+              "sbp": 125.3
+            },
+            {
+              "t": 224.0,
+              "sbp": 125.0
+            },
+            {
+              "t": 229.0,
+              "sbp": 124.6
+            },
+            {
+              "t": 234.0,
+              "sbp": 124.5
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 102.4,
+          "hi": 138.9
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 120.9,
+          "time_to_nadir_min": 28.0,
+          "fluid_left_L": 0.02,
+          "fluid_removed_L": 2.78,
+          "uf_rate_Lh": 0.75,
+          "path": [
+            {
+              "t": 194.0,
+              "sbp": 126.9
+            },
+            {
+              "t": 199.0,
+              "sbp": 124.7
+            },
+            {
+              "t": 204.0,
+              "sbp": 122.5
+            },
+            {
+              "t": 209.0,
+              "sbp": 122.1
+            },
+            {
+              "t": 214.0,
+              "sbp": 121.6
+            },
+            {
+              "t": 219.0,
+              "sbp": 121.2
+            },
+            {
+              "t": 224.0,
+              "sbp": 121.0
+            },
+            {
+              "t": 229.0,
+              "sbp": 121.0
+            },
+            {
+              "t": 234.0,
+              "sbp": 121.0
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 98.8,
+          "hi": 135.3
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 129.6,
+          "time_to_nadir_min": 0.0,
+          "fluid_left_L": 0.37,
+          "fluid_removed_L": 2.42,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 194.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 199.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 204.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 209.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 214.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 219.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 224.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 229.0,
+              "sbp": 129.6
+            },
+            {
+              "t": 234.0,
+              "sbp": 129.6
+            }
+          ],
+          "next_uf_ml_kg_h": 0.3,
+          "lo": 107.5,
+          "hi": 144.0
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 124.4,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 124.4,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 124.4,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 124.4,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 124.4,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 124.5,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 124.4,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 124.5,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 124.7,
+          "fluid_left_L": 0.04
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 124.9,
+          "fluid_left_L": 0.07
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 125.1,
+          "fluid_left_L": 0.1
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 125.2,
+          "fluid_left_L": 0.13
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 125.4,
+          "fluid_left_L": 0.15
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 125.6,
+          "fluid_left_L": 0.18
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 125.8,
+          "fluid_left_L": 0.21
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 126.0,
+          "fluid_left_L": 0.24
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 126.2,
+          "fluid_left_L": 0.26
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 126.4,
+          "fluid_left_L": 0.29
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 126.6,
+          "fluid_left_L": 0.32
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 126.8,
+          "fluid_left_L": 0.35
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 127.0,
+          "fluid_left_L": 0.37
+        }
+      ],
+      "met": {
+        "taper_frac": 0.0,
+        "nadir": 124.4,
+        "fluid_left_L": 0.02
+      },
+      "delta_nadir": 0.1,
+      "drivers": [
+        {
+          "feature": "k_pat",
+          "label": "Refill rate (patient twin)",
+          "unit": "/h",
+          "value": 0.128,
+          "contribution": 0.6075,
+          "direction": "raises"
+        },
+        {
+          "feature": "twin_D_now",
+          "label": "Volume deficit state (twin)",
+          "unit": "L",
+          "value": 1.396,
+          "contribution": 0.5191,
+          "direction": "raises"
+        },
+        {
+          "feature": "minutes_to_end",
+          "label": "Minutes to session end",
+          "unit": "min",
+          "value": 44.0,
+          "contribution": 0.4707,
+          "direction": "raises"
+        },
+        {
+          "feature": "uf_ml_kg_h",
+          "label": "Ultrafiltration intensity",
+          "unit": "mL/kg/h",
+          "value": 0.26,
+          "contribution": 0.4289,
+          "direction": "raises"
+        }
+      ],
+      "action": "Routine monitoring. Reassess at the next cuff.",
+      "hist_nadir_typical": 137.5,
+      "hist_early_share": null,
+      "sbp_trend_30": 0.0,
+      "cuff_cadence_min": 19.0,
+      "uf_rate_now_Lh": 0.75,
+      "hold_nadir": 124.4,
+      "triage": "stable",
+      "chair": 7
+    },
+    {
+      "session_id": "20259500_2013-09-03",
+      "pid": "20259500",
+      "age": 26.0,
+      "sex": "M",
+      "dm": 0.0,
+      "vintage_years": 9.09,
+      "dry_weight": 36.4,
+      "pre_weight": 37.8,
+      "uf_goal_L": 1.4,
+      "dia_temp_presc": 36.7,
+      "t_now_min": 49.0,
+      "elapsed_min": 238.0,
+      "sbp_now": 144.0,
+      "dbp_now": 104.0,
+      "risk": 0.0051,
+      "label": 0,
+      "session_idh": false,
+      "onset_min": null,
+      "detected": false,
+      "trajectory": [
+        {
+          "t": 0.0,
+          "sbp": 145.0,
+          "dbp": 94.0,
+          "uf": 0.0,
+          "cum_uf": 0.0
+        },
+        {
+          "t": 49.0,
+          "sbp": 144.0,
+          "dbp": 104.0,
+          "uf": 0.49,
+          "cum_uf": 0.2
+        }
+      ],
+      "forecast": [
+        {
+          "t": 49.0,
+          "sbp": 143.9
+        },
+        {
+          "t": 51.0,
+          "sbp": 143.7
+        },
+        {
+          "t": 53.0,
+          "sbp": 143.5
+        },
+        {
+          "t": 55.0,
+          "sbp": 143.3
+        },
+        {
+          "t": 57.0,
+          "sbp": 143.1
+        },
+        {
+          "t": 59.0,
+          "sbp": 142.9
+        },
+        {
+          "t": 61.0,
+          "sbp": 142.7
+        },
+        {
+          "t": 63.0,
+          "sbp": 142.5
+        },
+        {
+          "t": 65.0,
+          "sbp": 142.2
+        },
+        {
+          "t": 67.0,
+          "sbp": 142.0
+        },
+        {
+          "t": 69.0,
+          "sbp": 141.8
+        },
+        {
+          "t": 71.0,
+          "sbp": 141.5
+        },
+        {
+          "t": 73.0,
+          "sbp": 141.3
+        },
+        {
+          "t": 75.0,
+          "sbp": 141.0
+        },
+        {
+          "t": 77.0,
+          "sbp": 140.7
+        },
+        {
+          "t": 79.0,
+          "sbp": 140.5
+        },
+        {
+          "t": 81.0,
+          "sbp": 140.2
+        },
+        {
+          "t": 83.0,
+          "sbp": 139.9
+        },
+        {
+          "t": 85.0,
+          "sbp": 139.6
+        },
+        {
+          "t": 87.0,
+          "sbp": 139.3
+        },
+        {
+          "t": 89.0,
+          "sbp": 139.0
+        },
+        {
+          "t": 91.0,
+          "sbp": 138.7
+        },
+        {
+          "t": 93.0,
+          "sbp": 138.4
+        },
+        {
+          "t": 95.0,
+          "sbp": 138.1
+        },
+        {
+          "t": 97.0,
+          "sbp": 137.8
+        },
+        {
+          "t": 99.0,
+          "sbp": 137.5
+        },
+        {
+          "t": 101.0,
+          "sbp": 137.2
+        },
+        {
+          "t": 103.0,
+          "sbp": 136.8
+        },
+        {
+          "t": 105.0,
+          "sbp": 136.5
+        },
+        {
+          "t": 107.0,
+          "sbp": 136.2
+        },
+        {
+          "t": 109.0,
+          "sbp": 135.8
+        }
+      ],
+      "twin": {
+        "k_refill": 0.245,
+        "beta_bp": 16.16,
+        "n_prior_sessions": 0,
+        "v_removed_L": 0.2,
+        "v_target_L": 1.4,
+        "innovation_mmHg": -2.2,
+        "n_cuffs": 2
+      },
+      "whatif": [
+        {
+          "policy": "hold",
+          "label": "Hold current UF",
+          "cost": "highest crash risk",
+          "nadir": 135.8,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.02,
+          "fluid_removed_L": 1.38,
+          "uf_rate_Lh": 0.49,
+          "path": [
+            {
+              "t": 49.0,
+              "sbp": 143.9
+            },
+            {
+              "t": 54.0,
+              "sbp": 143.4
+            },
+            {
+              "t": 59.0,
+              "sbp": 142.9
+            },
+            {
+              "t": 64.0,
+              "sbp": 142.3
+            },
+            {
+              "t": 69.0,
+              "sbp": 141.8
+            },
+            {
+              "t": 74.0,
+              "sbp": 141.1
+            },
+            {
+              "t": 79.0,
+              "sbp": 140.5
+            },
+            {
+              "t": 84.0,
+              "sbp": 139.8
+            },
+            {
+              "t": 89.0,
+              "sbp": 139.0
+            },
+            {
+              "t": 94.0,
+              "sbp": 138.3
+            },
+            {
+              "t": 99.0,
+              "sbp": 137.5
+            },
+            {
+              "t": 104.0,
+              "sbp": 136.7
+            },
+            {
+              "t": 109.0,
+              "sbp": 135.8
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 113.7,
+          "hi": 150.2
+        },
+        {
+          "policy": "taper25",
+          "label": "Taper UF by 25%",
+          "cost": "fluid left behind at session end",
+          "nadir": 137.9,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.01,
+          "fluid_removed_L": 1.39,
+          "uf_rate_Lh": 0.37,
+          "path": [
+            {
+              "t": 49.0,
+              "sbp": 143.9
+            },
+            {
+              "t": 54.0,
+              "sbp": 143.6
+            },
+            {
+              "t": 59.0,
+              "sbp": 143.2
+            },
+            {
+              "t": 64.0,
+              "sbp": 142.8
+            },
+            {
+              "t": 69.0,
+              "sbp": 142.3
+            },
+            {
+              "t": 74.0,
+              "sbp": 141.8
+            },
+            {
+              "t": 79.0,
+              "sbp": 141.3
+            },
+            {
+              "t": 84.0,
+              "sbp": 140.8
+            },
+            {
+              "t": 89.0,
+              "sbp": 140.3
+            },
+            {
+              "t": 94.0,
+              "sbp": 139.7
+            },
+            {
+              "t": 99.0,
+              "sbp": 139.1
+            },
+            {
+              "t": 104.0,
+              "sbp": 138.5
+            },
+            {
+              "t": 109.0,
+              "sbp": 137.9
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 115.8,
+          "hi": 152.3
+        },
+        {
+          "policy": "cool10",
+          "label": "Cool dialysate \u22121.0 \u00b0C",
+          "cost": "cold discomfort (shivering RR 8.3, Cochrane 2019); IDH rate ratio 0.67 (0.48-0.93, 2025 meta); not for patients who shiver",
+          "nadir": 132.3,
+          "time_to_nadir_min": 60.0,
+          "fluid_left_L": 0.02,
+          "fluid_removed_L": 1.38,
+          "uf_rate_Lh": 0.49,
+          "path": [
+            {
+              "t": 49.0,
+              "sbp": 143.9
+            },
+            {
+              "t": 54.0,
+              "sbp": 141.7
+            },
+            {
+              "t": 59.0,
+              "sbp": 139.4
+            },
+            {
+              "t": 64.0,
+              "sbp": 138.8
+            },
+            {
+              "t": 69.0,
+              "sbp": 138.3
+            },
+            {
+              "t": 74.0,
+              "sbp": 137.6
+            },
+            {
+              "t": 79.0,
+              "sbp": 137.0
+            },
+            {
+              "t": 84.0,
+              "sbp": 136.3
+            },
+            {
+              "t": 89.0,
+              "sbp": 135.5
+            },
+            {
+              "t": 94.0,
+              "sbp": 134.8
+            },
+            {
+              "t": 99.0,
+              "sbp": 134.0
+            },
+            {
+              "t": 104.0,
+              "sbp": 133.2
+            },
+            {
+              "t": 109.0,
+              "sbp": 132.3
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 110.2,
+          "hi": 146.7
+        },
+        {
+          "policy": "pause",
+          "label": "Stop UF + 250 mL fluid",
+          "cost": "largest fluid deficit; saline bolus adds intake",
+          "nadir": 146.2,
+          "time_to_nadir_min": 0.0,
+          "fluid_left_L": 0.0,
+          "fluid_removed_L": 1.4,
+          "uf_rate_Lh": 0.0,
+          "path": [
+            {
+              "t": 49.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 54.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 59.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 64.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 69.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 74.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 79.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 84.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 89.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 94.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 99.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 104.0,
+              "sbp": 146.2
+            },
+            {
+              "t": 109.0,
+              "sbp": 146.2
+            }
+          ],
+          "next_uf_ml_kg_h": 0.2,
+          "lo": 124.1,
+          "hi": 160.6
+        }
+      ],
+      "sweep": [
+        {
+          "taper_frac": 0.0,
+          "nadir": 135.8,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.05,
+          "nadir": 136.2,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.1,
+          "nadir": 136.6,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.15,
+          "nadir": 137.0,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.2,
+          "nadir": 137.5,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.25,
+          "nadir": 137.9,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.3,
+          "nadir": 138.3,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.35,
+          "nadir": 138.7,
+          "fluid_left_L": 0.0
+        },
+        {
+          "taper_frac": 0.4,
+          "nadir": 139.1,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.45,
+          "nadir": 139.5,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.5,
+          "nadir": 139.9,
+          "fluid_left_L": 0.02
+        },
+        {
+          "taper_frac": 0.55,
+          "nadir": 140.3,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.6,
+          "nadir": 140.7,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.65,
+          "nadir": 141.1,
+          "fluid_left_L": 0.0
+        },
+        {
+          "taper_frac": 0.7,
+          "nadir": 141.5,
+          "fluid_left_L": 0.01
+        },
+        {
+          "taper_frac": 0.75,
+          "nadir": 142.0,
+          "fluid_left_L": 0.07
+        },
+        {
+          "taper_frac": 0.8,
+          "nadir": 142.4,
+          "fluid_left_L": 0.3
+        },
+        {
+          "taper_frac": 0.85,
+          "nadir": 142.8,
+          "fluid_left_L": 0.52
+        },
+        {
+          "taper_frac": 0.9,
+          "nadir": 143.2,
+          "fluid_left_L": 0.75
+        },
+        {
+          "taper_frac": 0.95,
+          "nadir": 143.6,
+          "fluid_left_L": 0.97
+        },
+        {
+          "taper_frac": 1.0,
+          "nadir": 144.0,
+          "fluid_left_L": 1.2
+        }
+      ],
+      "met": {
+        "taper_frac": 0.0,
+        "nadir": 135.8,
+        "fluid_left_L": 0.02
+      },
+      "delta_nadir": 2.1,
+      "drivers": [
+        {
+          "feature": "hist_idh_rate10",
+          "label": "IDH rate, last 10 sessions",
+          "unit": "",
+          "value": null,
+          "contribution": 0.8352,
+          "direction": "raises"
+        },
+        {
+          "feature": "hist_mean_nadir3",
+          "label": "Mean nadir, last 3 sessions",
+          "unit": "mmHg",
+          "value": null,
+          "contribution": 0.6077,
+          "direction": "raises"
+        },
+        {
+          "feature": "blood_flow",
+          "label": "Blood flow",
+          "unit": "mL/min",
+          "value": 200.0,
+          "contribution": 0.5403,
+          "direction": "raises"
+        },
+        {
+          "feature": "beta_pat",
+          "label": "BP sensitivity (patient twin)",
+          "unit": "mmHg/L",
+          "value": 15.781,
+          "contribution": -0.4929,
+          "direction": "lowers"
+        }
+      ],
+      "action": "Routine monitoring. Reassess at the next cuff.",
+      "hist_nadir_typical": null,
+      "hist_early_share": null,
+      "sbp_trend_30": 0.0,
+      "cuff_cadence_min": 22.0,
+      "uf_rate_now_Lh": 0.49,
+      "hold_nadir": 135.8,
+      "triage": "stable",
+      "chair": 8
+    }
+  ]
+}

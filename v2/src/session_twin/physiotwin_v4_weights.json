@@ -1,0 +1,272 @@
+{
+  "version": "physiotwin-v4.1-v1",
+  "features": [
+    "sbp_now",
+    "dbp_now",
+    "map_now",
+    "sbp_mean_15",
+    "sbp_min_15",
+    "sbp_slope_15",
+    "sbp_mean_30",
+    "sbp_min_30",
+    "sbp_slope_30",
+    "sbp_mean_60",
+    "sbp_min_60",
+    "sbp_slope_60",
+    "sbp_mean_120",
+    "sbp_min_120",
+    "sbp_slope_120",
+    "sbp_drop_from_max",
+    "n_bp_so_far",
+    "uf_Lh",
+    "blood_flow",
+    "conductivity",
+    "dia_temp",
+    "cum_uf_L",
+    "age",
+    "sex_M",
+    "dm",
+    "vintage_years",
+    "dry_weight",
+    "pre_weight",
+    "uf_goal_L",
+    "elapsed_min",
+    "uf_ml_kg_h",
+    "frac_uf_done",
+    "uf_slope_15",
+    "uf_slope_30",
+    "uf_var_30",
+    "uf_over13",
+    "cond_dev",
+    "temp_dev",
+    "sbp_std_30",
+    "sbp_std_60",
+    "pulse_pressure",
+    "map_slope_30",
+    "gap_since_last",
+    "n_bp_60",
+    "month",
+    "k_pat",
+    "beta_pat",
+    "twin_D_now",
+    "twin_refill_Lh",
+    "twin_refill_ratio",
+    "twin_pred_nadir",
+    "hist_idh_rate10",
+    "hist_mean_nadir3",
+    "hist_mean_nadir10",
+    "hist_prev_nadir",
+    "hist_mean_first_sbp3",
+    "hist_early_crash10",
+    "hist_last_idh",
+    "hist_n_sessions"
+  ],
+  "n_features": 59,
+  "kappa": 10.0,
+  "gamma_orth": 0.0,
+  "calibration_status": "NEGATIVE_ON_DEV",
+  "mechanism_sign_supported": false,
+  "display_gain_uncalibrated": 1.0,
+  "sign_best_gamma_dev": -0.5,
+  "beta_bounds": {
+    "beta_vol_mmHg_per_l": [
+      4.5,
+      24.0
+    ],
+    "beta_baro_mmHg": [
+      6.0,
+      28.0
+    ]
+  },
+  "constants": {
+    "tau_refill_min": 22.0,
+    "tau_baro_h": 0.5,
+    "tau_rec_h": 1.0,
+    "r_base_ml_kg_h": 4.3,
+    "r_oh_ml_kg_h_per_l": 2.8,
+    "v_b0_l_per_kg": 0.075
+  },
+  "conformal": {
+    "HOLD": {
+      "n_dev": 7393,
+      "n_fold2": 6695,
+      "q05": -14.694475412734228,
+      "q95": 25.522414490771855,
+      "coverage_fold2": 0.8915608663181479,
+      "pass": true
+    },
+    "TAPER": {
+      "n_dev": 360,
+      "n_fold2": 374,
+      "q05": -23.790413429305918,
+      "q95": 28.64837404769425,
+      "coverage_fold2": 0.9010695187165776,
+      "pass": true
+    }
+  },
+  "gate_summary": {
+    "G1": true,
+    "G2": true,
+    "G3": false,
+    "G4": true,
+    "G5": true,
+    "G6": true
+  },
+  "g2_as_plan_written_pass": false,
+  "plan_floor_gamma_0.25": {
+    "dev": {
+      "n": 12629,
+      "mae": 11.434158296448535,
+      "rmse": 15.04038267770223,
+      "bias": -3.4101773042861154
+    },
+    "fold2": {
+      "n": 12651,
+      "mae": 11.042199983858145,
+      "rmse": 14.729446886186516,
+      "bias": -2.4320845496052863
+    }
+  },
+  "fold2_confirmation": {
+    "G1": {
+      "n_taper": 374,
+      "v4": {
+        "n": 374,
+        "mae": 11.594909211884882,
+        "rmse": 16.007205963135895,
+        "bias": -0.31177913406551555
+      },
+      "v3": {
+        "n": 374,
+        "mae": 15.550072636002879,
+        "rmse": 23.289222607533198,
+        "bias": 9.690752651456812
+      },
+      "mae_ratio_v4_over_v3": 0.7456498424990853,
+      "pass": true,
+      "criteria": "MAE_v4 <= 0.80*MAE_v3 and |bias_v4| <= 3.0"
+    },
+    "G2": {
+      "dev_eval": {
+        "n": 12629,
+        "v4": {
+          "n": 12629,
+          "mae": 11.384885620227742,
+          "rmse": 14.971549265934767,
+          "bias": -3.419120071642376
+        },
+        "base": {
+          "n": 12629,
+          "mae": 11.384885620227742,
+          "rmse": 14.971549265934767,
+          "bias": -3.419120071642376
+        },
+        "oracle_forecast_v2": {
+          "n": 12629,
+          "mae": 9.29359502369034,
+          "rmse": 12.643257423759751,
+          "bias": -0.3532869204054768
+        },
+        "mae_delta_vs_base": 0.0,
+        "rmse_delta_vs_base": 0.0,
+        "pass_vs_base": true,
+        "pass_vs_oracle_forecast_v2": false
+      },
+      "fold2": {
+        "n": 12651,
+        "v4": {
+          "n": 12651,
+          "mae": 10.985512866875297,
+          "rmse": 14.652341491477461,
+          "bias": -2.416892938456691
+        },
+        "base": {
+          "n": 12651,
+          "mae": 10.985512866875297,
+          "rmse": 14.652341491477461,
+          "bias": -2.416892938456691
+        },
+        "oracle_forecast_v2": {
+          "n": 12651,
+          "mae": 9.600822913300828,
+          "rmse": 13.153030423656459,
+          "bias": 0.15080386611173277
+        },
+        "mae_delta_vs_base": 0.0,
+        "rmse_delta_vs_base": 0.0,
+        "pass_vs_base": true,
+        "pass_vs_oracle_forecast_v2": false
+      },
+      "pass": true,
+      "criteria": "MAE and RMSE <= the pre-anchor baseline on dev-eval and fold 2; Forecast-v2 is reported separately because its 72 features include the future-UF oracle",
+      "pass_as_plan_written": false
+    },
+    "G3": {
+      "n_intervention": 397,
+      "actual": {
+        "n": 397,
+        "mae": 11.543483570374928,
+        "rmse": 15.986730143655505,
+        "bias": -0.11296587072427738
+      },
+      "hold": {
+        "n": 397,
+        "mae": 11.543483570374928,
+        "rmse": 15.986730143655505,
+        "bias": -0.11296587072427738
+      },
+      "bootstrap": {
+        "delta_mae": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "p_delta_lt_0": 0.0,
+        "n_boot": 1000,
+        "n_patients": 96
+      },
+      "pass": false,
+      "criteria": "MAE(actual) < MAE(hold) and patient-clustered 95% CI of the paired delta upper bound < 0"
+    },
+    "G4": {
+      "gamma": 0.0,
+      "n_anchors": 12651,
+      "n_pairwise_minute_checks": 3086844,
+      "violations": 0,
+      "continuity_max_abs_error": 0.0,
+      "pass": true,
+      "criteria": "SBP(frac_low) >= SBP(frac_high) at every minute for nested fractions; SBP(0) == SBP_anchor within 1e-9"
+    },
+    "G5": {
+      "regimes": {
+        "HOLD": {
+          "n_dev": 7393,
+          "n_fold2": 6695,
+          "q05": -14.694475412734228,
+          "q95": 25.522414490771855,
+          "coverage_fold2": 0.8915608663181479,
+          "pass": true
+        },
+        "TAPER": {
+          "n_dev": 360,
+          "n_fold2": 374,
+          "q05": -23.790413429305918,
+          "q95": 28.64837404769425,
+          "coverage_fold2": 0.9010695187165776,
+          "pass": true
+        }
+      },
+      "pass": true,
+      "criteria": "empirical 90% band coverage in 88-92% for HOLD and TAPER"
+    },
+    "G6": {
+      "cold_start_n": 284,
+      "cold_start_finite_and_bounded": true,
+      "future_invariance_n": 200,
+      "future_invariance_bitwise_equal": 200,
+      "pass": true,
+      "criteria": "n_prior=0 finite/bounded; future UF records do not change the pre-anchor state bitwise"
+    }
+  },
+  "claim_boundary": "Retrospective HEMOBP evaluation only. The ODE correction's calibrated gain is 0; every positive gain worsens MAE and the actual-vs-hold gate fails. The delivered model is a calibrated pre-anchor forecast plus a clearly labelled mechanism illustration \u2014 not a validated counterfactual twin, treatment effect, safety layer, or autonomous prescription. Forecast-v2 is oracle-assisted and is not the fair G2 baseline."
+}

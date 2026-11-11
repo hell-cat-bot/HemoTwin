@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="arch-title arch-desc">
+  <title id="arch-title">HemoTwin V2 system map</title>
+  <desc id="arch-desc">HEMOBP data flows through causal feature blocks to a fair pre-anchor forecast, then into a four-view console that drives protocol review, fluid arithmetic, and handoff; a separate evidence lane records gates and the claim boundary.</desc>
+  <defs>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#1E3A4A" stroke-width="1" opacity=".28"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#93A4B8"/>
+    </marker>
+    <marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#22D3EE"/>
+    </marker>
+    <marker id="arrow-violet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#A78BFA"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="720" fill="#050A12"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+
+  <text x="60" y="58" fill="#22D3EE" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="11" font-weight="700" letter-spacing="3">HEMOTWIN V2</text>
+  <text x="60" y="98" fill="#F4F8FB" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="34" font-weight="700">System map</text>
+  <text x="60" y="126" fill="#93A4B8" font-family="Segoe UI, sans-serif" font-size="13">One console. Three views. One honest boundary.</text>
+
+  <!-- connectors first -->
+  <path d="M290 215H330" stroke="#93A4B8" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M590 215H630" stroke="#93A4B8" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M880 215H920" stroke="#22D3EE" stroke-width="1.8" marker-end="url(#arrow-cyan)"/>
+  <path d="M1070 270V305H755V340" fill="none" stroke="#22D3EE" stroke-width="1.8" marker-end="url(#arrow-cyan)"/>
+  <path d="M880 395H920" stroke="#2DD4BF" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <path d="M630 240H590V565H630" fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrow-violet)"/>
+  <path d="M630 575H670" stroke="#A78BFA" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrow-violet)"/>
+
+  <!-- data -->
+  <rect x="60" y="160" width="230" height="110" rx="8" fill="#0B1524" stroke="#1E3A4A"/>
+  <text x="80" y="186" fill="#93A4B8" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">DATA</text>
+  <text x="80" y="212" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">HEMOBP cohort</text>
+  <text x="80" y="234" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">205,482 sessions · 1,070 patients</text>
+  <text x="80" y="252" fill="#67E8F9" font-family="Segoe UI, sans-serif" font-size="10">CC BY 4.0 · fold 2 untouched</text>
+
+  <!-- features -->
+  <rect x="330" y="160" width="260" height="110" rx="8" fill="#0B1524" stroke="#1E3A4A"/>
+  <text x="350" y="186" fill="#93A4B8" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">FEATURES</text>
+  <text x="350" y="212" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">Causal blocks</text>
+  <text x="350" y="234" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">Static EHR · patient memory</text>
+  <text x="350" y="252" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">Telemetry · latent twin state</text>
+
+  <!-- forecast -->
+  <rect x="630" y="160" width="250" height="110" rx="8" fill="#0B1524" stroke="#22D3EE" stroke-width="1.4"/>
+  <text x="650" y="186" fill="#67E8F9" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">FORECAST</text>
+  <text x="650" y="212" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">Fair pre-anchor model</text>
+  <text x="650" y="234" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">59 features · no future-UF oracle</text>
+  <text x="650" y="252" fill="#67E8F9" font-family="Segoe UI, sans-serif" font-size="11">Fold-2 MAE 10.99 · RMSE 14.65</text>
+
+  <!-- console -->
+  <rect x="920" y="160" width="300" height="110" rx="8" fill="#0B1524" stroke="#22D3EE" stroke-width="1.4"/>
+  <text x="940" y="186" fill="#67E8F9" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">CONSOLE</text>
+  <text x="940" y="212" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">Three views</text>
+  <text x="940" y="234" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">Case lab · Live session · Replay</text>
+  <text x="940" y="252" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">Evidence &amp; handoff</text>
+
+  <!-- protocol -->
+  <rect x="630" y="340" width="250" height="110" rx="8" fill="#0B1524" stroke="#2DD4BF" stroke-width="1.2"/>
+  <text x="650" y="366" fill="#6EE7B7" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">DECISION SUPPORT</text>
+  <text x="650" y="392" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">Protocol + arithmetic</text>
+  <text x="650" y="414" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">Measured rules · role-scoped steps</text>
+  <text x="650" y="432" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">Exact fluid left · next-session UF</text>
+
+  <!-- handoff -->
+  <rect x="920" y="340" width="300" height="110" rx="8" fill="#0B1524" stroke="#A78BFA" stroke-width="1.2"/>
+  <text x="940" y="366" fill="#C4B5FD" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">HANDOFF</text>
+  <text x="940" y="392" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">FHIR · bilingual · audit</text>
+  <text x="940" y="414" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">Local R4 bundle · English / हिन्दी</text>
+  <text x="940" y="432" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">SHA-256 chain · demo-only</text>
+
+  <!-- gates -->
+  <rect x="330" y="520" width="300" height="110" rx="8" fill="#0B1524" stroke="#A78BFA" stroke-width="1.2"/>
+  <text x="350" y="546" fill="#C4B5FD" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">EVIDENCE</text>
+  <text x="350" y="572" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">G1–G7 pre-registered</text>
+  <text x="350" y="594" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">5 gate booleans pass · G7 fails</text>
+  <rect x="350" y="604" width="72" height="18" rx="4" fill="#2A1018" stroke="#FB7185"/>
+  <text x="386" y="617" fill="#FDA4AF" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="1">G7 FAIL</text>
+
+  <!-- boundary -->
+  <rect x="670" y="520" width="550" height="110" rx="8" fill="#0B1524" stroke="#FB7185" stroke-width="1.2"/>
+  <text x="690" y="546" fill="#FDA4AF" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="10" letter-spacing="1.5">CLAIM BOUNDARY</text>
+  <text x="690" y="572" fill="#F4F8FB" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">What we refuse to claim</text>
+  <text x="690" y="594" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">No validated treatment effect · no recommendation</text>
+  <text x="690" y="612" fill="#B8C6D9" font-family="Segoe UI, sans-serif" font-size="11">No alert utility · no prescription · no machine control</text>
+
+  <!-- legend -->
+  <circle cx="62" cy="675" r="4" fill="#22D3EE"/>
+  <text x="74" y="679" fill="#93A4B8" font-family="Segoe UI, sans-serif" font-size="10">validated surface</text>
+  <circle cx="200" cy="675" r="4" fill="#A78BFA"/>
+  <text x="212" y="679" fill="#93A4B8" font-family="Segoe UI, sans-serif" font-size="10">evidence / handoff</text>
+  <circle cx="338" cy="675" r="4" fill="#FB7185"/>
+  <text x="350" y="679" fill="#93A4B8" font-family="Segoe UI, sans-serif" font-size="10">boundary / failure</text>
+  <text x="1180" y="679" fill="#93A4B8" font-family="Segoe UI, sans-serif" font-size="10" text-anchor="end">Research prototype · not a medical device</text>
+</svg>

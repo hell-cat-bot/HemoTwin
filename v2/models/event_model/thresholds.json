@@ -1,0 +1,137 @@
+{
+  "fold_0_full": {
+    "threshold": 0.9815933714359402,
+    "selection": "budgeted",
+    "inner_detection": 0.10500247647350174,
+    "inner_burden": 0.24555502162421913,
+    "candidates": 102,
+    "n_event": 2019,
+    "n_sessions": 14567
+  },
+  "fold_0_universal": {
+    "threshold": 0.9802879086915192,
+    "selection": "budgeted",
+    "inner_detection": 0.10104011887072809,
+    "inner_burden": 0.22791240475046337,
+    "candidates": 102,
+    "n_event": 2019,
+    "n_sessions": 14567
+  },
+  "fold_0_minimal": {
+    "threshold": 0.9812753820838289,
+    "selection": "budgeted",
+    "inner_detection": 0.1025260029717682,
+    "inner_burden": 0.2499485137639871,
+    "candidates": 102,
+    "n_event": 2019,
+    "n_sessions": 14567
+  },
+  "fold_0_current_sbp": {
+    "threshold": -101.0,
+    "selection": "budgeted",
+    "inner_detection": 0.21892025755324418,
+    "inner_burden": 0.23937667330267043,
+    "candidates": 89,
+    "n_event": 2019,
+    "n_sessions": 14567
+  },
+  "fold_0_slope": {
+    "threshold": -49.0,
+    "selection": "budgeted",
+    "inner_detection": 0.1347201584943041,
+    "inner_burden": 0.1775245417724995,
+    "candidates": 100,
+    "n_event": 2019,
+    "n_sessions": 14567
+  },
+  "fold_1_full": {
+    "threshold": 0.9830078520514289,
+    "selection": "budgeted",
+    "inner_detection": 0.08934707903780069,
+    "inner_burden": 0.23133007715721668,
+    "candidates": 102,
+    "n_event": 1746,
+    "n_sessions": 14127
+  },
+  "fold_1_universal": {
+    "threshold": 0.9741963493958141,
+    "selection": "budgeted",
+    "inner_detection": 0.09507445589919816,
+    "inner_burden": 0.23168400934380973,
+    "candidates": 102,
+    "n_event": 1746,
+    "n_sessions": 14127
+  },
+  "fold_1_minimal": {
+    "threshold": 0.9781733059315463,
+    "selection": "budgeted",
+    "inner_detection": 0.08533791523482245,
+    "inner_burden": 0.22984356197352587,
+    "candidates": 102,
+    "n_event": 1746,
+    "n_sessions": 14127
+  },
+  "fold_1_current_sbp": {
+    "threshold": -103.0,
+    "selection": "budgeted",
+    "inner_detection": 0.23081328751431845,
+    "inner_burden": 0.23642670064415658,
+    "candidates": 86,
+    "n_event": 1746,
+    "n_sessions": 14127
+  },
+  "fold_1_slope": {
+    "threshold": -52.0,
+    "selection": "budgeted",
+    "inner_detection": 0.19644902634593356,
+    "inner_burden": 0.20641325122106605,
+    "candidates": 100,
+    "n_event": 1746,
+    "n_sessions": 14127
+  },
+  "fold_2_full": {
+    "threshold": 0.966575113657791,
+    "selection": "budgeted",
+    "inner_detection": 0.08602601762484263,
+    "inner_burden": 0.2399474920547188,
+    "candidates": 102,
+    "n_event": 2383,
+    "n_sessions": 14474
+  },
+  "fold_2_universal": {
+    "threshold": 0.952578203328758,
+    "selection": "budgeted",
+    "inner_detection": 0.08308854385228703,
+    "inner_burden": 0.2317949426557966,
+    "candidates": 102,
+    "n_event": 2383,
+    "n_sessions": 14474
+  },
+  "fold_2_minimal": {
+    "threshold": 0.9536885386153824,
+    "selection": "budgeted",
+    "inner_detection": 0.08350818296265212,
+    "inner_burden": 0.24837639906038414,
+    "candidates": 102,
+    "n_event": 2383,
+    "n_sessions": 14474
+  },
+  "fold_2_current_sbp": {
+    "threshold": -101.0,
+    "selection": "budgeted",
+    "inner_detection": 0.2043642467477969,
+    "inner_burden": 0.23580212795357192,
+    "candidates": 92,
+    "n_event": 2383,
+    "n_sessions": 14474
+  },
+  "fold_2_slope": {
+    "threshold": -50.60261865793763,
+    "selection": "budgeted",
+    "inner_detection": 0.15694502727654217,
+    "inner_burden": 0.18585049053475197,
+    "candidates": 99,
+    "n_event": 2383,
+    "n_sessions": 14474
+  }
+}

@@ -1,0 +1,249 @@
+"""Package-level verification for the self-contained V2 submission."""
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+REQUIRED = [
+    "README.md",
+    "LICENSE",
+    "requirements.txt",
+    "app/hemotwin.py",
+    "app/manual_app.py",
+    "app/views/case_lab_page.py",
+    "app/views/evidence_page.py",
+    "app/views/replay_page.py",
+    "assets/replay/replay.html",
+    "app/views/case_lab.py",
+    "app/views/evidence_handoff.py",
+    "config/protocols/idh_review_research_v1.json",
+    "evidence/benchmark_report.json",
+    "evidence/g7_report.json",
+    "evidence/g7_protocol.md",
+    "evidence/g7_protocol.sha256",
+    "evidence/demo_twin.json",
+    "evidence/case_inspection.json",
+    "models/physiotwin_v4/train_meta.json",
+    "models/physiotwin_v4/models/base_seed42.txt",
+    "models/forecast_v2/fold_0/FEATURES.md",
+    "models/forecast_v2/fold_0/nadir_seed42.txt",
+    "models/event_model/models/fold_0/universal_meta.json",
+    "models/event_model/thresholds.json",
+    "docs/architecture.svg",
+    "docs/EVIDENCE_STATUS.md",
+    "docs/DESIGN.md",
+    "docs/DECK_NOTES.md",
+    "deck/HemoTwin_v2.pptx",
+    "deck/HemoTwin_v2.pdf",
+    "report/HemoTwin_Project_Overview.pdf",
+    "report/HemoTwin_Project_Overview.html",
+]
+
+BANNED = ("guaranteed", "envelope", "ceiling", "partial identification",
+          "100% safe", "no side effects")
+PLACEHOLDERS = ("TBD", "TODO", "Lorem ipsum", "XX%", "placeholder")
+
+
+def main() -> int:
+    failures: list[str] = []
+    print("HemoTwin V2 package verification")
+    print("=" * 60)
+
+    for rel in REQUIRED:
+        ok = (ROOT / rel).exists()
+        print(f"{'PASS' if ok else 'FAIL'}  exists  {rel}")
+        if not ok:
+            failures.append(rel)
+
+    # No raw data or lab artifacts.
+    for bad in ("data/raw", "artifacts"):
+        path = ROOT / bad
+        ok = not path.exists()
+        print(f"{'PASS' if ok else 'FAIL'}  no {bad}/ in package")
+        if not ok:
+            failures.append(bad)
+
+    # Package size.
+    total = sum(p.stat().st_size for p in ROOT.rglob("*") if p.is_file())
+    mb = total / (1024 * 1024)
+    ok = mb < 45
+    print(f"{'PASS' if ok else 'FAIL'}  package size {mb:.1f} MB (<45 MB)")
+    if not ok:
+        failures.append("package-size")
+
+    # README numbers/claims.
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    for token in ("205,482", "303,122", "0.474", "10.99", "9.60",
+                  "+0.13", "G7", "FAIL"):
+        ok = token in readme
+        print(f"{'PASS' if ok else 'FAIL'}  README contains {token}")
+        if not ok:
+            failures.append(f"readme:{token}")
+    low = readme.lower()
+    for word in BANNED:
+        ok = word not in low
+        print(f"{'PASS' if ok else 'FAIL'}  README avoids '{word}'")
+        if not ok:
+            failures.append(f"readme-ban:{word}")
+
+    # App must not contain invented risk scores.
+    for rel in ("app/views/case_lab.py", "app/manual_app.py"):
+        source = (ROOT / rel).read_text(encoding="utf-8")
+        ok = "0.99 if" not in source and "score\": 0.2" not in source
+        print(f"{'PASS' if ok else 'FAIL'}  no invented score in {rel}")
+        if not ok:
+            failures.append(f"fake-score:{rel}")
+
+    # Deck integrity and text claims.
+    try:
+        from pptx import Presentation
+        prs = Presentation(str(ROOT / "deck" / "HemoTwin_v2.pptx"))
+        n = len(prs.slides)
+        ok = n == 16
+        print(f"{'PASS' if ok else 'FAIL'}  deck has {n} slides (expected 16)")
+        if not ok:
+            failures.append("deck-slides")
+        deck_text = []
+        notes_missing = []
+        for i, slide in enumerate(prs.slides, start=1):
+            for shape in slide.shapes:
+                if hasattr(shape, "text") and shape.text:
+                    deck_text.append(shape.text)
+            note = ""
+            if slide.has_notes_slide:
+                note = slide.notes_slide.notes_text_frame.text
+            if not note.strip():
+                notes_missing.append(i)
+        blob = "\n".join(deck_text)
+        print(f"{'PASS' if not notes_missing else 'FAIL'}  speaker notes on every slide"
+              + (f" (missing {notes_missing})" if notes_missing else ""))
+        if notes_missing:
+            failures.append("deck-notes")
+        for token in ("10.99", "9.60", "0.13", "205,482", "581", "G7", "FAIL",
+                      "1,070", "4.19M", "10.4%", "116.6", "0.50", "1.18",
+                      "16.5", "19.9"):
+            ok = token in blob
+            print(f"{'PASS' if ok else 'FAIL'}  deck contains {token}")
+            if not ok:
+                failures.append(f"deck:{token}")
+        low_deck = blob.lower()
+        for word in BANNED:
+            ok = word not in low_deck
+            print(f"{'PASS' if ok else 'FAIL'}  deck avoids '{word}'")
+            if not ok:
+                failures.append(f"deck-ban:{word}")
+        for token in PLACEHOLDERS:
+            ok = token.lower() not in low_deck
+            print(f"{'PASS' if ok else 'FAIL'}  deck avoids placeholder '{token}'")
+            if not ok:
+                failures.append(f"deck-placeholder:{token}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"FAIL  deck readable: {exc}")
+        failures.append("deck-read")
+
+    # Evidence/chart data consistency: the charts are generated from these files.
+    try:
+        demo = json.loads((ROOT / "evidence" / "demo_twin.json").read_text(encoding="utf-8"))
+        g7 = json.loads((ROOT / "evidence" / "g7_report.json").read_text(encoding="utf-8"))
+        report = json.loads((ROOT / "evidence" / "benchmark_report.json").read_text(encoding="utf-8"))
+        data_errors = []
+        for case in demo["cases"]:
+            hold = (case.get("calibrated") or {}).get("scenarios", [{}])[0]
+            series = hold.get("nadir_series_mmhg") or []
+            if len(series) != 61:
+                data_errors.append(f"{case['name']}: series length {len(series)}")
+            if not series:
+                data_errors.append(f"{case['name']}: empty series")
+                continue
+            # The chart's +60 min value is the endpoint of the calibrated
+            # trajectory. The synthetic stale-cuff guardrail reuses a demo
+            # trajectory but withholds the projection, so it is exempt.
+            if not case.get("synthetic_demo"):
+                if abs(float(series[-1]) - float(case["base_nadir"])) > 1e-6:
+                    data_errors.append(f"{case['name']}: series end != base_nadir")
+                band = hold.get("nadir_band_90") or [None, None]
+                if band[0] is None or not (float(band[0]) <= float(case["base_nadir"]) <= float(band[1])):
+                    data_errors.append(f"{case['name']}: forecast outside band")
+            else:
+                band = hold.get("nadir_band_90") or [None, None]
+                if band[0] is None or not (float(band[0]) <= float(series[-1]) <= float(band[1])):
+                    data_errors.append(f"{case['name']}: synthetic series outside band")
+        stage0 = g7["stage0"]
+        census = sum(stage0["n_sessions"].values())
+        if census != 205_113:
+            data_errors.append(f"G7 census {census}")
+        if stage0["n4_matched_events"] != 581 or stage0["n4_patients"] != 158:
+            data_errors.append("G7 matched-event counts changed")
+        if str(g7.get("verdict")) != "FAIL":
+            data_errors.append(f"G7 verdict {g7.get('verdict')}")
+        fold2 = report["gates"]["G2"]["fold2"]
+        if abs(float(fold2["v4"]["mae"]) - 10.985512866875297) > 1e-6:
+            data_errors.append("fair fold-2 MAE changed")
+        if abs(float(fold2["oracle_forecast_v2"]["mae"]) - 9.600822913300828) > 1e-6:
+            data_errors.append("oracle fold-2 MAE changed")
+        ok = not data_errors
+        print(f"{'PASS' if ok else 'FAIL'}  chart/evidence data consistency"
+              + (f" ({data_errors[:3]})" if data_errors else ""))
+        if not ok:
+            failures.append("chart-data")
+    except Exception as exc:  # noqa: BLE001
+        print(f"FAIL  chart/evidence data consistency: {exc}")
+        failures.append("chart-data")
+
+    # PDF is real.
+    pdf = ROOT / "deck" / "HemoTwin_v2.pdf"
+    if pdf.exists():
+        ok = pdf.stat().st_size > 100_000
+        print(f"{'PASS' if ok else 'FAIL'}  PDF present ({pdf.stat().st_size // 1024} KB)")
+        if not ok:
+            failures.append("pdf-size")
+
+    # Markdown local links resolve.
+    broken = []
+    for md in [ROOT / "README.md", *sorted((ROOT / "docs").glob("*.md"))]:
+        text = md.read_text(encoding="utf-8")
+        for target in re.findall(r"!?\[[^\]]*\]\(([^)]+)\)", text):
+            target = target.split("#")[0].strip()
+            if not target:
+                continue
+            path = (md.parent / target).resolve()
+            if not path.exists():
+                path = (ROOT / target).resolve()
+            if not path.exists():
+                broken.append(f"{md.name} -> {target}")
+    ok = not broken
+    print(f"{'PASS' if ok else 'FAIL'}  local Markdown links resolve"
+          + (f" (broken: {broken[:5]})" if broken else ""))
+    if not ok:
+        failures.append("links")
+
+    # Audit chain.
+    try:
+        sys.path.insert(0, str(ROOT))
+        from src.session_twin.audit_chain import verify_audit_chain
+        chain = verify_audit_chain(ROOT / "demo" / "audit.jsonl")
+        ok = bool(chain.get("ok")) and chain.get("n_events", 0) >= 7
+        print(f"{'PASS' if ok else 'FAIL'}  demo audit chain verifies "
+              f"({chain.get('n_events')} events)")
+        if not ok:
+            failures.append("audit-chain")
+    except Exception as exc:  # noqa: BLE001
+        print(f"FAIL  audit chain: {exc}")
+        failures.append("audit-chain")
+
+    print("=" * 60)
+    if failures:
+        print(f"{len(failures)} FAILURE(S)")
+        for item in failures:
+            print(" -", item)
+        return 1
+    print("All package checks passed.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
