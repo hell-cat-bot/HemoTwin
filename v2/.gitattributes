@@ -1,0 +1,3 @@
+# Keep text files LF so the frozen G7 protocol hash and text-format
+# LightGBM models stay valid on Windows checkouts.
+* text=auto eol=lf
