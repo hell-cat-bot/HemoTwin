@@ -25,9 +25,9 @@ def apply_theme(fig: go.Figure, height: int = 420) -> go.Figure:
         font=dict(family="Segoe UI, sans-serif", color=MUTED, size=12),
         title=dict(font=dict(family="Segoe UI Variable Display, Segoe UI, "
                                   "sans-serif", color=INK, size=16)),
-        margin=dict(l=8, r=8, t=34, b=8),
+        margin=dict(l=8, r=8, t=58, b=10),
         legend=dict(
-            orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0,
+            orientation="h", yanchor="bottom", y=1.01, xanchor="left", x=0,
             bgcolor="rgba(0,0,0,0)", font=dict(color=MUTED, size=11)),
         hoverlabel=dict(
             bgcolor=SURFACE, bordercolor="rgba(23,117,106,.4)",
@@ -35,10 +35,10 @@ def apply_theme(fig: go.Figure, height: int = 420) -> go.Figure:
         hovermode="x unified",
     )
     fig.update_xaxes(
-        gridcolor=GRID, zeroline=False, linecolor="#DCE4E1",
+        gridcolor=GRID, zeroline=False, linecolor="#DCE4E1", automargin=True,
         tickfont=dict(color=MUTED), title_font=dict(color=MUTED))
     fig.update_yaxes(
-        gridcolor=GRID, zeroline=False, linecolor="#DCE4E1",
+        gridcolor=GRID, zeroline=False, linecolor="#DCE4E1", automargin=True,
         tickfont=dict(color=MUTED), title_font=dict(color=MUTED))
     return fig
 
@@ -80,10 +80,10 @@ def fan_figure(case: dict, show_illustration: bool = False,
             x=x + x[::-1],
             y=[v + hi_off for v in y] + [v + lo_off for v in y][::-1],
             fill="toself", fillcolor="rgba(23, 117, 106, 0.10)",
-            line=dict(width=0), name="90% nadir band (widened along path)",
+            line=dict(width=0), name="90% nadir band",
             hoverinfo="skip", legendrank=3))
         fig.add_trace(go.Scatter(
-            x=x, y=y, mode="lines", name="Calibrated projection · gain 0",
+            x=x, y=y, mode="lines", name="Projection · gain 0",
             line=dict(color=ACCENT, width=2.6), legendrank=4,
             hoverinfo="skip"))
     elif not show_projection:
@@ -107,7 +107,7 @@ def fan_figure(case: dict, show_illustration: bool = False,
     if before:
         fig.add_trace(go.Scatter(
             x=[c["rel"] for c in before], y=[c["sbp"] for c in before],
-            mode="lines+markers", name="Observed cuffs · before anchor",
+            mode="lines+markers", name="Observed · before anchor",
             line=dict(color=INK, width=2.2),
             marker=dict(color=INK, size=7,
                         line=dict(color=SURFACE, width=2)),
@@ -118,7 +118,7 @@ def fan_figure(case: dict, show_illustration: bool = False,
     if after:
         fig.add_trace(go.Scatter(
             x=[c["rel"] for c in after], y=[c["sbp"] for c in after],
-            mode="markers", name="Observed cuffs · ground truth",
+            mode="markers", name="Observed · ground truth",
             marker=dict(color=AMBER, size=11, symbol="diamond",
                         line=dict(color=SURFACE, width=1.5)),
             customdata=_cuff_custom(after), legendrank=2,

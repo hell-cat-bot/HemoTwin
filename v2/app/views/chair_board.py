@@ -387,6 +387,10 @@ CSS = """
 }
 .cb-table td { color: var(--ht-ink); }
 .cb-model-note { color: var(--ht-muted); font-size: 10.5px; line-height: 1.5; }
+@media (max-width: 1120px) {
+  .cb-card { padding: 12px 10px 10px; }
+  .cb-card__session { font-size: 9px; }
+}
 @media (max-width: 980px) {
   .cb-detail { grid-template-columns: 1fr; }
 }

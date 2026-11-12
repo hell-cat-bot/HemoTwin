@@ -94,7 +94,7 @@ class ChartAndSelectionTest(unittest.TestCase):
         cuffs = _merged_cuffs(case, self.inspection)
         fig = charts.fan_figure({**case, "cuffs": cuffs})
         after = next(t for t in fig.data
-                     if t.name == "Observed cuffs · ground truth")
+                     if t.name == "Observed · ground truth")
         self.assertEqual(len(after.customdata), 4)
         index, dbp, uf, calibrated = after.customdata[1]
         self.assertEqual(cuffs[index]["phase"], "after")

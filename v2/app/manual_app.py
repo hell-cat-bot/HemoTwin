@@ -47,8 +47,8 @@ st.markdown(ui_theme.page_head(
     "Enter a real session",
     "Mirror the state at the chair, validate the cuff, walk the unit's review "
     "pathway, and compute the fluid arithmetic. No prescription is produced.",
-    pills=[("Research prototype", "warn"), ("Shadow display only", "sage"),
-           ("No machine action", "")]),
+    pills=[("Research prototype", "warn"),
+           ("Display-only · no machine action", "sage")]),
     unsafe_allow_html=True)
 
 try:

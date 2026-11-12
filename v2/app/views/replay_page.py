@@ -21,32 +21,19 @@ ASSET = ROOT / "assets" / "replay" / "replay.html"
 st.markdown(ui_theme.page_head(
     "Session replay",
     "Prediction, then the record",
-    "Watch the research forecast draw forward, then the recorded cuffs and UF "
-    "steps roll in at their real times. Click a cuff, scrub the timeline, or "
-    "try a what-if card.",
+    "The forecast draws first, then recorded cuffs and UF steps follow at "
+    "their real times. Click a cuff or scrub the timeline.",
     pills=[("Retrospective", "info"), ("Curated sessions", ""),
            ("Display-only", "warn")]),
     unsafe_allow_html=True)
 st.markdown(ui_theme.callout(
-    "Curated retrospective replay. The shadow display never triggers an alarm; "
-    "what-if paths are mechanism illustrations from the failed twin experiment "
-    "(G7). No treatment recommendation and no machine action.", "warn"),
+    "Curated retrospective replay · display-only shadow model, never an alarm "
+    "· no treatment recommendation or machine action.", "warn"),
     unsafe_allow_html=True)
 st.markdown("""
 <style>
-.st-key-replay_frame {
-  background: var(--ht-chrome);
-  border: 1px solid #15211E;
-  border-radius: 12px;
-  padding: 10px;
-  margin-top: 14px;
-  overflow: hidden;
-}
-.st-key-replay_frame iframe {
-  display: block;
-  border-radius: 8px;
-  background: #05080B;
-}
+.st-key-replay_frame { margin-top: 6px; overflow: hidden; }
+.st-key-replay_frame iframe { display: block; border: 0; background: transparent; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -60,6 +47,8 @@ html = ASSET.read_text(encoding="utf-8")
 embed = html.replace(
     "</head>",
     "<style>"
+    "html,body{overflow:hidden!important;scrollbar-width:none}"
+    "body::-webkit-scrollbar{display:none}"
     "body.embed .topbar{display:none!important}"
     "body.embed footer{display:none!important}"
     "body.embed .wrap{padding-top:0!important;max-width:none!important}"

@@ -7,10 +7,11 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2307111F'/%3E%3Cpath d='M16 33h9l3-7 5 14 3-7h12' stroke='%2322D3EE' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root{
-  --bg:#050A12; --panel:#0A1220; --panel2:#0C1626; --line:#1B2A3F;
-  --ink:#E6EDF7; --muted:#7C8DA6; --dim:#4E6076;
-  --cyan:#22D3EE; --teal:#2DD4BF; --violet:#A78BFA;
-  --amber:#FBBF24; --coral:#FB7185;
+  --bg:#EFF3F2; --panel:#FFFFFF; --panel2:#F7FAF9; --line:#DCE4E1;
+  --line-2:#C6D2CE; --accent:#17756A;
+  --ink:#141C1E; --muted:#5C6B6D; --dim:#7E8B8C;
+  --cyan:#17756A; --teal:#17756A; --violet:#7D8B7C;
+  --amber:#A8641B; --coral:#B23C2C;
   --mono:"Cascadia Mono",Consolas,"SF Mono",monospace;
   --sans:"Segoe UI Variable","Segoe UI",system-ui,-apple-system,sans-serif;
   --display:Bahnschrift,"Segoe UI Variable Display","Segoe UI",var(--sans);
@@ -280,6 +281,128 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--cyan); outline-
   #cuffPulse{display:none}
   #scene.mode-c .flowdash,#scene.mode-c .hudspin{animation:none!important}
 }
+
+/* Continuum light theme: the console frames this replay, so panels, type and
+   controls use the same mist-and-white workspace. The illustrated scene stays
+   dark on purpose, like a photographic viewport inside the light stage. */
+body{background:var(--bg);}
+body::before{display:none;}
+.wrap{padding:0 0 10px;}
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  box-shadow:0 1px 2px rgba(20,28,30,.04);
+}
+.eyebrow{color:var(--muted);}
+.monitor-head b{color:var(--ink);}
+.reveal-badge{color:var(--muted); border-color:var(--line); background:var(--panel2);}
+.badge{color:var(--muted); border-color:var(--line); background:var(--panel);}
+.badge.warn{color:var(--amber); border-color:#E8D3B2; background:#FBF4E8;}
+.tab{color:var(--muted); border-color:var(--line); background:var(--panel);}
+.tab:hover{color:var(--ink); border-color:var(--line-2);}
+.tab[aria-selected="true"]{color:#FFFFFF; background:var(--cyan); border-color:var(--cyan);}
+.clock b{color:var(--ink);}
+.clock span{color:var(--muted);}
+.scene-note b{color:var(--ink);}
+.scene-claim{color:var(--dim); border-color:var(--line);}
+.scene-wrap{border-color:var(--line); box-shadow:0 10px 28px rgba(20,28,30,.10);}
+.sim-strip{
+  border:1px solid #E8D3B2; background:#FBF4E8; color:#6B4A1D;
+}
+.sim-strip .tag{color:var(--amber); border-color:#E8D3B2;}
+.sim-strip b{color:#6B4A1D;}
+.sim-strip .metric{color:#8A6524;}
+.sim-strip .clear{color:var(--amber); border-color:#E8D3B2; background:var(--panel);}
+.sim-strip .fine{color:#8A7348;}
+.timeline .btn{background:var(--panel); border-color:var(--line-2); color:var(--ink);}
+.timeline .btn:hover{border-color:var(--accent); color:var(--accent);}
+.timeline .btn.primary{background:var(--accent); border-color:var(--accent); color:#FFFFFF;}
+.speed{color:var(--muted); border-color:var(--line); background:var(--panel);}
+.speed[aria-pressed="true"]{color:#FFFFFF; background:var(--accent); border-color:var(--accent);}
+input[type=range]::-webkit-slider-runnable-track{background:#CFDAD6;}
+input[type=range]::-webkit-slider-thumb{background:#FFFFFF; border:2px solid var(--accent); box-shadow:0 1px 3px rgba(20,28,30,.18);}
+input[type=range]::-moz-range-track{background:#CFDAD6;}
+input[type=range]::-moz-range-thumb{background:#FFFFFF; border:2px solid var(--accent);}
+.tl-meta{color:var(--dim);}
+.inspector{border-color:var(--line); background:var(--panel2);}
+.insp-empty{color:var(--dim);}
+.ins-head .lead{color:var(--muted);}
+.ins-head .lead b{color:var(--ink);}
+.ins-head .tag{border-color:var(--line-2); color:var(--muted);}
+.ins-head .tag.actual{border-color:#BFDCD0; color:var(--good);}
+.ins-cell span{color:var(--dim);}
+.ins-cell b{color:var(--ink);}
+.ins-note{color:var(--muted);}
+.patient h2{color:var(--ink);}
+.fact{background:var(--panel2); border-color:var(--line);}
+.fact span{color:var(--dim);}
+.fact b{color:var(--ink);}
+.vital{background:var(--panel2); border-color:var(--line);}
+.vital span{color:var(--dim);}
+.vital b{color:var(--ink);}
+.vital b small{color:var(--muted);}
+.vital.low b{color:var(--risk);}
+.shadow-bar{background:#E7EDEB; border-color:var(--line);}
+.shadow-fill{background:var(--accent);}
+.shadow-thr{background:var(--amber);}
+.shadow-row b{color:var(--ink);}
+.shadow-row span{color:var(--muted);}
+.note{color:var(--muted);}
+.alert{
+  border:1px solid #E8D3B2;
+  background:#FBF4E8;
+  box-shadow:0 1px 2px rgba(20,28,30,.04);
+  animation:none;
+}
+.alert .eyebrow{color:var(--amber);}
+.alert h2{color:var(--ink);}
+.alert-grid div{background:var(--panel); border-color:#EADCC4;}
+.alert-grid span{color:var(--muted);}
+.alert-grid b{color:var(--ink);}
+.alert-grid small{color:var(--muted);}
+.honesty{color:#6B4A1D; background:#F8EDD9; border-left-color:var(--amber);}
+.alert-note{color:var(--muted);}
+.policy{color:var(--ink); background:var(--panel); border-color:var(--line);}
+.policy:hover{border-color:var(--line-2);}
+.policy[aria-pressed="true"]{border-color:var(--amber); background:#FBF4E8; box-shadow:none;}
+.policy-top span{color:var(--ink);}
+.policy-top b{color:var(--ink);}
+.policy-top b small{color:var(--muted);}
+.policy-meta{color:var(--muted);}
+.policy-bar{background:#E7EDEB;}
+.policy-bar i{background:var(--amber);}
+.fine{color:var(--dim);}
+.outcome{border-color:var(--line); background:var(--panel);}
+.outcome .eyebrow{color:var(--muted);}
+.outcome h2{color:var(--ink);}
+.outcome-grid div{background:var(--panel2); border-color:var(--line);}
+.outcome-grid span{color:var(--muted);}
+.outcome-grid b{color:var(--ink);}
+.outcome-grid small{color:var(--muted);}
+.uf-log{border-top-color:var(--line);}
+.uf-row{color:var(--muted);}
+.uf-row b{color:var(--ink);}
+.uf-row.hold b{color:var(--amber);}
+.uf-final{color:var(--muted);}
+.chain-live{color:var(--accent);}
+.chain-row{border-bottom-color:#EDF2F0;}
+.chain-row b{color:var(--ink);}
+.chain-row span{color:var(--muted);}
+.chain-row.low b{color:var(--risk);}
+.chain-row.rebound b{color:var(--good);}
+.chain-row.uf.hold b{color:var(--amber);}
+.chain-row.anchor .chain-dot{background:#8A9A96;}
+.chain-row.trigger .chain-dot{background:var(--sage);}
+.chain-row.trigger b{color:#5F6E5E;}
+.chain-row.observe b{color:var(--accent);}
+.chain-row.complete .chain-dot,.chain-row.reveal .chain-dot{background:var(--ink);}
+.chain-row.complete b,.chain-row.reveal b{color:var(--ink);}
+.chain-row.start .chain-dot{background:#B9C6C2;}
+.chain-row .chain-t{color:var(--dim);}
+footer{color:var(--dim);}
+footer b{color:var(--muted);}
+/* The inspector only exists once a cuff is selected. */
+.inspector:has(#insBody.hidden){display:none;}
 </style>
 </head>
 <body>
@@ -493,7 +616,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--cyan); outline-
           <g id="flowDots"></g>
 
           <circle id="cuffPulse" cx="694" cy="180" r="62" fill="none" stroke="#FBBF24" stroke-width="2"/>
-          <text class="scene-label" x="622" y="488" style="font-size:7px;opacity:.7">SCENE ILLUSTRATION · DATA RECORDED</text>
+          <text class="scene-label" x="784" y="488" text-anchor="end" style="font-size:7px;opacity:.7">SCENE ILLUSTRATION · DATA RECORDED</text>
         </svg>
         <div class="readout">
           <div class="chip">SBP<b id="rSbp">—</b></div>
@@ -521,8 +644,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--cyan); outline-
         <svg id="chart" viewBox="0 0 760 300" role="group" aria-label="Interactive systolic pressure chart" aria-describedby="chartHelp"></svg>
         <p class="sr-only" id="chartHelp">Use Tab to enter the chart, left and right arrow keys to move between cuff readings, Enter to select, and Escape to clear. Selecting a point pauses the replay.</p>
         <div class="legend" id="legend"></div>
-        <div class="inspector" id="inspector" aria-live="polite">
-          <div class="insp-empty" id="insEmpty">Click any cuff point on the curve for its SBP, DBP, UF rate and fluid removed.</div>
+        <div class="inspector hidden" id="inspector" aria-live="polite">
           <div id="insBody" class="hidden">
             <div class="ins-head">
               <span class="lead"><b id="insTime">—</b> min · <span id="insSource">recorded cuff</span></span>
@@ -645,11 +767,6 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--cyan); outline-
           <div class="chain-row start"><span class="chain-t">0'</span><i class="chain-dot"></i><div><b>Session started</b><span>recorded machine UF programme</span></div></div>
         </div>
         <p class="note" style="font-size:9.5px">UF steps are machine-recorded. Cuff lows and rebounds are recorded readings. The forecast trigger is a research prompt, not an approved alarm.</p>
-      </section>
-
-      <section class="card" id="howTo">
-        <div class="eyebrow">How to read this</div>
-        <p class="note" style="font-size:11.5px">Cuff readings appear at their recorded times. After the last cuff, the research forecast draws forward 60 minutes; the trigger fires when it crosses 90 mmHg. From that point the now line rolls forward through the recorded session, revealing the real cuffs and UF steps as they occurred. Click any point on the curve to inspect it.</p>
       </section>
     </aside>
   </main>
@@ -1037,30 +1154,30 @@ function renderChart(){
 
   let s = "";
   for (let v = 60; v <= 170; v += 10){
-    s += '<line x1="' + ML + '" y1="' + Y(v) + '" x2="' + (W - MR) + '" y2="' + Y(v) + '" stroke="#101C2B" stroke-width="1"/>';
-    if (v % 20 === 0) s += '<text x="' + (ML - 8) + '" y="' + (Y(v) + 3.5) + '" text-anchor="end" fill="#4E6076" font-family="var(--mono)" font-size="9">' + v + '</text>';
+    s += '<line x1="' + ML + '" y1="' + Y(v) + '" x2="' + (W - MR) + '" y2="' + Y(v) + '" stroke="#E6EDEA" stroke-width="1"/>';
+    if (v % 20 === 0) s += '<text x="' + (ML - 8) + '" y="' + (Y(v) + 3.5) + '" text-anchor="end" fill="#7E8B8C" font-family="var(--mono)" font-size="9">' + v + '</text>';
   }
   for (let t = 0; t <= tmax; t += 30){
-    s += '<line x1="' + X(t) + '" y1="' + MT + '" x2="' + X(t) + '" y2="' + (H - MB) + '" stroke="#0E1A28" stroke-width="1"/>';
-    s += '<text x="' + X(t) + '" y="' + (H - MB + 16) + '" text-anchor="middle" fill="#4E6076" font-family="var(--mono)" font-size="9">' + Math.round(t) + '</text>';
+    s += '<line x1="' + X(t) + '" y1="' + MT + '" x2="' + X(t) + '" y2="' + (H - MB) + '" stroke="#EDF2F0" stroke-width="1"/>';
+    s += '<text x="' + X(t) + '" y="' + (H - MB + 16) + '" text-anchor="middle" fill="#7E8B8C" font-family="var(--mono)" font-size="9">' + Math.round(t) + '</text>';
   }
-  s += '<text x="' + ML + '" y="' + (H - 4) + '" fill="#3E5067" font-family="var(--mono)" font-size="9" letter-spacing="1.5">SESSION MINUTES</text>';
-  s += '<text x="14" y="120" fill="#3E5067" font-family="var(--mono)" font-size="9" letter-spacing="1.5" transform="rotate(-90 14 120)" text-anchor="middle">SBP mmHg</text>';
+  s += '<text x="' + ML + '" y="' + (H - 4) + '" fill="#5C6B6D" font-family="var(--mono)" font-size="9" letter-spacing="1.5">SESSION MINUTES</text>';
+  s += '<text x="14" y="120" fill="#5C6B6D" font-family="var(--mono)" font-size="9" letter-spacing="1.5" transform="rotate(-90 14 120)" text-anchor="middle">SBP mmHg</text>';
 
   const a = c.anchor_min;
   const w0 = Math.min(tmax, a + 15), w1 = Math.min(tmax, a + 60);
-  s += '<rect x="' + X(w0) + '" y="' + MT + '" width="' + Math.max(0, X(w1) - X(w0)) + '" height="' + (H - MT - MB) + '" fill="rgba(167,139,250,.07)"/>';
-  s += '<line x1="' + X(w0) + '" y1="' + MT + '" x2="' + X(w0) + '" y2="' + (H - MB) + '" stroke="rgba(167,139,250,.35)" stroke-dasharray="3 4"/>';
+  s += '<rect x="' + X(w0) + '" y="' + MT + '" width="' + Math.max(0, X(w1) - X(w0)) + '" height="' + (H - MT - MB) + '" fill="rgba(23,117,106,.06)"/>';
+  s += '<line x1="' + X(w0) + '" y1="' + MT + '" x2="' + X(w0) + '" y2="' + (H - MB) + '" stroke="rgba(23,117,106,.28)" stroke-dasharray="3 4"/>';
 
-  s += '<line x1="' + ML + '" y1="' + Y(90) + '" x2="' + (W - MR) + '" y2="' + Y(90) + '" stroke="#FBBF24" stroke-dasharray="7 5" opacity=".75" stroke-width="1.4"/>';
-  s += '<text x="' + (ML + 6) + '" y="' + (Y(90) + 13) + '" fill="#FBBF24" opacity=".8" font-family="var(--mono)" font-size="9" letter-spacing="1">90 mmHg floor</text>';
+  s += '<line x1="' + ML + '" y1="' + Y(90) + '" x2="' + (W - MR) + '" y2="' + Y(90) + '" stroke="#A8641B" stroke-dasharray="7 5" opacity=".8" stroke-width="1.4"/>';
+  s += '<text x="' + (ML + 6) + '" y="' + (Y(90) + 13) + '" fill="#A8641B" opacity=".9" font-family="var(--mono)" font-size="9" letter-spacing="1">90 mmHg floor</text>';
 
-  s += '<line x1="' + X(a) + '" y1="' + MT + '" x2="' + X(a) + '" y2="' + (H - MB) + '" stroke="#2A4054" stroke-dasharray="2 5"/>';
-  s += '<text x="' + (X(a) + 5) + '" y="' + (MT + 11) + '" fill="#5F748C" font-family="var(--mono)" font-size="9">last cuff</text>';
+  s += '<line x1="' + X(a) + '" y1="' + MT + '" x2="' + X(a) + '" y2="' + (H - MB) + '" stroke="#C6D2CE" stroke-dasharray="2 5"/>';
+  s += '<text x="' + (X(a) + 5) + '" y="' + (MT + 11) + '" fill="#7E8B8C" font-family="var(--mono)" font-size="9">last cuff</text>';
 
   if (rev.length){
     const pts = rev.map(p => X(p.t) + "," + Y(p.sbp)).join(" ");
-    s += '<polyline points="' + pts + '" fill="none" stroke="#22D3EE" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
+    s += '<polyline points="' + pts + '" fill="none" stroke="#141C1E" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
   }
 
   if (S.t > a && c.forecast.length){
@@ -1068,21 +1185,21 @@ function renderChart(){
     const start = [{ t: a, sbp: c.forecast[0].sbp }, ...shown];
     if (start.length > 1){
       const pts = start.map(p => X(p.t) + "," + Y(p.sbp)).join(" ");
-      s += '<polyline points="' + pts + '" fill="none" stroke="#A78BFA" stroke-width="2.6" stroke-dasharray="7 5" filter="url(#glow)" stroke-linecap="round"/>';
+      s += '<polyline points="' + pts + '" fill="none" stroke="#17756A" stroke-width="2.2" stroke-dasharray="6 4" stroke-linecap="round"/>';
     }
     if (S.t >= projectionEnd() - 1e-9){
       const low = c.forecast.reduce((m, p) => p.sbp < m.sbp ? p : m, c.forecast[0]);
-      s += '<text x="' + (X(low.t) - 8) + '" y="' + (Y(low.sbp) - 9) + '" text-anchor="end" fill="#A78BFA" font-family="var(--mono)" font-size="9">forecast ' + fmt(low.sbp, 1) + '</text>';
+      s += '<text x="' + (X(low.t) - 8) + '" y="' + (Y(low.sbp) - 9) + '" text-anchor="end" fill="#17756A" font-family="var(--mono)" font-size="9">forecast ' + fmt(low.sbp, 1) + '</text>';
     }
   }
 
   const picked = scenario();
   if (picked){
     const pts = picked.path.map(p => X(p.t) + "," + Y(p.sbp)).join(" ");
-    s += '<polyline points="' + pts + '" fill="none" stroke="#FBBF24" stroke-width="2.1" opacity=".95" stroke-linecap="round"/>';
+    s += '<polyline points="' + pts + '" fill="none" stroke="#A8641B" stroke-width="2.1" opacity=".95" stroke-linecap="round"/>';
     const end = picked.path[picked.path.length - 1];
-    s += '<circle cx="' + X(end.t) + '" cy="' + Y(end.sbp) + '" r="3.4" fill="#FBBF24"/>';
-    s += '<text x="' + (X(end.t) - 8) + '" y="' + (Y(end.sbp) + 17) + '" text-anchor="end" fill="#FBBF24" font-family="var(--mono)" font-size="9">' + fmt(picked.nadir, 1) + ' · ' + fmt(picked.fluid_left_L, 2) + ' L left</text>';
+    s += '<circle cx="' + X(end.t) + '" cy="' + Y(end.sbp) + '" r="3.4" fill="#A8641B"/>';
+    s += '<text x="' + (X(end.t) - 8) + '" y="' + (Y(end.sbp) + 17) + '" text-anchor="end" fill="#A8641B" font-family="var(--mono)" font-size="9">' + fmt(picked.nadir, 1) + ' · ' + fmt(picked.fluid_left_L, 2) + ' L left</text>';
   }
 
   if (actualPhase()){
@@ -1092,10 +1209,10 @@ function renderChart(){
       const anchorSbp = c.cuffs[c.cuffs.length - 1].sbp;
       const pts = [{ t: c.anchor_min, sbp: anchorSbp }, ...shown]
         .map(p => X(p.t) + "," + Y(p.sbp)).join(" ");
-      s += '<polyline points="' + pts + '" fill="none" stroke="#F8FAFC" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".94"/>';
+      s += '<polyline points="' + pts + '" fill="none" stroke="#141C1E" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".94"/>';
       if (act.nadir_t <= S.t + 1e-9){
-        s += '<circle cx="' + X(act.nadir_t) + '" cy="' + Y(act.nadir) + '" r="8" fill="none" stroke="#F8FAFC" stroke-width="1.4" opacity=".7"/>';
-        s += '<text x="' + (X(act.nadir_t) + 11) + '" y="' + (Y(act.nadir) - 8) + '" fill="#F8FAFC" font-family="var(--mono)" font-size="10">actual ' + Math.round(act.nadir_t) + '</text>';
+        s += '<circle cx="' + X(act.nadir_t) + '" cy="' + Y(act.nadir) + '" r="8" fill="none" stroke="#141C1E" stroke-width="1.4" opacity=".7"/>';
+        s += '<text x="' + (X(act.nadir_t) + 11) + '" y="' + (Y(act.nadir) - 8) + '" fill="#141C1E" font-family="var(--mono)" font-size="10">actual ' + Math.round(act.nadir_t) + '</text>';
       }
     }
   }
@@ -1103,10 +1220,10 @@ function renderChart(){
   const tr = c.trigger;
   if (tr && S.t >= tr.t - 1e-9){
     const x = X(tr.t), y = Y(90);
-    s += '<circle cx="' + x + '" cy="' + y + '" r="8" fill="none" stroke="#FB7185" stroke-width="1.5" opacity=".8"/>';
-    s += '<circle cx="' + x + '" cy="' + y + '" r="3.4" fill="#FB7185"/>';
-    s += '<line x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (H - MB) + '" stroke="rgba(251,113,133,.35)" stroke-dasharray="2 4"/>';
-    s += '<text x="' + (x + 12) + '" y="' + (y + 17) + '" fill="#FB7185" font-family="var(--mono)" font-size="10">' + Math.round(tr.t) + ' min</text>';
+    s += '<circle cx="' + x + '" cy="' + y + '" r="8" fill="none" stroke="#B23C2C" stroke-width="1.5" opacity=".8"/>';
+    s += '<circle cx="' + x + '" cy="' + y + '" r="3.4" fill="#B23C2C"/>';
+    s += '<line x1="' + x + '" y1="' + y + '" x2="' + x + '" y2="' + (H - MB) + '" stroke="rgba(178,60,44,.35)" stroke-dasharray="2 4"/>';
+    s += '<text x="' + (x + 12) + '" y="' + (y + 17) + '" fill="#B23C2C" font-family="var(--mono)" font-size="10">' + Math.round(tr.t) + ' min</text>';
   }
 
   if (c.actual){
@@ -1116,7 +1233,7 @@ function renderChart(){
       if (e.t > c.anchor_min + 1e-9 && !actualPhase()) continue;
       const x = X(e.t);
       const tall = e.to === 0;
-      s += '<line x1="' + x + '" y1="' + (H - MB + 2) + '" x2="' + x + '" y2="' + (H - MB + (tall ? 10 : 6)) + '" stroke="#FBBF24" stroke-width="' + (tall ? 2 : 1.2) + '" opacity="' + (tall ? ".95" : ".6") + '"/>';
+      s += '<line x1="' + x + '" y1="' + (H - MB + 2) + '" x2="' + x + '" y2="' + (H - MB + (tall ? 10 : 6)) + '" stroke="#A8641B" stroke-width="' + (tall ? 2 : 1.2) + '" opacity="' + (tall ? ".95" : ".6") + '"/>';
     }
   }
 
@@ -1127,7 +1244,7 @@ function renderChart(){
       '" aria-label="Cuff at ' + Math.round(p.t) + ' minutes, SBP ' + Math.round(p.sbp) + '">';
     s += '<circle class="hit" cx="' + X(p.t) + '" cy="' + Y(p.sbp) + '"/>';
     s += '<circle cx="' + X(p.t) + '" cy="' + Y(p.sbp) + '" r="' + (isSel ? "5.4" : (i === rev.length - 1 ? "4.4" : "3")) +
-      '" fill="' + (isSel ? "#E6FFFD" : "#22D3EE") + '" stroke="' + (isSel ? "#22D3EE" : "#07111B") + '" stroke-width="1.5"/>';
+      '" fill="' + (isSel ? "#17756A" : "#141C1E") + '" stroke="#FFFFFF" stroke-width="1.5"/>';
     s += '</g>';
   });
 
@@ -1141,14 +1258,14 @@ function renderChart(){
         '" aria-label="Recorded cuff at ' + Math.round(p.t) + ' minutes, SBP ' + Math.round(p.sbp) + '">';
       s += '<circle class="hit" cx="' + X(p.t) + '" cy="' + Y(p.sbp) + '"/>';
       s += '<circle cx="' + X(p.t) + '" cy="' + Y(p.sbp) + '" r="' + (isSel ? "5.2" : "3") +
-        '" fill="#07111B" stroke="#F8FAFC" stroke-width="1.4"/>';
+        '" fill="#FFFFFF" stroke="#141C1E" stroke-width="1.4"/>';
       s += '</g>';
     }
   }
 
   const px = X(S.t);
-  s += '<line x1="' + px + '" y1="' + MT + '" x2="' + px + '" y2="' + (H - MB) + '" stroke="#E6EDF7" stroke-opacity=".22" stroke-dasharray="2 4"/>';
-  s += '<text x="' + Math.min(px + 4, W - MR - 24) + '" y="' + (MT - 4) + '" fill="#7C8DA6" font-family="var(--mono)" font-size="8">now</text>';
+  s += '<line x1="' + px + '" y1="' + MT + '" x2="' + px + '" y2="' + (H - MB) + '" stroke="#5C6B6D" stroke-opacity=".35" stroke-dasharray="2 4"/>';
+  s += '<text x="' + Math.min(px + 4, W - MR - 24) + '" y="' + (MT - 4) + '" fill="#7E8B8C" font-family="var(--mono)" font-size="8">now</text>';
 
   if (sel){
     const bx = Math.max(ML + 4, Math.min(X(sel.t) - 66, W - MR - 142));
@@ -1157,23 +1274,23 @@ function renderChart(){
       ? "UF " + fmt(sel.uf, 1) + " L/h · " + fmt(sel.removed, 2) + " L"
       : "DBP " + fmt(sel.dbp, 0) + " · UF " + fmt(sel.uf, 1);
     s += '<g class="selCallout" pointer-events="none">';
-    s += '<rect x="' + bx + '" y="' + by + '" width="138" height="44" rx="7" fill="#07111D" stroke="' + (sel.source === "actual" ? "rgba(248,250,252,.45)" : "rgba(34,211,238,.45)") + '"/>';
-    s += '<text x="' + (bx + 9) + '" y="' + (by + 16) + '" fill="#DDE9F6" font-family="var(--mono)" font-size="9">' + Math.round(sel.t) + ' min · SBP ' + Math.round(sel.sbp) + '</text>';
-    s += '<text x="' + (bx + 9) + '" y="' + (by + 30) + '" fill="#8FA5BC" font-family="var(--mono)" font-size="8.5">' + line2 + '</text>';
-    s += '<text x="' + (bx + 9) + '" y="' + (by + 40) + '" fill="' + (sel.source === "actual" ? "#F8FAFC" : "#22D3EE") + '" font-family="var(--mono)" font-size="7.4" letter-spacing="1">' + (sel.source === "actual" ? "RECORDED · POST-ANCHOR" : "RESEARCH CUFF") + '</text>';
+    s += '<rect x="' + bx + '" y="' + by + '" width="138" height="44" rx="7" fill="#FFFFFF" stroke="' + (sel.source === "actual" ? "rgba(20,28,30,.22)" : "rgba(23,117,106,.45)") + '"/>';
+    s += '<text x="' + (bx + 9) + '" y="' + (by + 16) + '" fill="#141C1E" font-family="var(--mono)" font-size="9">' + Math.round(sel.t) + ' min · SBP ' + Math.round(sel.sbp) + '</text>';
+    s += '<text x="' + (bx + 9) + '" y="' + (by + 30) + '" fill="#5C6B6D" font-family="var(--mono)" font-size="8.5">' + line2 + '</text>';
+    s += '<text x="' + (bx + 9) + '" y="' + (by + 40) + '" fill="' + (sel.source === "actual" ? "#141C1E" : "#17756A") + '" font-family="var(--mono)" font-size="7.4" letter-spacing="1">' + (sel.source === "actual" ? "RECORDED · POST-ANCHOR" : "RESEARCH CUFF") + '</text>';
     s += '</g>';
   }
 
   $("chart").innerHTML = s;
 
   const legend = [
-    '<span><i style="background:#22D3EE"></i>Measured SBP</span>',
-    '<span><i style="background:#A78BFA"></i>Forecast (research)</span>',
-    '<span><i style="background:#FBBF24"></i>90 mmHg floor</span>',
+    '<span><i style="background:#141C1E"></i>Measured SBP</span>',
+    '<span><i style="background:#17756A"></i>Forecast (research)</span>',
+    '<span><i style="background:#A8641B"></i>90 mmHg floor</span>',
     '<span><span class="tick"></span>UF change</span>'
   ];
-  if (picked) legend.push('<span><i style="background:#FBBF24"></i>Selected what-if</span>');
-  if (actualPhase()) legend.push('<span><i style="background:#F8FAFC"></i>Recorded readings (rolling)</span>');
+  if (picked) legend.push('<span><i style="background:#A8641B"></i>Selected what-if</span>');
+  if (actualPhase()) legend.push('<span><i style="background:#141C1E"></i>Recorded readings (rolling)</span>');
   $("legend").innerHTML = legend.join("");
   const rolling = actualPhase();
   $("revealBadge").classList.toggle("hidden", !rolling);
@@ -1197,7 +1314,7 @@ function renderInspector(){
   const key = sel ? sel.key : "none";
   if (key === S.insKey) return;
   S.insKey = key;
-  $("insEmpty").classList.toggle("hidden", !!sel);
+  $("inspector").classList.toggle("hidden", !sel);
   $("insBody").classList.toggle("hidden", !sel);
   if (!sel) return;
   $("insTime").textContent = Math.round(sel.t);
@@ -1408,7 +1525,6 @@ function render(){
   }
 
   const tc = $("tradeoffCard");
-  $("howTo").classList.toggle("hidden", alertOn() || projectionDone());
   if (tr && alertOn()){
     tc.classList.remove("hidden");
     document.querySelectorAll(".policy").forEach(el => {

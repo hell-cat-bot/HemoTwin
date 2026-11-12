@@ -78,7 +78,7 @@ html, body, [class*="css"] {{
 [data-testid="stDecoration"], #MainMenu, footer {{ display: none !important; }}
 [data-testid="stMainBlockContainer"], .block-container {{
   max-width: 1240px;
-  padding: 22px 26px 40px;
+  padding: 88px 26px 40px;
 }}
 [data-testid="stSidebarCollapseButton"] button,
 [data-testid="stExpandSidebarButton"] {{
@@ -121,6 +121,7 @@ hr {{ border-color: var(--ht-line); }}
 [data-testid="stSidebar"] {{
   background: var(--ht-surface-2);
   border-right: 1px solid var(--ht-line);
+  padding-top: 66px;
 }}
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
 [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] li {{
@@ -231,42 +232,74 @@ details {{
 summary {{ color: var(--ht-ink); font-size: 13px; font-weight: 600; }}
 div[data-testid="stExpander"] details {{ background: var(--ht-surface-2); }}
 
-/* Fixed instrument bar: the dark chrome shared with the 3D landing. */
-/* Streamlit wraps the container in a content-height layout div; pin that
-   wrapper too, otherwise sticky is clamped to its 72px parent box. */
+/* Fixed instrument bar: the dark chrome shared with the 3D landing. It spans
+   the viewport so the header does not jump when a page opens a sidebar. */
 div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 999;
-  padding-top: 10px;
-  margin-top: -10px;
-  background: var(--ht-bg);
+  left: 0;
+  right: 0;
+  z-index: 1000000;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
 }}
 .st-key-ht_topbar {{
-  position: sticky;
-  top: 10px;
-  z-index: 999;
+  --ht-nav-fs: 12px;
+  --ht-nav-ls: 0.08em;
   background: var(--ht-chrome);
-  border: 1px solid #15211E;
-  border-radius: 12px;
-  padding: 8px 16px;
-  margin-bottom: 22px;
-  animation: htDrop 300ms ease both;
+  border-bottom: 1px solid #15211E;
+  border-radius: 0;
+  padding: 9px max(26px, calc((100vw - 1240px) / 2 + 26px));
+  margin-bottom: 0;
 }}
-.st-key-ht_topbar [data-testid="stHorizontalBlock"] {{ align-items: center; gap: 4px; }}
+.st-key-ht_topbar [data-testid="stHorizontalBlock"] {{
+  align-items: center;
+  gap: 0;
+  flex-wrap: nowrap;
+}}
+/* Brand flexes; the five links and the status cluster stay anchored right, so
+   their x-positions are identical on every view. */
+.st-key-ht_topbar [data-testid="stColumn"]:first-child {{
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0;
+}}
+.st-key-ht_topbar [data-testid="stColumn"]:nth-child(n+2):nth-child(-n+6) {{
+  flex: 0 0 82px !important;
+  width: 82px !important;
+  min-width: 0;
+}}
+.st-key-ht_topbar [data-testid="stColumn"]:last-child {{
+  flex: 0 0 108px !important;
+  width: 108px !important;
+}}
 .st-key-ht_topbar [data-testid="stPageLink"] {{ text-align: center; }}
+/* Streamlit paints the label's inner markdown <p> with the body ink color,
+   which is unreadable on the dark bar; let it inherit the link color. */
+.st-key-ht_topbar [data-testid="stPageLink"] a * {{ color: inherit !important; }}
 .st-key-ht_topbar [data-testid="stPageLink"] a {{
-  color: #869895;
+  color: #E4EDEA;
   font-family: {MONO_FONT};
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
+  font-size: var(--ht-nav-fs);
+  font-weight: 600;
+  letter-spacing: var(--ht-nav-ls);
   text-transform: uppercase;
-  padding: 6px 2px;
+  padding: 7px 2px;
   background: transparent !important;
   border-radius: 0 !important;
   border-bottom: 1.5px solid transparent;
   justify-content: center;
   transition: color 140ms ease, border-color 140ms ease;
+}}
+.st-key-ht_topbar [data-testid="stPageLink"] a p {{
+  font-family: {MONO_FONT};
+  font-size: var(--ht-nav-fs);
+  font-weight: 600;
+  letter-spacing: var(--ht-nav-ls);
+  line-height: 1.2;
+  margin: 0;
 }}
 .st-key-ht_topbar [data-testid="stPageLink"] a:hover {{
   color: #E7F1EE;
@@ -311,10 +344,10 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
 .ht-live {{
   display: inline-flex; align-items: center; gap: 7px;
   font-family: {MONO_FONT};
-  font-size: 9.5px;
+  font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #7FA69E;
+  color: #CBDCD7;
   white-space: nowrap;
 }}
 .ht-live i {{
@@ -331,7 +364,6 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   padding-bottom: 18px;
   margin-bottom: 22px;
   border-bottom: 1px solid var(--ht-line);
-  animation: htRise 280ms ease both;
 }}
 .ht-pagehead__main {{ max-width: 760px; }}
 .ht-pagehead__side {{ display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }}
@@ -477,14 +509,6 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
 .ht-grid-3 {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }}
 .ht-grid-2 > .ht-card, .ht-grid-3 > .ht-card {{ height: 100%; }}
 
-@keyframes htRise {{
-  from {{ opacity: 0; transform: translateY(6px); }}
-  to {{ opacity: 1; transform: translateY(0); }}
-}}
-@keyframes htDrop {{
-  from {{ opacity: 0; transform: translateY(-5px); }}
-  to {{ opacity: 1; transform: translateY(0); }}
-}}
 @media (max-width: 1200px) {{
   .st-key-case_buttons [data-testid="stHorizontalBlock"] {{ flex-wrap: wrap; row-gap: 8px; }}
   .st-key-case_buttons [data-testid="stColumn"] {{
@@ -495,7 +519,17 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   [data-testid="stWidgetLabel"] p {{ font-size: 12px; }}
 }}
 @media (max-width: 1120px) {{
-  .st-key-ht_topbar [data-testid="stPageLink"] a {{ font-size: 9.5px; letter-spacing: 0.05em; }}
+  .st-key-ht_topbar {{ padding-left: 20px; padding-right: 20px; --ht-nav-fs: 11px; --ht-nav-ls: 0.05em; }}
+  .ht-pagehead {{ flex-direction: column; align-items: flex-start; gap: 10px; }}
+  .ht-pagehead__side {{ justify-content: flex-start; }}
+  .st-key-ht_topbar [data-testid="stColumn"]:nth-child(n+2):nth-child(-n+6) {{
+    flex-basis: 68px !important;
+    width: 68px !important;
+  }}
+  .st-key-ht_topbar [data-testid="stColumn"]:last-child {{
+    flex-basis: 30px !important;
+    width: 30px !important;
+  }}
   .st-key-ht_topbar .ht-brand__word {{ font-size: 11.5px; letter-spacing: 0.14em; }}
   .st-key-ht_topbar .ht-live span {{ display: none; }}
 }}
@@ -507,8 +541,8 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   .ht-section {{ flex-direction: column; gap: 6px; }}
 }}
 @media (max-width: 760px) {{
+  .st-key-ht_topbar {{ --ht-nav-fs: 9px; --ht-nav-ls: 0.04em; }}
   .st-key-ht_topbar .ht-brand__ver {{ display: none; }}
-  .st-key-ht_topbar [data-testid="stPageLink"] a {{ font-size: 9px; letter-spacing: 0.04em; }}
   .st-key-ht_topbar .ht-live span {{ display: none; }}
 }}
 @media (max-width: 640px) {{
