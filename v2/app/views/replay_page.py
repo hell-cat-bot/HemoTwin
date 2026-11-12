@@ -26,10 +26,6 @@ st.markdown(ui_theme.page_head(
     pills=[("Retrospective", "info"), ("Curated sessions", ""),
            ("Display-only", "warn")]),
     unsafe_allow_html=True)
-st.markdown(ui_theme.callout(
-    "Curated retrospective replay · display-only shadow model, never an alarm "
-    "· no treatment recommendation or machine action.", "warn"),
-    unsafe_allow_html=True)
 st.markdown("""
 <style>
 .st-key-replay_frame { margin-top: 6px; overflow: hidden; }

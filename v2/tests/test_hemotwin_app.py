@@ -96,7 +96,6 @@ class ReplayPageTest(unittest.TestCase):
         blob = _markdown_blob(at)
         self.assertIn("Session replay", blob)
         self.assertIn("Prediction, then the record", blob)
-        self.assertIn("no treatment recommendation", blob)
 
     def test_replay_asset_and_nav_are_present(self):
         self.assertTrue(REPLAY_ASSET.exists())
