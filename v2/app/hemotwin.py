@@ -27,9 +27,13 @@ inject_css()
 
 pages = [
     st.Page(
+        "views/home_page.py",
+        title="Home",
+        default=True,
+    ),
+    st.Page(
         "views/case_lab_page.py",
         title="Case lab",
-        default=True,
     ),
     st.Page(
         "views/chair_board_page.py",

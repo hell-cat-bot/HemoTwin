@@ -7,7 +7,7 @@ import streamlit as st
 
 from app.ui import theme
 
-NAV_LABELS = ["Case lab", "Chairs", "Live", "Replay", "Evidence"]
+NAV_LABELS = ["Home", "Case lab", "Chairs", "Live", "Replay", "Evidence"]
 
 
 def _current_page(pages):
@@ -25,17 +25,18 @@ def header(pages) -> None:
     active = _current_page(pages)
     with st.container(key="ht_topbar"):
         cols = st.columns(
-            [2.6, 1, 1, 1, 1, 1.1, 1.35], gap="small", vertical_alignment="center")
+            [2.6, 1, 1, 1, 1, 1, 1.1, 1.35], gap="small",
+            vertical_alignment="center")
         with cols[0]:
             st.markdown(theme.brand_html(), unsafe_allow_html=True)
-        for col, page, label in zip(cols[1:6], pages, NAV_LABELS):
+        for col, page, label in zip(cols[1:7], pages, NAV_LABELS):
             with col:
                 if page is active:
                     with st.container(key="ht_nav_active"):
                         st.page_link(page, label=label)
                 else:
                     st.page_link(page, label=label)
-        with cols[6]:
+        with cols[7]:
             st.markdown(theme.status_html(), unsafe_allow_html=True)
 
 

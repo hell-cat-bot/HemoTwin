@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>HemoTwin bay</title>
+<style>
+html, body { margin: 0; height: 100%; overflow: hidden; background: #04070a; }
+iframe { display: block; width: 100%; height: 100%; border: 0; }
+</style>
+</head>
+<body>
+<iframe id="bay" src="./index.html?embed=1"></iframe>
+<script>
+// The bay cannot scroll, so a wheel there would otherwise die inside the
+// iframe. Hand the delta to the console so the landing reveals the band.
+// preventDefault keeps the browser from also chaining the same wheel.
+function scrollableAncestor(node, view) {
+  while (node && node !== view.document.body) {
+    const style = view.getComputedStyle(node);
+    if (/auto|scroll/.test(style.overflowY)
+        && node.scrollHeight > node.clientHeight + 1) return node;
+    node = node.parentElement;
+  }
+  return null;
+}
+function forwardWheel() {
+  const bay = document.getElementById("bay");
+  const view = bay.contentWindow;
+  const doc = bay.contentDocument;
+  if (!doc || !view) return;
+  doc.addEventListener("wheel", (event) => {
+    if (scrollableAncestor(event.target, view)) return;
+    event.preventDefault();
+    const scroller = window.top.document.querySelector(
+      '[data-testid="stMain"]');
+    if (scroller) scroller.scrollBy({ top: event.deltaY, behavior: "auto" });
+  }, { passive: false });
+}
+const bay = document.getElementById("bay");
+bay.addEventListener("load", forwardWheel);
+forwardWheel();
+</script>
+</body>
+</html>

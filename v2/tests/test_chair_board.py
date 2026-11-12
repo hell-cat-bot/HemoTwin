@@ -136,6 +136,7 @@ class ChairBoardAppTest(unittest.TestCase):
 
     def test_case_select_stays_in_sync_after_page_switch(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()
+        at.switch_page("views/case_lab_page.py").run()
         next(b for b in at.button if b.label.startswith("True crash")).click().run()
         at.switch_page("views/evidence_page.py").run()
         at.switch_page("views/case_lab_page.py").run()

@@ -88,6 +88,7 @@ export default function App() {
   const step = useSession((s) => s.step)
   const apply = useSession((s) => s.apply)
   const phase = useSession((s) => s.phase)
+  const embed = new URLSearchParams(window.location.search).has('embed')
 
   useEffect(() => {
     let raf = 0
@@ -119,13 +120,15 @@ export default function App() {
       </div>
       <div className="scrim" aria-hidden="true" />
       <LoadPortal />
-      <TopBar />
+      {!embed && <TopBar />}
       <Hero />
       <Panel />
-      <div className="hint">
-        <span className="hint-dot" />
-        Move your cursor to look around
-      </div>
+      {!embed && (
+        <div className="hint">
+          <span className="hint-dot" />
+          Move your cursor to look around
+        </div>
+      )}
     </div>
   )
 }

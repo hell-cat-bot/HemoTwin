@@ -259,14 +259,14 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   gap: 0;
   flex-wrap: nowrap;
 }}
-/* Brand flexes; the five links and the status cluster stay anchored right, so
+/* Brand flexes; the six links and the status cluster stay anchored right, so
    their x-positions are identical on every view. */
 .st-key-ht_topbar [data-testid="stColumn"]:first-child {{
   flex: 1 1 auto !important;
   width: auto !important;
   min-width: 0;
 }}
-.st-key-ht_topbar [data-testid="stColumn"]:nth-child(n+2):nth-child(-n+6) {{
+.st-key-ht_topbar [data-testid="stColumn"]:nth-child(n+2):nth-child(-n+7) {{
   flex: 0 0 82px !important;
   width: 82px !important;
   min-width: 0;
@@ -522,7 +522,7 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   .st-key-ht_topbar {{ padding-left: 20px; padding-right: 20px; --ht-nav-fs: 11px; --ht-nav-ls: 0.05em; }}
   .ht-pagehead {{ flex-direction: column; align-items: flex-start; gap: 10px; }}
   .ht-pagehead__side {{ justify-content: flex-start; }}
-  .st-key-ht_topbar [data-testid="stColumn"]:nth-child(n+2):nth-child(-n+6) {{
+  .st-key-ht_topbar [data-testid="stColumn"]:nth-child(n+2):nth-child(-n+7) {{
     flex-basis: 68px !important;
     width: 68px !important;
   }}

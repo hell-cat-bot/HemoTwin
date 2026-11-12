@@ -21,9 +21,32 @@ def _markdown_blob(at) -> str:
     return " ".join(str(m.value) for m in at.markdown)
 
 
-class ShellAndCaseLabTest(unittest.TestCase):
-    def test_shell_loads_case_lab_without_exception(self):
+class HomePageTest(unittest.TestCase):
+    def test_home_lands_on_the_3d_bay_without_exception(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()
+        self.assertEqual(list(at.exception), [])
+        self.assertIn("Five views, one twin", _markdown_blob(at))
+        sim = ROOT / "app" / "static" / "sim" / "index.html"
+        self.assertTrue(sim.exists())
+        bundle = " ".join(
+            p.read_text(encoding="utf-8")
+            for p in (sim.parent / "assets").glob("*.js"))
+        self.assertIn("./models/dialysis_bay.glb", bundle)
+        home = (ROOT / "app" / "views" / "home_page.py").read_text(
+            encoding="utf-8")
+        self.assertIn("/app/static/sim/embed.html", home)
+        embed = sim.parent / "embed.html"
+        self.assertIn("index.html?embed=1",
+                      embed.read_text(encoding="utf-8"))
+        nav = (ROOT / "app" / "hemotwin.py").read_text(encoding="utf-8")
+        self.assertLess(nav.index("views/home_page.py"),
+                        nav.index("views/case_lab_page.py"))
+
+
+class ShellAndCaseLabTest(unittest.TestCase):
+    def test_case_lab_loads_without_exception(self):
+        at = AppTest.from_file(str(APP), default_timeout=120).run()
+        at.switch_page("views/case_lab_page.py").run()
         self.assertEqual(list(at.exception), [])
         self.assertEqual(at.session_state["case_id"].split(".")[0], "2")
         self.assertEqual(at.session_state["case_select"], "Taper")
@@ -31,6 +54,7 @@ class ShellAndCaseLabTest(unittest.TestCase):
 
     def test_case_lab_inspector_and_policy_section(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()
+        at.switch_page("views/case_lab_page.py").run()
         self.assertEqual(list(at.exception), [])
         blob = " ".join(
             [str(m.value) for m in at.markdown]
@@ -46,6 +70,7 @@ class ShellAndCaseLabTest(unittest.TestCase):
 
     def test_stale_cuff_blocks_and_true_crash_reviews(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()
+        at.switch_page("views/case_lab_page.py").run()
         stale = next(b for b in at.button if b.label.startswith("Stale cuff"))
         stale.click().run()
         self.assertEqual(list(at.exception), [])
