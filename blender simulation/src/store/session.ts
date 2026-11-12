@@ -28,6 +28,7 @@ interface Snapshot {
   target: number
   inst: number
   uf: number
+  speed: number
   samples: Sample[]
   forecast: ForecastPoint[]
   ghost: ForecastPoint[] | null
@@ -42,6 +43,7 @@ interface Actions {
   start: () => void
   reset: () => void
   apply: (id: InterventionId) => void
+  setSpeed: (speed: number) => void
   step: (dtReal: number) => void
 }
 
@@ -65,6 +67,7 @@ const initial: Snapshot = {
   target: 125,
   inst: 0.04,
   uf: 0.42,
+  speed: 1,
   samples: [],
   forecast: [],
   ghost: null,
@@ -83,6 +86,7 @@ const EMPTY_ACTIONS = {
   start: () => undefined,
   reset: () => undefined,
   apply: () => undefined,
+  setSpeed: () => undefined,
   step: () => undefined,
 }
 
@@ -102,6 +106,7 @@ export const useSession = create<SessionStore>((set, get) => ({
     notedRefill = false
     set({
       ...initial,
+      speed: get().speed,
       phase: 'running',
       sbp: reading(core),
       t: 0,
@@ -117,7 +122,7 @@ export const useSession = create<SessionStore>((set, get) => ({
     autoRescued = false
     settledAt = null
     notedRefill = false
-    set({ ...initial })
+    set({ ...initial, speed: get().speed })
   },
 
   apply: (id) => {
@@ -145,13 +150,15 @@ export const useSession = create<SessionStore>((set, get) => ({
     })
   },
 
+  setSpeed: (speed) => set({ speed }),
+
   step: (dtReal) => {
     const state = get()
     if (state.phase === 'idle' || state.phase === 'settled') return
 
     const rate = state.phase === 'alert' ? 0.3 : state.phase === 'applied' ? 0.46 : 0.36
     const dt = Math.min(dtReal, 0.25)
-    acc += dt * rate
+    acc += dt * rate * state.speed
     advance(core, acc)
     acc = 0
 

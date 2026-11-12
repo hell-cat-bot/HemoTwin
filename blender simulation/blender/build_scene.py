@@ -155,7 +155,7 @@ def sphere(name, radius, loc=(0, 0, 0), scale=(1, 1, 1), mat=None,
     return ob
 
 
-def tube(name, pts, radius, mat, res_u=24, bevel_res=3, parent=None):
+def tube(name, pts, radius, mat, res_u=24, bevel_res=3, parent=None, radii=None):
     curve = bpy.data.curves.new(name, "CURVE")
     curve.dimensions = "3D"
     curve.resolution_u = res_u
@@ -171,6 +171,7 @@ def tube(name, pts, radius, mat, res_u=24, bevel_res=3, parent=None):
     for i, p in enumerate(pts):
         bp = sp.bezier_points[i]
         bp.co = Vector(p)
+        bp.radius = radii[i] if radii else 1.0
         bp.handle_left_type = "AUTO"
         bp.handle_right_type = "AUTO"
     ob = bpy.data.objects.new(name, curve)
@@ -260,10 +261,10 @@ M = {
     "blanket":   make_mat("M_Blanket",     (0.105, 0.135, 0.145), 0.96),
     "towel":     make_mat("M_Towel",       (0.18, 0.21, 0.22),    0.96),
     "skin":      make_mat("M_Skin",      (0.435, 0.30, 0.232),  0.55),
-    "skin_dark": make_mat("M_SkinShadow",  (0.42, 0.275, 0.205),  0.62),
+    "skin_dark": make_mat("M_SkinShadow",  (0.30, 0.195, 0.145),  0.62),
     "hair":      make_mat("M_Hair",        (0.075, 0.068, 0.062), 0.72),
     "brow":      make_mat("M_Brow",        (0.09, 0.07, 0.06),    0.7),
-    "lip":       make_mat("M_Lip",         (0.32, 0.175, 0.15),   0.55),
+    "lip":       make_mat("M_Lip",         (0.29, 0.155, 0.13),    0.55),
     "tape":      make_mat("M_Tape",        (0.63, 0.60, 0.51),    0.85),
     "blood":     make_mat("M_BloodLine",   (0.16, 0.025, 0.03),   0.32),
     "blood_core":make_mat("M_DialyzerBlood",(0.22, 0.03, 0.035),  0.4),
@@ -411,7 +412,7 @@ GRP_PATIENT = empty("GRP_Patient", (0, 0, 0))
 head_loc = Vector((0.0, -0.735, 1.288))
 head_rot = (radians(42), 0, radians(-20))
 
-bpy.ops.mesh.primitive_uv_sphere_add(segments=48, ring_count=32, radius=1.0, location=head_loc)
+bpy.ops.mesh.primitive_uv_sphere_add(segments=64, ring_count=48, radius=1.0, location=head_loc)
 head = bpy.context.object
 head.name = "SM_Head"
 me = head.data
@@ -421,72 +422,113 @@ for v in me.vertices:
         taper = 0.76 + 0.24 * max(0.0, (z + 1.0) / 1.05)
         v.co.x *= taper
         v.co.y *= 0.94 + 0.06 * max(0.0, (z + 1.0) / 1.05)
+    # chin and jaw: pull the lower front of the skull forward so the chin is
+    # part of the head silhouette instead of a sphere stuck on the face
+    if v.co.y > 0.05 and v.co.z < -0.35:
+        jaw = math.exp(-(((v.co.z + 0.78) / 0.26) ** 2))
+        v.co.y += 0.30 * jaw * (v.co.y ** 2)
 head.scale = (0.092, 0.106, 0.133)
 bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 head.rotation_euler = head_rot
 head.data.materials.append(M["skin"])
 smooth(head, None)
 head.parent = GRP_PATIENT
+# keep the head in proportion with the broadened shoulders
+head.scale = (0.95, 0.95, 0.95)
 
 GRP_HEAD = empty("GRP_HeadFeatures", head_loc, head_rot)
 GRP_HEAD.parent = GRP_PATIENT
+GRP_HEAD.scale = (0.95, 0.95, 0.95)
 
 # features are authored on +Y (upright face), rotated with the head
 def face_pt(x, y, z):
     return (x, y, z)
 
-# nose
-n = sphere("SM_Nose", 1.0, (0, 0.096, -0.010), scale=(0.020, 0.027, 0.036), mat=M["skin"], parent=GRP_HEAD)
+# nose: bridge, tip and wings read as one dorsum instead of a button
+n = sphere("SM_NoseBridge", 1.0, (0, 0.0845, 0.022), scale=(0.011, 0.014, 0.028), mat=M["skin"], parent=GRP_HEAD)
+n = sphere("SM_Nose", 1.0, (0, 0.094, -0.014), scale=(0.016, 0.018, 0.022), mat=M["skin"], parent=GRP_HEAD)
+for sx in (-1, 1):
+    sphere(f"SM_NoseWing_{sx}", 1.0, (sx * 0.0145, 0.0905, -0.031),
+           scale=(0.008, 0.0085, 0.008), mat=M["skin"], parent=GRP_HEAD)
+    sphere(f"SM_Nostril_{sx}", 1.0, (sx * 0.0115, 0.0935, -0.0385),
+           scale=(0.0042, 0.0034, 0.0026), mat=M["skin_dark"], parent=GRP_HEAD)
 # brow ridge / brows
 for sx in (-1, 1):
-    # closed eye / lid
-    sphere(f"SM_EyeLid_{sx}", 1.0, (sx * 0.038, 0.0915, 0.012),
-           scale=(0.027, 0.0095, 0.0075), mat=M["skin_dark"], parent=GRP_HEAD)
-    # ear
-    sphere(f"SM_Ear_{sx}", 1.0, (sx * 0.095, 0.004, -0.012),
-           scale=(0.013, 0.020, 0.030), mat=M["skin"], parent=GRP_HEAD)
-# lips
-tube("SM_Mouth", [(-0.026, 0.088, -0.058), (0.0, 0.094, -0.062), (0.026, 0.088, -0.058)],
-     0.0038, M["lip"], res_u=12, bevel_res=2, parent=GRP_HEAD)
-sphere("SM_LowerLip", 1.0, (0, 0.090, -0.072), scale=(0.022, 0.008, 0.0055),
+    # closed eye: a thin dark lash line
+    tube(f"SM_EyeLid_{sx}",
+         [(sx * 0.020, 0.1015, 0.010), (sx * 0.040, 0.0925, 0.014),
+          (sx * 0.058, 0.0805, 0.008)],
+         0.0022, M["brow"], res_u=10, bevel_res=2, parent=GRP_HEAD)
+    # brow follows the curved forehead surface
+    tube(f"SM_Brow_{sx}",
+         [(sx * 0.014, 0.097, 0.041), (sx * 0.036, 0.090, 0.0445),
+          (sx * 0.058, 0.073, 0.038)],
+         0.0038, M["brow"], res_u=10, bevel_res=2, parent=GRP_HEAD)
+    # ear with a concha hollow
+    sphere(f"SM_Ear_{sx}", 1.0, (sx * 0.093, 0.004, -0.014),
+           scale=(0.0125, 0.021, 0.032), mat=M["skin"], parent=GRP_HEAD)
+    sphere(f"SM_EarInner_{sx}", 1.0, (sx * 0.1035, 0.004, -0.016),
+           scale=(0.0045, 0.009, 0.013), mat=M["skin_dark"], parent=GRP_HEAD)
+# lips: narrow and seated into the muzzle
+tube("SM_Mouth", [(-0.026, 0.0895, -0.0605), (0.0, 0.0940, -0.0625), (0.026, 0.0895, -0.0605)],
+     0.0030, M["lip"], res_u=12, bevel_res=2, parent=GRP_HEAD)
+sphere("SM_LowerLip", 1.0, (0, 0.0895, -0.0715), scale=(0.0155, 0.0058, 0.0046),
        mat=M["lip"], parent=GRP_HEAD)
-for sx in (-1, 1):
-    tube(f"SM_Nasolabial_{sx}", [(sx * 0.030, 0.092, -0.030), (sx * 0.041, 0.083, -0.048),
-                                 (sx * 0.044, 0.078, -0.060)],
-         0.0024, M["skin_dark"], res_u=8, bevel_res=2, parent=GRP_HEAD)
-# cheek/jaw blend
-sphere("SM_Chin", 1.0, (0, 0.052, -0.098), scale=(0.040, 0.043, 0.033),
-       mat=M["skin"], parent=GRP_HEAD)
-for sx in (-1, 1):
-    tube(f"SM_Sideburn_{sx}", [(sx * 0.086, 0.026, 0.006), (sx * 0.088, 0.032, -0.036),
-                               (sx * 0.083, 0.045, -0.066)],
-         0.010, M["hair"], res_u=8, bevel_res=2, parent=GRP_HEAD)
 
-# hair cap: hollow shell over top/back, leaving the face open
-bpy.ops.mesh.primitive_uv_sphere_add(segments=48, ring_count=32, radius=1.0, location=head_loc)
-hair = bpy.context.object
-hair.name = "SM_Hair"
-hm = hair.data
+# hair cap: swept shell whose lower rim is the hairline curve itself, so the
+# edge stays clean and hugs the skull (no carved sphere, no stair steps)
 import bmesh
 bm = bmesh.new()
-bm.from_mesh(hm)
-for f in list(bm.faces):
-    c = f.calc_center_median()
-    c = Vector((c.x / 0.097, c.y / 0.111, c.z / 0.128))
-    keep = not (c.y > 0.26 and c.z < 0.665)         # carve the face opening
-    if c.z < -0.55:
-        keep = False                                 # neck opening
-    if not keep:
-        bm.faces.remove(f)
+N, ROWS = 144, 28
+HAIR_R = (0.0935, 0.108, 0.137)
+
+# hairline height in carve units (1.0 ~ 15 mm) by front-relative azimuth:
+# low widow's peak at the centre, high temples, above the ears, nape at back
+HEM_PTS = [(0.0, 4.80), (0.55, 5.42), (1.05, 4.30), (1.40, 2.45),
+           (1.85, 1.15), (2.45, 0.10), (math.pi, -4.80)]
+
+
+def hem_theta(t):
+    for (t0, h0), (t1, h1) in zip(HEM_PTS, HEM_PTS[1:]):
+        if t <= t1:
+            u = (t - t0) / (t1 - t0)
+            u = u * u * (3.0 - 2.0 * u)
+            return h0 + (h1 - h0) * u
+    return HEM_PTS[-1][1]
+
+
+rings = []
+for j in range(ROWS + 1):
+    ring = []
+    for i in range(N):
+        theta = 2.0 * pi * i / N
+        t = abs(((theta + pi) % (2.0 * pi)) - pi)
+        phi_rim = math.acos(max(-0.99, min(0.99, hem_theta(t) * 0.128)))
+        phi = phi_rim * (1.0 - j / ROWS)
+        ring.append(bm.verts.new((
+            HAIR_R[0] * math.sin(phi) * math.sin(theta),
+            HAIR_R[1] * math.sin(phi) * math.cos(theta),
+            HAIR_R[2] * math.cos(phi))))
+    rings.append(ring)
+for j in range(ROWS):
+    for i in range(N):
+        v00 = rings[j][i]
+        v10 = rings[j][(i + 1) % N]
+        v11 = rings[j + 1][(i + 1) % N]
+        v01 = rings[j + 1][i]
+        bm.faces.new((v00, v01, v11, v10))
+bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
+hm = bpy.data.meshes.new("SM_Hair")
 bm.to_mesh(hm)
 bm.free()
-hair.scale = (0.101, 0.115, 0.132)
-bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+hair = bpy.data.objects.new("SM_Hair", hm)
+bpy.context.scene.collection.objects.link(hair)
 hair.rotation_euler = head_rot
 hair.location = head_loc + Vector((0, 0.002, 0.003))
+hair.scale = (0.95, 0.95, 0.95)
 hair.data.materials.append(M["hair"])
 sol = hair.modifiers.new("Solidify", "SOLIDIFY")
-sol.thickness = 0.006
+sol.thickness = 0.0025
 sol.offset = 1.0
 smooth(hair, None)
 hair.parent = GRP_PATIENT
@@ -503,11 +545,11 @@ def neck_ring(center, rx, rs, steps=36):
 
 
 NECK_RINGS = [
-    neck_ring((0, -0.596, 1.090), 0.060, 0.054),
-    neck_ring((0, -0.620, 1.135), 0.056, 0.052),
-    neck_ring((0, -0.650, 1.185), 0.050, 0.048),
-    neck_ring((0, -0.678, 1.232), 0.044, 0.043),
-    neck_ring((0, -0.700, 1.270), 0.038, 0.040),
+    neck_ring((0, -0.596, 1.082), 0.066, 0.059),
+    neck_ring((0, -0.620, 1.124), 0.061, 0.056),
+    neck_ring((0, -0.648, 1.170), 0.055, 0.051),
+    neck_ring((0, -0.674, 1.212), 0.048, 0.046),
+    neck_ring((0, -0.695, 1.250), 0.041, 0.042),
 ]
 loft("SM_Neck", NECK_RINGS, M["skin"], parent=GRP_PATIENT)
 
@@ -527,34 +569,26 @@ def body_ring(y, top, wx, ratio, p=2.5, steps=56):
 
 
 BIB = [
-    (-0.400, 0.062, 0.200, 0.50),
-    (-0.470, 0.100, 0.215, 0.49),
-    (-0.520, 0.126, 0.228, 0.47),
-    (-0.560, 0.150, 0.240, 0.45),
-    (-0.600, 0.160, 0.238, 0.43),
-    (-0.635, 0.157, 0.215, 0.41),
-    (-0.665, 0.142, 0.172, 0.40),
-    (-0.690, 0.124, 0.132, 0.40),
-    (-0.712, 0.104, 0.094, 0.40),
-    (-0.732, 0.086, 0.074, 0.40),
+    (-0.400, 0.058, 0.204, 0.50),
+    (-0.470, 0.082, 0.222, 0.49),
+    (-0.520, 0.100, 0.238, 0.47),
+    (-0.560, 0.128, 0.252, 0.45),
+    (-0.600, 0.148, 0.250, 0.43),
+    (-0.635, 0.150, 0.224, 0.41),
+    (-0.665, 0.138, 0.178, 0.40),
+    (-0.690, 0.122, 0.136, 0.40),
+    (-0.712, 0.104, 0.096, 0.40),
+    (-0.732, 0.086, 0.076, 0.40),
 ]
 loft("SM_GownChest", [body_ring(*st) for st in BIB], M["gown"], parent=GRP_PATIENT)
 
 # deltoids round off the shoulder line
 for sx in (-1, 1):
     sphere(f"SM_Shoulder_{'L' if sx > 0 else 'R'}", 1.0,
-           (sx * 0.155, -0.575, 1.062), scale=(0.058, 0.080, 0.048),
+           (sx * 0.168, -0.575, 1.058), scale=(0.062, 0.082, 0.050),
            mat=M["gown"], segs=36, rings=22, parent=GRP_PATIENT)
 
-# gown neckline collar
-bpy.ops.mesh.primitive_torus_add(
-    major_radius=0.060, minor_radius=0.008, major_segments=44, minor_segments=12,
-    location=(0, -0.641, 1.143), rotation=(radians(31), 0, 0))
-collar = bpy.context.object
-collar.name = "SM_GownCollar"
-collar.data.materials.append(M["gown_seam"])
-smooth(collar, None)
-collar.parent = GRP_PATIENT
+# gown neckline: the gown loft ends at the neck, no collar ring needed
 
 # left forearm resting on the blanket, hand toward the foot of the bed
 towel = box("SM_ArmTowel", (0.16, 0.40, 0.030), (0.345, -0.02, 0.812),
@@ -563,28 +597,33 @@ towel = box("SM_ArmTowel", (0.16, 0.40, 0.030), (0.345, -0.02, 0.812),
 L_ARM = [(0.205, -0.618, 1.050), (0.235, -0.560, 1.032), (0.258, -0.490, 1.020),
          (0.275, -0.420, 1.008), (0.288, -0.350, 0.972), (0.296, -0.290, 0.928),
          (0.300, -0.252, 0.888)]
-tube("SM_GownSleeve", L_ARM, 0.047, M["gown"], res_u=24, bevel_res=4, parent=GRP_PATIENT)
+tube("SM_GownSleeve", L_ARM, 0.047, M["gown"], res_u=24, bevel_res=4, parent=GRP_PATIENT,
+     radii=[1.06, 1.03, 1.00, 0.96, 0.91, 0.87, 0.83])
 tube("SM_GownSleeveSeam", [(0.282, -0.440, 1.030), (0.308, -0.300, 0.938)],
      0.0045, M["gown_seam"], res_u=12, bevel_res=2, parent=GRP_PATIENT)
 tube("SM_Forearm", [(0.300, -0.250, 0.885), (0.342, -0.095, 0.842), (0.380, 0.060, 0.812)],
-     0.043, M["skin"], res_u=18, bevel_res=4, parent=GRP_PATIENT)
+     0.043, M["skin"], res_u=18, bevel_res=4, parent=GRP_PATIENT,
+     radii=[1.0, 0.90, 0.78])
 # taper the wrist visually with a second smaller skin tube
 tube("SM_Wrist", [(0.380, 0.045, 0.812), (0.390, 0.100, 0.805), (0.398, 0.145, 0.800)],
-     0.030, M["skin"], res_u=14, bevel_res=3, parent=GRP_PATIENT)
+     0.030, M["skin"], res_u=14, bevel_res=3, parent=GRP_PATIENT,
+     radii=[0.96, 0.92, 0.90])
 
-# hand: palm + fingers, relaxed
+# hand: palm + fingers, relaxed and slightly curled
 palm = sphere("SM_HandPalm", 1.0, (0.404, 0.196, 0.796),
-              scale=(0.031, 0.046, 0.013), mat=M["skin"], parent=GRP_PATIENT)
+              scale=(0.033, 0.049, 0.014), mat=M["skin"], parent=GRP_PATIENT)
 for i in range(4):
-    fx = 0.381 + i * 0.014
+    fx = 0.379 + i * 0.015
     tube(f"SM_Finger_{i}",
-         [(fx, 0.228, 0.796), (fx + 0.002, 0.260 - abs(i - 1.5) * 0.003, 0.790),
-          (fx + 0.004, 0.280 - abs(i - 1.5) * 0.005, 0.780)],
-         0.0088, M["skin"], res_u=8, bevel_res=2, parent=GRP_PATIENT)
+         [(fx, 0.228, 0.796), (fx + 0.002, 0.262 - abs(i - 1.5) * 0.003, 0.789),
+          (fx + 0.004, 0.283 - abs(i - 1.5) * 0.005, 0.776)],
+         0.0092, M["skin"], res_u=8, bevel_res=2, parent=GRP_PATIENT,
+         radii=[1.0, 0.94, 0.84])
     sphere(f"SM_Knuckle_{i}", 1.0, (fx, 0.230, 0.804),
            scale=(0.009, 0.012, 0.007), mat=M["skin"], parent=GRP_PATIENT)
-tube("SM_Thumb", [(0.376, 0.190, 0.798), (0.362, 0.214, 0.794), (0.366, 0.234, 0.787)],
-     0.011, M["skin"], res_u=8, bevel_res=2, parent=GRP_PATIENT)
+tube("SM_Thumb", [(0.376, 0.190, 0.798), (0.360, 0.214, 0.793), (0.364, 0.236, 0.785)],
+     0.0115, M["skin"], res_u=8, bevel_res=2, parent=GRP_PATIENT,
+     radii=[1.0, 0.92, 0.80])
 
 # AVF access (subtle bump + tape, no needle)
 sphere("SM_AVFBump", 1.0, (0.376, 0.092, 0.822), scale=(0.018, 0.030, 0.012),
@@ -626,19 +665,25 @@ def build_blanket():
             fx = i / nx
             x = -0.60 + 1.20 * fx
             ax = abs(x)
-            # blanket edge sits at mid-chest, leaving the upper body visible
-            y0 = -0.425 - 0.030 * smoothstep((ax - 0.05) / 0.25)
+            # blanket edge sits high on the chest, leaving only the collar
+            # and upper gown visible
+            y0 = -0.520 - 0.045 * smoothstep((ax - 0.05) / 0.25)
             y = y0 + (y1 - y0) * fy
             # mattress reference (head section only for y < -0.15)
             z = mattress_z(y) + 0.02
             # body under the cloth
-            torso = 0.108 * math.exp(-((y + 0.28) / 0.30) ** 2) * max(0.0, 1 - (ax / 0.45) ** 4)
+            torso = 0.115 * math.exp(-((y + 0.28) / 0.30) ** 2) * max(0.0, 1 - (ax / 0.47) ** 4)
             legs = 0.082 * math.exp(-((y - 0.60) / 0.38) ** 2) * max(0.0, 1 - (ax / 0.38) ** 4)
             knee = 0.022 * math.exp(-((y - 0.34) / 0.10) ** 2) * max(0.0, 1 - (ax / 0.34) ** 4)
             z += torso + legs + knee
             # chest mound under the cloth
             chest = 0.052 * math.exp(-((y + 0.60) / 0.16) ** 2) * max(0.0, 1 - (ax / 0.34) ** 4)
             z += chest
+            # turned-down top hem: a raised roll along the edge keeps the
+            # gown covered and reads as folded bedding
+            edge_d = y - y0
+            z += (0.022 * math.exp(-((edge_d - 0.050) / 0.052) ** 2)
+                  + 0.010 * (1.0 - smoothstep(edge_d / 0.07)))
             # cloth lifted over the right upper arm tucked under the covers
             arm = (0.040 * math.exp(-((x + 0.265) / 0.10) ** 2)
                    * math.exp(-((y + 0.34) / 0.26) ** 2))

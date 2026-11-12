@@ -258,8 +258,20 @@ function Rig() {
   return null
 }
 
+const WARM_KEY = new THREE.Color('#ffcfa3')
+const RED_KEY = new THREE.Color('#ff6247')
+
+// how far the room should have shifted toward the alarm state
+function crashUrgency(phase: string, sbp: number) {
+  if (phase === 'alert') return 1
+  if (phase === 'applied') return Math.min(0.9, Math.max(0, (104 - sbp) / 20))
+  if (phase === 'running') return Math.min(0.55, Math.max(0, (114 - sbp) / 46))
+  return 0
+}
+
 function KeyLight() {
   const ref = useRef<THREE.SpotLight>(null)
+  const urgency = useRef(0)
   useEffect(() => {
     const l = ref.current
     if (!l) return
@@ -271,6 +283,15 @@ function KeyLight() {
     l.shadow.camera.near = 0.4
     l.shadow.camera.far = 9
   }, [])
+  useFrame((_, dt) => {
+    const s = useSession.getState()
+    const target = crashUrgency(s.phase, s.sbp)
+    urgency.current += (target - urgency.current) * Math.min(1, dt * 2.4)
+    const l = ref.current
+    if (!l) return
+    l.color.copy(WARM_KEY).lerp(RED_KEY, urgency.current * 0.85)
+    l.intensity = 47 - urgency.current * 5
+  })
   return (
     <spotLight
       ref={ref}
@@ -286,6 +307,32 @@ function KeyLight() {
   )
 }
 
+// red wash over the bed that ramps up as the crash approaches and fades
+// once the intervention is working
+function CrashWash() {
+  const ref = useRef<THREE.PointLight>(null)
+  const urgency = useRef(0)
+  useFrame((state, dt) => {
+    const s = useSession.getState()
+    const target = crashUrgency(s.phase, s.sbp)
+    urgency.current += (target - urgency.current) * Math.min(1, dt * 2.4)
+    const l = ref.current
+    if (!l) return
+    const pulse = s.phase === 'alert' ? 1 + Math.sin(state.clock.elapsedTime * 5.2) * 0.18 : 1
+    l.intensity = urgency.current * 15 * pulse
+  })
+  return (
+    <pointLight
+      ref={ref}
+      position={[0.35, 2.35, 0.05]}
+      color="#ff4636"
+      intensity={0}
+      distance={6.5}
+      decay={1.7}
+    />
+  )
+}
+
 function Lights() {
   const { scene } = useThree()
   useEffect(() => {
@@ -296,6 +343,7 @@ function Lights() {
       <ambientLight intensity={0.22} color="#ffd9bb" />
       <hemisphereLight args={['#25404f', '#0a0c0e', 0.36]} />
       <KeyLight />
+      <CrashWash />
       <pointLight position={[2.7, 1.85, -0.9]} intensity={6} color="#8fb8ff" distance={8} decay={1.8} />
       <spotLight
         position={[0.7, 2.4, 1.9]}

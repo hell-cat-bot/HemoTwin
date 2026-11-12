@@ -537,6 +537,34 @@ button {
   letter-spacing: 0.06em;
 }
 
+.speed {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.speed-btn {
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  padding: 4px 5px;
+  border-radius: 4px;
+  color: var(--dim);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.speed-btn:hover {
+  color: var(--text);
+}
+
+.speed-btn.on {
+  color: var(--teal);
+  background: rgba(94, 234, 212, 0.1);
+}
+
 .icon-btn {
   width: 22px;
   height: 22px;

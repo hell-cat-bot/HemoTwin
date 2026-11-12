@@ -40,6 +40,19 @@ export default function Panel() {
             <span>Bay 04 · Session</span>
           </div>
           <div className="panel-clock">
+            <div className="speed" role="group" aria-label="Simulation speed">
+              {[1, 2, 3, 4].map((n) => (
+                <button
+                  key={n}
+                  className={`speed-btn${s.speed === n ? ' on' : ''}`}
+                  onClick={() => s.setSpeed(n)}
+                  aria-pressed={s.speed === n}
+                  aria-label={`${n}x speed`}
+                >
+                  {n}×
+                </button>
+              ))}
+            </div>
             <span>{clock(s.t)}</span>
             <button className="icon-btn" onClick={s.reset} aria-label="End session">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
