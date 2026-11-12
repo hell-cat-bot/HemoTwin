@@ -122,10 +122,13 @@ class ChairBoardAppTest(unittest.TestCase):
         self.assertIn("Recorded crash at 112 min", blob)
         self.assertIn("FINAL-HOUR", blob)
         self.assertIn("1/1 high, 0/4 low", blob)
-        next(b for b in at.button if b.label == "Open in Case lab").click().run()
+        next(b for b in at.button if b.label == "Session details").click().run()
         self.assertEqual(list(at.exception), [])
-        self.assertTrue(at.session_state["case_id"].startswith("4."))
-        self.assertEqual(at.session_state["case_select"], "True Crash")
+        self.assertEqual(at.session_state["chair_details"], 4)
+        blob = _blob(at)
+        self.assertIn("forecast and fluid arithmetic", blob)
+        self.assertIn("Fluid arithmetic · what each policy changes", blob)
+        self.assertIn("retired twin's mechanism sketch", blob)
 
     def test_case_select_stays_in_sync_after_page_switch(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()

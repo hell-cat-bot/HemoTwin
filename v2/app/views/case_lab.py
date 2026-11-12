@@ -77,6 +77,10 @@ def _demo() -> dict:
     return _load_json(str(path), path.stat().st_mtime)
 
 
+def demo_case(name: str) -> dict | None:
+    return next((c for c in _demo()["cases"] if c["name"] == name), None)
+
+
 def _report() -> dict:
     path = EVIDENCE / "benchmark_report.json"
     return _load_json(str(path), path.stat().st_mtime)
@@ -320,6 +324,97 @@ def _shap_panel(case: dict) -> None:
                "oracle block is excluded; these are associations, not causal effects.")
 
 
+def _fluid_table(case: dict, stale: bool) -> None:
+    """Fluid arithmetic plus the uncalibrated per-policy SBP sketch."""
+    if stale:
+        st.markdown(theme.callout(
+            "Projection and fluid arithmetic withheld: the last cuff is "
+            f"{case.get('cuff_age_min', 0):.0f} minutes old. A current BP is "
+            "required before the trade-off can be computed.", "warn"),
+            unsafe_allow_html=True)
+        return
+    scenarios = (case.get("calibrated", {}).get("scenarios") or [])
+    sketch = {s.get("policy"): s for s in
+              ((case.get("illustration") or {}).get("scenarios") or [])}
+    hold = scenarios[0] if scenarios else {}
+    band = hold.get("nadir_band_90") or [None, None]
+    shared = []
+    if hold.get("projected_nadir_mmhg") is not None:
+        shared.append(pill(
+            f"Calibrated +60 min · "
+            f"{_fmt(hold.get('projected_nadir_mmhg'), 1)} mmHg", "info"))
+    if band[0] is not None and band[1] is not None:
+        shared.append(pill(
+            f"90% band · {_fmt(band[0], 0)}–{_fmt(band[1], 0)} mmHg", ""))
+    floor_ok = hold.get("clears_90_mmhg_nadir_floor")
+    if floor_ok is not None:
+        shared.append(pill(
+            "Clears the 90 mmHg floor" if floor_ok
+            else "Below the 90 mmHg floor",
+            "ok" if floor_ok else "fail"))
+    st.markdown("".join(shared), unsafe_allow_html=True)
+    st.caption("Calibrated, gain 0 · shared by every policy; the pre-anchor "
+               "model carries no UF→SBP effect.")
+
+    hold_left = hold.get("fluid_left_behind_l")
+    has_fluid = any(
+        _safe_float(s.get("fluid_left_behind_l")) is not None
+        for s in scenarios)
+    rows = []
+    for scenario in scenarios:
+        sketch_row = sketch.get(scenario.get("policy")) or {}
+        left = scenario.get("fluid_left_behind_l")
+        delta = None
+        if has_fluid:
+            left_v = _safe_float(left)
+            hold_v = _safe_float(hold_left)
+            if left_v is not None and hold_v is not None:
+                delta = left_v - hold_v
+        row = {
+            "UF policy": scenario.get("label", ""),
+            "Mean UF · +60 min (L/h)": scenario.get("mean_uf_l_h"),
+        }
+        if has_fluid:
+            row["Fluid left (L)"] = left
+            row["Δ fluid left vs hold (L)"] = delta
+        row["Expected SBP +60 (mmHg)"] = sketch_row.get("projected_nadir_mmhg")
+        row["Δ SBP vs hold (mmHg)"] = sketch_row.get(
+            "expected_nadir_stabilization_vs_hold_mmhg")
+        rows.append(row)
+    table = pd.DataFrame(rows)
+    numeric = list(table.columns[1:])
+    table[numeric] = table[numeric].apply(pd.to_numeric, errors="coerce")
+    config = {
+        "Mean UF · +60 min (L/h)": st.column_config.NumberColumn(
+            format="%.2f"),
+        "Expected SBP +60 (mmHg)": st.column_config.NumberColumn(
+            format="%.1f", help="Uncalibrated mechanism sketch, not a "
+                                "validated treatment effect."),
+        "Δ SBP vs hold (mmHg)": st.column_config.NumberColumn(
+            format="%+.1f", help="Sketch gain against holding the current UF."),
+    }
+    if has_fluid:
+        config.update({
+            "Fluid left (L)": st.column_config.NumberColumn(format="%.2f"),
+            "Δ fluid left vs hold (L)": st.column_config.NumberColumn(
+                format="%+.2f"),
+        })
+    st.dataframe(table, hide_index=True, width="stretch",
+                 column_config=config)
+    if table["Expected SBP +60 (mmHg)"].notna().any():
+        st.caption("Expected SBP is the retired twin's mechanism sketch "
+                   "(G7 failed): a support layer, not a validated treatment "
+                   "effect. Fluid arithmetic is exact; neither is a "
+                   "prescription.")
+    elif has_fluid:
+        st.caption("Fluid arithmetic only; not a prescription or a validated "
+                   "treatment effect.")
+    else:
+        st.caption("This session has no recorded UF goal, so the "
+                   "fluid-bank arithmetic is unavailable. The UF schedule "
+                   "still differs by policy.")
+
+
 def render() -> None:
     demo = _demo()
     cases = demo["cases"]
@@ -527,103 +622,11 @@ def render() -> None:
 
     st.markdown(theme.section(
         "Fluid arithmetic", "What each policy changes",
-        "The +60 min projection is policy-independent — the pre-anchor model "
-        "carries no UF→SBP effect. The table shows the fluid each policy "
-        "leaves behind."),
+        "The calibrated +60 min is policy-independent; the expected SBP "
+        "column is an uncalibrated sketch; the fluid arithmetic is exact."),
         unsafe_allow_html=True)
 
-    if stale:
-        st.markdown(theme.callout(
-            "Projection and fluid arithmetic withheld: the last cuff is "
-            f"{case.get('cuff_age_min', 0):.0f} minutes old. A current BP is "
-            "required before the trade-off can be computed.", "warn"),
-            unsafe_allow_html=True)
-    else:
-        scenarios = (case.get("calibrated", {}).get("scenarios") or [])
-        hold = scenarios[0] if scenarios else {}
-        band = hold.get("nadir_band_90") or [None, None]
-        shared = []
-        if hold.get("projected_nadir_mmhg") is not None:
-            shared.append(pill(
-                f"Calibrated +60 min · "
-                f"{_fmt(hold.get('projected_nadir_mmhg'), 1)} mmHg", "info"))
-        if band[0] is not None and band[1] is not None:
-            shared.append(pill(
-                f"90% band · {_fmt(band[0], 0)}–{_fmt(band[1], 0)} mmHg", ""))
-        floor_ok = hold.get("clears_90_mmhg_nadir_floor")
-        if floor_ok is not None:
-            shared.append(pill(
-                "Clears the 90 mmHg floor" if floor_ok
-                else "Below the 90 mmHg floor",
-                "ok" if floor_ok else "fail"))
-        st.markdown("".join(shared), unsafe_allow_html=True)
-        st.caption("Shared by every policy; no invented policy-dependent SBP "
-                   "effect.")
-
-        hold_left = hold.get("fluid_left_behind_l")
-        has_fluid = any(
-            _safe_float(s.get("fluid_left_behind_l")) is not None
-            for s in scenarios)
-        rows = []
-        for scenario in scenarios:
-            left = scenario.get("fluid_left_behind_l")
-            delta = None
-            if has_fluid:
-                left_v = _safe_float(left)
-                hold_v = _safe_float(hold_left)
-                if left_v is not None and hold_v is not None:
-                    delta = left_v - hold_v
-            row = {
-                "UF policy": scenario.get("label", ""),
-                "Mean UF · 60 min (L/h)": scenario.get("mean_uf_l_h"),
-                "Removed by +60 min (L)": scenario.get("end_session_total_uf_l"),
-            }
-            if has_fluid:
-                row["Fluid left (L)"] = left
-                row["Δ fluid left vs hold (L)"] = delta
-                row["Next-session UF (mL/kg/h)"] = scenario.get(
-                    "next_session_uf_intensity_ml_kg_h")
-            rows.append(row)
-        table = pd.DataFrame(rows)
-        numeric = list(table.columns[1:])
-        table[numeric] = table[numeric].apply(pd.to_numeric, errors="coerce")
-        config = {
-            "Mean UF · 60 min (L/h)": st.column_config.NumberColumn(
-                format="%.2f"),
-            "Removed by +60 min (L)": st.column_config.NumberColumn(
-                format="%.2f"),
-        }
-        if has_fluid:
-            config.update({
-                "Fluid left (L)": st.column_config.NumberColumn(format="%.2f"),
-                "Δ fluid left vs hold (L)": st.column_config.NumberColumn(
-                    format="%+.2f"),
-                "Next-session UF (mL/kg/h)":
-                    st.column_config.NumberColumn(format="%.1f"),
-            })
-        st.dataframe(table, hide_index=True, width="stretch",
-                     column_config=config)
-        if has_fluid:
-            st.caption("Fluid arithmetic only; not a prescription or a validated "
-                       "treatment effect.")
-        else:
-            st.caption("This session has no recorded UF goal, so the "
-                       "fluid-bank arithmetic is unavailable. The UF schedule "
-                       "still differs by policy.")
-
-        ill = (case.get("illustration", {}).get("scenarios") or [])
-        if show_ill and ill:
-            with st.expander("Mechanism sketch (uncalibrated)", expanded=True):
-                ill_rows = []
-                for scenario in ill:
-                    ill_rows.append({
-                        "UF policy": scenario.get("label", ""),
-                        "Sketch +60 min (mmHg)": _fmt(scenario.get("projected_nadir_mmhg")),
-                        "Δ vs hold (mmHg)": _fmt(scenario.get("expected_nadir_stabilization_vs_hold_mmhg"), 2),
-                        "Cushion per L carried (mmHg/L)": _fmt(scenario.get("hemodynamic_gain_per_liter_carried_mmHg_per_l"), 2),
-                    })
-                st.dataframe(pd.DataFrame(ill_rows), hide_index=True, width="stretch")
-                st.caption("Labeled sketch only. The operational gain is 0.")
+    _fluid_table(case, stale)
 
     st.markdown(theme.section(
         "Decision support", "What the unit's protocol says next",

@@ -6,7 +6,8 @@ from pathlib import Path
 
 import streamlit as st
 
-from app.ui import theme
+from app.ui import charts, theme
+from app.views import case_lab
 
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "evidence"
@@ -647,6 +648,29 @@ def _detail(chair: dict, reveal: bool) -> str:
     )
 
 
+def _session_details(chair: dict) -> None:
+    case = case_lab.demo_case(chair["case_name"])
+    if case is None:
+        st.caption("Session detail is unavailable for this chair.")
+        return
+    stale = bool(case.get("synthetic_demo")) or (
+        float(case.get("cuff_age_min") or 0) > 35)
+    st.markdown(theme.section(
+        "Session details",
+        f"{chair['case_select']} · forecast and fluid arithmetic",
+        "The same frozen v4 evidence as Case lab, without leaving the board."),
+        unsafe_allow_html=True)
+    st.plotly_chart(
+        charts.fan_figure(case_lab._view_case(case), show_illustration=False,
+                          show_projection=not stale),
+        width="stretch", config={"displayModeBar": False},
+        key=f"chair_fan_{chair['chair']}")
+    st.markdown(
+        '<div class="ht-kicker">Fluid arithmetic · what each policy changes'
+        '</div>', unsafe_allow_html=True)
+    case_lab._fluid_table(case, stale)
+
+
 def _model_card(board: dict) -> None:
     risk = board["risk_model"]
     shape = board["shape_policy"]
@@ -758,11 +782,16 @@ def render() -> None:
             "list.", ""), unsafe_allow_html=True)
     else:
         st.markdown(_detail(chair, reveal), unsafe_allow_html=True)
-        if st.button("Open in Case lab", key="chair_open_case",
-                     type="primary"):
-            st.session_state["case_id"] = chair["case_id"]
-            st.session_state["case_select"] = chair["case_select"]
-            st.switch_page("views/case_lab_page.py")
+        st.session_state.setdefault("chair_details", None)
+        open_details = st.session_state.get("chair_details") == chair["chair"]
+        label = "Hide session details" if open_details else "Session details"
+        if st.button(label, key="chair_session_details",
+                     type="primary" if open_details else "secondary"):
+            st.session_state["chair_details"] = (
+                None if open_details else chair["chair"])
+            st.rerun()
+        if open_details:
+            _session_details(chair)
 
     with st.expander("Model card & limits", expanded=False):
         _model_card(board)
