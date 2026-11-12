@@ -25,7 +25,7 @@ class HomePageTest(unittest.TestCase):
     def test_home_lands_on_the_3d_bay_without_exception(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()
         self.assertEqual(list(at.exception), [])
-        self.assertIn("Five views, one twin", _markdown_blob(at))
+        self.assertNotIn("Five views, one twin", _markdown_blob(at))
         sim = ROOT / "app" / "static" / "sim" / "index.html"
         self.assertTrue(sim.exists())
         bundle = " ".join(

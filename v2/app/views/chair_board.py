@@ -15,6 +15,22 @@ BOARD = EVIDENCE / "chair_risk.json"
 
 CSS = """
 <style>
+/* The page fades without a transform so the fixed instrument bar keeps the
+   viewport as its containing block; the rise lives on the chair rail. */
+@keyframes ht-board-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ht-board-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+[data-testid="stMainBlockContainer"] > [data-testid="stVerticalBlock"]:has(.st-key-chair_rail) {
+  animation: ht-board-fade 420ms ease both;
+}
+.st-key-chair_rail {
+  animation: ht-board-rise 560ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
 .st-key-chair_rail [data-testid="stHorizontalBlock"] {
   flex-wrap: wrap !important;
   gap: 10px !important;

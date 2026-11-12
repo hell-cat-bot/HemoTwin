@@ -54,7 +54,7 @@ function LoadPortal() {
 
   useEffect(() => {
     if (!active && loaded > 0) {
-      const wait = Math.max(0, 900 - (performance.now() - mount.current))
+      const wait = Math.max(0, 500 - (performance.now() - mount.current))
       const id = window.setTimeout(() => setReady(true), wait)
       return () => window.clearTimeout(id)
     }
@@ -62,7 +62,7 @@ function LoadPortal() {
 
   useEffect(() => {
     if (!ready) return
-    const id = window.setTimeout(() => setGone(true), 1400)
+    const id = window.setTimeout(() => setGone(true), 900)
     return () => window.clearTimeout(id)
   }, [ready])
 

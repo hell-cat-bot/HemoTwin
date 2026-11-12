@@ -376,7 +376,7 @@ export default function Bay() {
   return (
     <Canvas
       shadows
-      dpr={[1, 1.7]}
+      dpr={[1, 1.5]}
       gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
       camera={{ position: [-2.15, 1.62, -1.85], fov: 27, near: 0.1, far: 40 }}
       onCreated={({ gl }) => {

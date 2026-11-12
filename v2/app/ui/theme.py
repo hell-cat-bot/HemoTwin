@@ -36,7 +36,6 @@ DISPLAY_FONT = '"Segoe UI Variable Display", "Segoe UI", sans-serif'
 BODY_FONT = '"Segoe UI", "Segoe UI Variable Text", system-ui, sans-serif'
 MONO_FONT = '"Cascadia Mono", Consolas, "SF Mono", monospace'
 
-
 def inject_css() -> None:
     """Apply the global Continuum theme once per page render."""
     st.markdown(f"""
@@ -62,6 +61,7 @@ def inject_css() -> None:
   --ht-chrome: {PALETTE['chrome']};
   --ht-mono: {MONO_FONT};
   --ht-radius: 12px;
+  --ht-bar-h: 40px;
 }}
 
 html, body, [class*="css"] {{
@@ -78,7 +78,7 @@ html, body, [class*="css"] {{
 [data-testid="stDecoration"], #MainMenu, footer {{ display: none !important; }}
 [data-testid="stMainBlockContainer"], .block-container {{
   max-width: 1240px;
-  padding: 88px 26px 40px;
+  padding: calc(var(--ht-bar-h) + 48px) 26px 40px;
 }}
 [data-testid="stSidebarCollapseButton"] button,
 [data-testid="stExpandSidebarButton"] {{
@@ -246,23 +246,34 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   background: transparent;
 }}
 .st-key-ht_topbar {{
-  --ht-nav-fs: 12px;
-  --ht-nav-ls: 0.08em;
+  --ht-nav-fs: 11px;
+  --ht-nav-ls: 0.1em;
+  flex: 0 0 auto !important;
+  height: var(--ht-bar-h) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background: var(--ht-chrome);
   border-bottom: 1px solid #15211E;
   border-radius: 0;
-  padding: 9px max(26px, calc((100vw - 1240px) / 2 + 26px));
+  padding: 0 max(26px, calc((100vw - 1240px) / 2 + 26px));
   margin-bottom: 0;
 }}
+/* Streamlit shrinks a single-line markdown box to a few px with a negative
+   margin, which pushed the brand block below the nav baseline. Restore the
+   intrinsic height so brand, links and status share one optical centre. */
+.st-key-ht_topbar [data-testid="stMarkdown"] {{ height: auto !important; }}
+.st-key-ht_topbar [data-testid="stMarkdown"] > div {{ height: auto !important; }}
+.st-key-ht_topbar [data-testid="stMarkdownContainer"] {{ margin-bottom: 0 !important; }}
 .st-key-ht_topbar [data-testid="stHorizontalBlock"] {{
   align-items: center;
   gap: 0;
   flex-wrap: nowrap;
 }}
-/* Brand flexes; the six links and the status cluster stay anchored right, so
-   their x-positions are identical on every view. */
+/* Brand and status mirror each other, so the six views sit on the optical
+   centre at every width. */
 .st-key-ht_topbar [data-testid="stColumn"]:first-child {{
-  flex: 1 1 auto !important;
+  flex: 1 1 0 !important;
   width: auto !important;
   min-width: 0;
 }}
@@ -272,8 +283,13 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   min-width: 0;
 }}
 .st-key-ht_topbar [data-testid="stColumn"]:last-child {{
-  flex: 0 0 108px !important;
-  width: 108px !important;
+  flex: 1 1 0 !important;
+  width: auto !important;
+  min-width: 0;
+}}
+.st-key-ht_topbar [data-testid="stColumn"]:last-child [data-testid="stMarkdown"] {{
+  display: flex;
+  justify-content: flex-end;
 }}
 .st-key-ht_topbar [data-testid="stPageLink"] {{ text-align: center; }}
 /* Streamlit paints the label's inner markdown <p> with the body ink color,
@@ -286,10 +302,10 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   font-weight: 600;
   letter-spacing: var(--ht-nav-ls);
   text-transform: uppercase;
-  padding: 7px 2px;
+  padding: 6px 2px;
   background: transparent !important;
   border-radius: 0 !important;
-  border-bottom: 1.5px solid transparent;
+  border-bottom: 2px solid transparent;
   justify-content: center;
   transition: color 140ms ease, border-color 140ms ease;
 }}
@@ -328,7 +344,7 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
   font-family: {DISPLAY_FONT};
   font-size: 12.5px;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   color: #EDF5F2;
 }}
 .ht-brand__ver {{
@@ -344,7 +360,7 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
 .ht-live {{
   display: inline-flex; align-items: center; gap: 7px;
   font-family: {MONO_FONT};
-  font-size: 10px;
+  font-size: 9.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #CBDCD7;
@@ -527,8 +543,7 @@ div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
     width: 68px !important;
   }}
   .st-key-ht_topbar [data-testid="stColumn"]:last-child {{
-    flex-basis: 30px !important;
-    width: 30px !important;
+    flex: 1 1 0 !important;
   }}
   .st-key-ht_topbar .ht-brand__word {{ font-size: 11.5px; letter-spacing: 0.14em; }}
   .st-key-ht_topbar .ht-live span {{ display: none; }}
