@@ -179,7 +179,7 @@ def _state_tone(state: str) -> str:
         "URGENT_CLINICAL_REVIEW": "fail",
         "REVIEW_NOW": "warn",
         "NO_ALERT": "ok",
-        "INSUFFICIENT_INFORMATION": "violet",
+        "INSUFFICIENT_INFORMATION": "sage",
     }.get(state, "")
 
 
@@ -212,10 +212,10 @@ def _protocol_panel(case: dict, role_code: str, stale: bool) -> None:
     st.markdown(
         f'<div class="ht-card ht-card--glow">'
         f'<div class="ht-kicker">Deterministic protocol state · role {e(result["role_simulation"])}</div>'
-        f'<div style="display:flex;align-items:center;gap:10px;margin:8px 0 6px">'
-        f'<h3 style="margin:0">{e(state_label)}</h3></div>'
-        f'<p style="color:#B8C6D9">{e(result["state_reason_text"])}</p>'
-        f'<p style="margin-top:8px;font-size:11px;color:#93A4B8">'
+        f'<div style="display:flex;align-items:center;gap:10px;margin:10px 0 8px">'
+        f'{pill(state_label, tone)}</div>'
+        f'<p>{e(result["state_reason_text"])}</p>'
+        f'<p style="margin-top:8px;font-size:11px">'
         f'Protocol {e(result["protocol_version"])} · research status · '
         f'shadow risk not scored · the forecast never gates this state.</p>'
         f'</div>',
@@ -229,7 +229,7 @@ def _protocol_panel(case: dict, role_code: str, stale: bool) -> None:
             st.markdown(
                 f"**{step['sequence']}. {e(step['title'])}**  \n"
                 f"{e(step['instruction'])}  \n"
-                f"<span style='color:#93A4B8;font-size:12px'>Roles: "
+                f"<span style='color:var(--ht-muted);font-size:12px'>Roles: "
                 f"{e(', '.join(step['roles']))}</span>",
                 unsafe_allow_html=True)
     else:
@@ -241,7 +241,7 @@ def _protocol_panel(case: dict, role_code: str, stale: bool) -> None:
             st.markdown(
                 f"**{step['sequence']}. {e(step['title'])}**  \n"
                 f"{e(step['instruction'])}  \n"
-                f"<span style='color:#93A4B8;font-size:12px'>Roles: "
+                f"<span style='color:var(--ht-muted);font-size:12px'>Roles: "
                 f"{e(', '.join(step['roles']))} · {e(badge)}</span>",
                 unsafe_allow_html=True)
     st.caption("Configured research protocol. Not a validated workflow, "
@@ -350,71 +350,61 @@ def render() -> None:
             value=False,
             key="show_ill",
             help="Dashed fan: uncalibrated mechanism sketch, not a measured effect.")
-        st.caption("205,482 QC-eligible HEMOBP sessions · 303,122 raw · "
-                   "Spanish frame AUROC 0.474 (transport failed).")
-        st.divider()
-        st.caption("**Research decision support.** Mirrors the session, shows "
-                   "fluid arithmetic, and structures review. It does not "
-                   "prescribe treatment.")
+        st.caption("205,482 QC-eligible HEMOBP sessions · fold 2 untouched · "
+                   "Spanish-frame AUROC 0.474 (transport failed).")
 
     case = by_id[st.session_state["case_id"]]
     stale = bool(case.get("synthetic_demo")) or (
         float(case.get("cuff_age_min") or 0) > 35)
     hold = (case.get("calibrated", {}).get("scenarios") or [{}])[0]
 
-    st.markdown(theme.hero(
-        "HemoTwin · chair-side session twin",
-        "See the pressure falling.<br/><em>Show the trade-off.</em>",
+    st.markdown(theme.page_head(
+        "Case lab · frozen v4 evidence",
+        "See the pressure falling. Show the trade-off.",
         "A calibrated forecast, exact fluid arithmetic, and a review "
         "pathway — not a prescription engine.",
-        [("205,482 sessions", "info"), ("Fold 2 untouched", "ok")],
+        pills=[("205,482 sessions", "info"), ("Fold 2 untouched", "ok"),
+               ("Display-only", "warn")],
     ), unsafe_allow_html=True)
 
-    st.markdown(
-        "".join(pill(t, tone) for t, tone in [
-            ("1 · Pick a case", "info"), ("2 · Read the projection", ""),
-            ("3 · Inspect the trade-off", ""), ("4 · Open the evidence", "violet")]),
-        unsafe_allow_html=True)
-
-    st.markdown(theme.section(
-        "Case lab", "Pick a chair-side story",
-        "Five archetypes plus a showcase. Every case is a real HEMOBP session "
-        "except the labelled synthetic stale-cuff guardrail."),
-        unsafe_allow_html=True)
-
-    cols = st.columns(5)
-    for col, (name, label, desc) in zip(cols, ARCHETYPES):
-        item = by_name[name]
-        with col:
-            st.button(
-                f"{label} · {item['sbp_anchor']:.0f}→{item['base_nadir']:.0f}",
-                key=f"pick_{name}", width="stretch",
-                on_click=_pick, args=(item["id"], name))
-            st.caption(desc)
-
-    with st.expander("Showcase case", expanded=False):
-        col, _ = st.columns([1, 2])
-        for name, label, desc in EXTRA_CASES:
-            item = by_name[name]
-            with col:
+    picker, showcase = st.columns([3.2, 1], vertical_alignment="bottom")
+    with picker:
+        st.markdown('<div class="ht-kicker">Pick a case</div>',
+                    unsafe_allow_html=True)
+    with showcase:
+        with st.popover("Showcase case", use_container_width=True):
+            for name, label, desc in EXTRA_CASES:
+                item = by_name[name]
                 st.button(
                     f"{label} · {item['sbp_anchor']:.0f}→{item['base_nadir']:.0f}",
                     key=f"pick_{name}", width="stretch",
                     on_click=_pick, args=(item["id"], name))
                 st.caption(desc)
 
+    with st.container(key="case_buttons"):
+        cols = st.columns(5)
+        for col, (name, label, _desc) in zip(cols, ARCHETYPES):
+            item = by_name[name]
+            with col:
+                st.button(
+                    f"{label} · {item['sbp_anchor']:.0f}→{item['base_nadir']:.0f}",
+                    key=f"pick_{name}", width="stretch",
+                    on_click=_pick, args=(item["id"], name))
+
     st.markdown(theme.section(
-        "Selected case", f"{case['name'].replace('_', ' ').title()} · {case['session_id']}",
-        f"Anchor at {case['t_anchor']:.0f} min · regime "
-        f"{_regime_label(case['regime'])} · "
+        "Selected case",
+        f"{case['name'].replace('_', ' ').title()} · {case['session_id']}",
+        f"Anchor {case['t_anchor']:.0f} min · {_regime_label(case['regime'])} · "
         f"{'synthetic guardrail' if case.get('synthetic_demo') else 'real HEMOBP session'}."),
         unsafe_allow_html=True)
-    chips = [pill(_regime_label(case["regime"]).upper(), "info")]
+    chips = []
     if case.get("synthetic_demo"):
         chips.append(pill("Synthetic demo — not a patient record", "warn"))
     if stale:
         chips.append(pill(f"Cuff age {case.get('cuff_age_min', 0):.0f} min", "fail"))
-    st.markdown("".join(chips), unsafe_allow_html=True)
+    if chips:
+        st.markdown('<div class="ht-pills">' + "".join(chips) + "</div>",
+                    unsafe_allow_html=True)
 
     st.markdown(metric_row([
         {"label": "SBP at anchor", "value": _fmt(case["sbp_anchor"], 0),
@@ -482,11 +472,11 @@ def render() -> None:
             title = "Twin at the anchor"
         else:
             title = f"Twin · {float(selected['rel']):+.0f} min"
-        st.markdown(theme.orb_card(
-            title,
-            "Recorded vitals for this minute plus the latent "
-            "Starling-baroreflex state integrated from the UF stream."),
-            unsafe_allow_html=True)
+        st.markdown(theme.card(
+            f'<div class="ht-kicker">{e(title)}</div>'
+            '<p style="margin-top:6px">Recorded vitals for this minute plus '
+            'the latent Starling–baroreflex state from the UF stream.</p>',
+            tight=True), unsafe_allow_html=True)
 
         if selected is None:
             sbp_v = None if stale else case.get("sbp_anchor")
@@ -526,7 +516,7 @@ def render() -> None:
 
     with st.expander("How to read this chart", expanded=False):
         st.markdown(
-            "- **Solid cyan** — validated pre-anchor forecast at calibrated gain 0.\n"
+            "- **Solid teal** — validated pre-anchor forecast at calibrated gain 0.\n"
             "- **Shaded band** — 90% nadir interval, widened along the path for display; not a per-minute confidence band.\n"
             "- **Amber diamonds** — observed cuffs after the anchor; hover shows the calibrated value at that minute.\n"
             "- **Click a cuff** — SBP, DBP, UF and the twin state at that minute.\n"
@@ -537,9 +527,9 @@ def render() -> None:
 
     st.markdown(theme.section(
         "Fluid arithmetic", "What each policy changes",
-        "The +60 min projection is policy-independent: the pre-anchor model "
-        "carries no UF→SBP treatment effect. The table shows the fluid each "
-        "policy leaves behind."),
+        "The +60 min projection is policy-independent — the pre-anchor model "
+        "carries no UF→SBP effect. The table shows the fluid each policy "
+        "leaves behind."),
         unsafe_allow_html=True)
 
     if stale:

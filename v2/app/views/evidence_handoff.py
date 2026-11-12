@@ -175,7 +175,7 @@ def _g7_section(g7: dict) -> None:
                "reverse-causality story but does not rescue the intervention effect.")
     st.markdown(theme.card(
         f'<div class="ht-kicker">Frozen protocol</div>'
-        f'<p style="margin-top:6px;font-family:monospace;color:#67E8F9;'
+        f'<p style="margin-top:6px;font-family:var(--ht-mono);color:var(--ht-accent);'
         f'word-break:break-all">{e(g7.get("protocol_sha256", ""))}</p>'
         '<p>SHA-256 frozen before estimation. The pre-registration is what '
         'makes the failure meaningful; the protocol and hash ship in '
@@ -212,7 +212,7 @@ def _claim_boundary(g7: dict, demo: dict) -> None:
     with left:
         st.markdown(theme.card(
             '<div class="ht-kicker">We can claim</div>'
-            '<ul style="margin:10px 0 0 18px;color:#C7D6E6;line-height:1.8">'
+            '<ul style="margin:10px 0 0 18px;color:var(--ht-muted);line-height:1.8">'
             '<li>A calibrated pre-anchor nadir forecast (fold-2 MAE 10.99, RMSE 14.65).</li>'
             '<li>Exact arithmetic for fluid left, carry-forward and next-session intensity.</li>'
             '<li>A deterministic, versioned review pathway with role-scoped steps.</li>'
@@ -222,7 +222,7 @@ def _claim_boundary(g7: dict, demo: dict) -> None:
     with right:
         st.markdown(theme.card(
             '<div class="ht-kicker">We refuse to claim</div>'
-            '<ul style="margin:10px 0 0 18px;color:#C7D6E6;line-height:1.8">'
+            '<ul style="margin:10px 0 0 18px;color:var(--ht-muted);line-height:1.8">'
             '<li>A validated what-if/treatment effect from the twin.</li>'
             '<li>That any UF policy will raise SBP, prevent IDH, or is minimum effective.</li>'
             '<li>Alert utility, clinical benefit, or a safety layer.</li>'
@@ -342,13 +342,13 @@ def render() -> None:
         st.caption("The evidence view uses the frozen files in `evidence/`; "
                    "no model is retrained here.")
 
-    st.markdown(theme.hero(
+    st.markdown(theme.page_head(
         "Evidence · frozen 2026-11-09",
-        "The evidence<br/><em>is the product.</em>",
+        "The evidence is the product.",
         "Seven pre-registered checks. Five pass, the twin test fails; the "
         "what-if claim stays off the table.",
-        [("Twin test failed", "fail"), ("Fold 2 untouched", "ok"),
-         ("No treatment effect", "warn")],
+        pills=[("Twin test failed", "fail"), ("Fold 2 untouched", "ok"),
+               ("No treatment effect", "warn")],
     ), unsafe_allow_html=True)
 
     _gate_grid(report, g7)

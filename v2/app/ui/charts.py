@@ -5,15 +5,16 @@ import math
 
 import plotly.graph_objects as go
 
-CYAN = "#22D3EE"
-TEAL = "#2DD4BF"
-VIOLET = "#A78BFA"
-AMBER = "#FBBF24"
-CORAL = "#FB7185"
-GOOD = "#34D399"
-INK = "#E2E8F0"
-MUTED = "#93A4B8"
-GRID = "rgba(148, 163, 184, 0.12)"
+ACCENT = "#17756A"
+TEAL = "#0F8F80"
+SAGE = "#7D8B7C"
+AMBER = "#A8641B"
+RISK = "#B23C2C"
+GOOD = "#1F7A4D"
+INK = "#141C1E"
+MUTED = "#5C6B6D"
+GRID = "#E6EDEA"
+SURFACE = "#FFFFFF"
 
 
 def apply_theme(fig: go.Figure, height: int = 420) -> go.Figure:
@@ -21,23 +22,23 @@ def apply_theme(fig: go.Figure, height: int = 420) -> go.Figure:
         height=height,
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Segoe UI, sans-serif", color="#CBD5E1", size=12),
-        title=dict(font=dict(family="Bahnschrift, Segoe UI, sans-serif",
-                             color="#F4F8FB", size=16)),
+        font=dict(family="Segoe UI, sans-serif", color=MUTED, size=12),
+        title=dict(font=dict(family="Segoe UI Variable Display, Segoe UI, "
+                                  "sans-serif", color=INK, size=16)),
         margin=dict(l=8, r=8, t=34, b=8),
         legend=dict(
             orientation="h", yanchor="top", y=-0.18, xanchor="left", x=0,
             bgcolor="rgba(0,0,0,0)", font=dict(color=MUTED, size=11)),
         hoverlabel=dict(
-            bgcolor="#0B1524", bordercolor="rgba(34,211,238,.35)",
-            font=dict(color="#E6EEF8", family="Segoe UI")),
+            bgcolor=SURFACE, bordercolor="rgba(23,117,106,.4)",
+            font=dict(color=INK, family="Segoe UI")),
         hovermode="x unified",
     )
     fig.update_xaxes(
-        gridcolor=GRID, zeroline=False, linecolor="rgba(148,163,184,.18)",
+        gridcolor=GRID, zeroline=False, linecolor="#DCE4E1",
         tickfont=dict(color=MUTED), title_font=dict(color=MUTED))
     fig.update_yaxes(
-        gridcolor=GRID, zeroline=False, linecolor="rgba(148,163,184,.18)",
+        gridcolor=GRID, zeroline=False, linecolor="#DCE4E1",
         tickfont=dict(color=MUTED), title_font=dict(color=MUTED))
     return fig
 
@@ -78,22 +79,22 @@ def fan_figure(case: dict, show_illustration: bool = False,
         fig.add_trace(go.Scatter(
             x=x + x[::-1],
             y=[v + hi_off for v in y] + [v + lo_off for v in y][::-1],
-            fill="toself", fillcolor="rgba(34, 211, 238, 0.11)",
+            fill="toself", fillcolor="rgba(23, 117, 106, 0.10)",
             line=dict(width=0), name="90% nadir band (widened along path)",
             hoverinfo="skip", legendrank=3))
         fig.add_trace(go.Scatter(
             x=x, y=y, mode="lines", name="Calibrated projection · gain 0",
-            line=dict(color=CYAN, width=3), legendrank=4,
+            line=dict(color=ACCENT, width=2.6), legendrank=4,
             hoverinfo="skip"))
     elif not show_projection:
         fig.add_annotation(
             x=0.02, y=0.5, xref="x domain", yref="paper",
             text="No current BP — projection withheld",
             showarrow=False, font=dict(color=AMBER, size=12),
-            bgcolor="rgba(7,17,31,.85)", borderpad=6)
+            bgcolor="rgba(255,255,255,.94)", borderpad=6)
 
     if show_illustration:
-        colors = [VIOLET, AMBER, CORAL, GOOD, "#60A5FA"]
+        colors = [SAGE, AMBER, RISK, GOOD, "#6E9E94"]
         for scenario, color in zip(
                 case.get("illustration", {}).get("scenarios", []), colors):
             series = scenario.get("nadir_series_mmhg") or []
@@ -108,8 +109,8 @@ def fan_figure(case: dict, show_illustration: bool = False,
             x=[c["rel"] for c in before], y=[c["sbp"] for c in before],
             mode="lines+markers", name="Observed cuffs · before anchor",
             line=dict(color=INK, width=2.2),
-            marker=dict(color="#F8FAFC", size=7,
-                        line=dict(color="#0B1524", width=2)),
+            marker=dict(color=INK, size=7,
+                        line=dict(color=SURFACE, width=2)),
             customdata=_cuff_custom(before), legendrank=1,
             hovertemplate=("%{x:.0f} min · SBP %{y:.0f} · DBP "
                            "%{customdata[1]} · UF %{customdata[2]}"
@@ -119,34 +120,34 @@ def fan_figure(case: dict, show_illustration: bool = False,
             x=[c["rel"] for c in after], y=[c["sbp"] for c in after],
             mode="markers", name="Observed cuffs · ground truth",
             marker=dict(color=AMBER, size=11, symbol="diamond",
-                        line=dict(color="#0B1524", width=1.5)),
+                        line=dict(color=SURFACE, width=1.5)),
             customdata=_cuff_custom(after), legendrank=2,
             hovertemplate=("%{x:.0f} min · SBP %{y:.0f} · calib "
                            "%{customdata[3]} · DBP %{customdata[1]} · UF "
                            "%{customdata[2]}<extra></extra>")))
 
-    fig.add_hline(y=90, line_dash="dot", line_color="rgba(251,113,133,.7)",
+    fig.add_hline(y=90, line_dash="dot", line_color="rgba(178,60,44,.55)",
                   annotation_text="90 mmHg floor",
-                  annotation_font=dict(color="#FDA4AF", size=11),
+                  annotation_font=dict(color=RISK, size=11),
                   annotation_position="top right")
-    fig.add_vline(x=0, line_dash="dash", line_color="rgba(148,163,184,.35)")
+    fig.add_vline(x=0, line_dash="dash", line_color="rgba(20,28,30,.28)")
     fig.add_annotation(
         x=0, y=1.04, xref="x", yref="paper", text="anchor",
         showarrow=False, font=dict(color=MUTED, size=11),
         xanchor="left")
     if selected_rel is not None:
         fig.add_vline(x=float(selected_rel), line_dash="dot",
-                      line_color="rgba(34,211,238,.55)", line_width=1.4)
+                      line_color="rgba(23,117,106,.6)", line_width=1.4)
         fig.add_annotation(
             x=float(selected_rel), y=0.02, yref="paper",
             text=f"inspecting {float(selected_rel):+.0f} min",
-            showarrow=False, font=dict(color=CYAN, size=10),
-            bgcolor="rgba(5,10,18,.82)", borderpad=3,
+            showarrow=False, font=dict(color=ACCENT, size=10),
+            bgcolor="rgba(255,255,255,.94)", borderpad=3,
             xanchor="left")
     fig.update_layout(xaxis_title="Minutes from anchor",
                       yaxis_title="Systolic BP (mmHg)")
     fig.update_xaxes(showspikes=True, spikemode="across",
-                     spikecolor="rgba(34,211,238,.45)",
+                     spikecolor="rgba(23,117,106,.4)",
                      spikethickness=1, spikedash="dot")
     if not show_projection:
         fig.update_xaxes(range=[-102, 64])
@@ -184,9 +185,9 @@ def g7_forest_figure(g7: dict) -> go.Figure:
         los.append(float(ci[0]) if ci[0] is not None else float(value))
         his.append(float(ci[1]) if ci[1] is not None else float(value))
         if los[-1] <= 0 <= his[-1]:
-            colors.append("rgba(148,163,184,.75)")
+            colors.append("rgba(92,107,109,.65)")
         else:
-            colors.append(CORAL if values[-1] > 0 else GOOD)
+            colors.append(RISK if values[-1] > 0 else GOOD)
 
     fig = go.Figure()
     for i, (label, value, lo, hi, color) in enumerate(
@@ -198,10 +199,10 @@ def g7_forest_figure(g7: dict) -> go.Figure:
         fig.add_trace(go.Scatter(
             x=[value], y=[i], mode="markers",
             marker=dict(color=color, size=11,
-                        line=dict(color="#0B1524", width=2)),
+                        line=dict(color=SURFACE, width=2)),
             hovertemplate=f"{label}<br>{value:.2f} [{lo:.2f}, {hi:.2f}]<extra></extra>",
             showlegend=False))
-    fig.add_vline(x=0, line_color="rgba(226,232,240,.45)", line_width=1)
+    fig.add_vline(x=0, line_color="rgba(20,28,30,.35)", line_width=1)
     fig.update_yaxes(tickvals=list(range(len(labels))), ticktext=labels,
                      autorange="reversed")
     fig.update_layout(xaxis_title="Estimate (95% bootstrap CI)",
@@ -222,7 +223,7 @@ def temporal_order_figure(g7: dict) -> go.Figure:
     values = [classes[key] for key, _ in order if key in classes]
     fig = go.Figure(go.Bar(
         x=values, y=labels, orientation="h",
-        marker=dict(color=[CYAN, VIOLET, AMBER, "#60A5FA", "rgba(148,163,184,.45)"]),
+        marker=dict(color=[ACCENT, SAGE, AMBER, "#6E9E94", "rgba(92,107,109,.45)"]),
         text=[str(v) for v in values], textposition="outside",
         textfont=dict(color=INK, size=11),
         hovertemplate="%{y}: %{x}<extra></extra>"))
@@ -237,12 +238,12 @@ def shap_bar_figure(result: dict) -> go.Figure:
     labels = [d["feature"] for d in downward] + [s["feature"] for s in stabilizing]
     values = [d["contribution_mmHg"] for d in downward] + [
         s["contribution_mmHg"] for s in stabilizing]
-    colors = [CORAL] * len(downward) + [GOOD] * len(stabilizing)
+    colors = [RISK] * len(downward) + [GOOD] * len(stabilizing)
     fig = go.Figure(go.Bar(
         x=values[::-1], y=labels[::-1], orientation="h",
         marker=dict(color=colors[::-1]),
         hovertemplate="%{y}: %{x:.2f} mmHg<extra></extra>"))
-    fig.add_vline(x=0, line_color="rgba(226,232,240,.35)", line_width=1)
+    fig.add_vline(x=0, line_color="rgba(20,28,30,.3)", line_width=1)
     fig.update_layout(xaxis_title="TreeSHAP contribution (mmHg)",
                       showlegend=False)
     return apply_theme(fig, 330)
@@ -259,7 +260,7 @@ def scenario_fluid_figure(case: dict) -> go.Figure | None:
     labels = [r[0] for r in rows]
     values = [float(r[1]) for r in rows]
     fig = go.Figure(go.Bar(
-        x=labels, y=values, marker=dict(color=CYAN),
+        x=labels, y=values, marker=dict(color=ACCENT),
         text=[f"{v:.2f} L" for v in values], textposition="outside",
         textfont=dict(color=INK, size=11),
         hovertemplate="%{x}: %{y:.2f} L<extra></extra>"))

@@ -19,14 +19,17 @@ CSS = """
   gap: 10px !important;
 }
 .st-key-chair_rail [data-testid="column"] {
-  flex: 1 1 158px !important;
+  flex: 1 1 172px !important;
   width: auto !important;
-  min-width: 158px !important;
+  min-width: 172px !important;
 }
 .st-key-chair_rail div[data-testid="stButton"] > button {
-  min-height: 2.35rem;
-  padding: 6px 8px;
-  font-size: 11px;
+  min-height: 2.15rem;
+  padding: 4px 8px;
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 .cb-axis {
   display: flex;
@@ -34,12 +37,11 @@ CSS = """
   gap: 8px;
   border-top: 1px solid var(--ht-line);
   padding-top: 7px;
-  margin: 12px 0 6px;
+  margin: 4px 0 2px;
   color: var(--ht-muted);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-family: var(--ht-mono);
   font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.14em;
 }
 .cb-axis span::before {
   content: "";
@@ -47,36 +49,38 @@ CSS = """
   width: 1px;
   height: 7px;
   margin-right: 6px;
-  background: var(--ht-line-strong);
+  background: var(--ht-line-2);
   vertical-align: middle;
 }
-.cb-axis-note {
-  margin: 0 0 12px;
-  color: var(--ht-muted);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
 .cb-card {
-  min-height: 248px;
-  padding: 13px 14px 12px;
+  min-height: 238px;
+  padding: 14px 14px 12px;
   border: 1px solid var(--ht-line);
   border-radius: 12px;
-  background: linear-gradient(155deg, rgba(15, 23, 42, 0.9), rgba(7, 13, 26, 0.95));
+  background: var(--ht-surface);
+  box-shadow: 0 1px 2px rgba(20, 28, 30, 0.03);
   display: flex;
   flex-direction: column;
   gap: 7px;
 }
-.cb-card--high { border-color: rgba(34, 211, 238, 0.34); }
-.cb-card--moderate { border-color: rgba(251, 191, 36, 0.32); }
-.cb-card--low { border-color: rgba(148, 163, 184, 0.18); }
+.cb-card--high {
+  border-color: #E4C3BD;
+  box-shadow: inset 0 2px 0 var(--ht-risk);
+}
+.cb-card--moderate {
+  border-color: #E8D3B2;
+  box-shadow: inset 0 2px 0 var(--ht-warn);
+}
+.cb-card--low { border-color: var(--ht-line); }
 .cb-card.is-selected {
-  border-color: rgba(34, 211, 238, 0.66);
-  box-shadow: inset 0 2px 0 var(--ht-cyan);
+  border-color: var(--ht-accent);
+  box-shadow: inset 0 2px 0 var(--ht-accent), 0 0 0 2px var(--ht-accent-soft);
 }
 .cb-card--empty {
   border-style: dashed;
-  opacity: 0.62;
+  border-color: var(--ht-line-2);
+  background: transparent;
+  box-shadow: none;
 }
 .cb-card__top {
   display: flex;
@@ -86,29 +90,30 @@ CSS = """
 }
 .cb-card__no {
   color: var(--ht-muted);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-family: var(--ht-mono);
   font-size: 9px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   white-space: nowrap;
   flex: 0 0 auto;
 }
 .cb-card__name {
-  color: var(--ht-text);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  color: var(--ht-ink);
+  font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
   font-size: 15px;
   font-weight: 600;
   line-height: 1.15;
 }
 .cb-card__session, .cb-card__patient {
   color: var(--ht-muted);
-  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-family: var(--ht-mono);
   font-size: 10px;
   line-height: 1.35;
 }
 .cb-card__prob {
-  color: var(--ht-text);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
-  font-size: 32px;
+  color: var(--ht-ink);
+  font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
   line-height: 1;
   letter-spacing: -0.03em;
 }
@@ -118,26 +123,36 @@ CSS = """
   letter-spacing: 0;
   margin-left: 2px;
 }
-.cb-card__prob--low { color: #B8C6D9; }
+.cb-card__prob--high { color: var(--ht-risk); }
+.cb-card__prob--moderate { color: var(--ht-warn); }
+.cb-card__prob--low { color: var(--ht-ink); }
 .cb-badge {
-  border: 1px solid var(--ht-line);
+  border: 1px solid var(--ht-line-2);
   border-radius: 999px;
-  padding: 3px 5px;
+  padding: 2px 6px;
   color: var(--ht-muted);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-family: var(--ht-mono);
   font-size: 8px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   white-space: nowrap;
   flex: 0 0 auto;
 }
-.cb-badge--high { color: #67E8F9; border-color: rgba(34, 211, 238, 0.42); }
-.cb-badge--moderate { color: #FCD34D; border-color: rgba(251, 191, 36, 0.4); }
-.cb-badge--low { color: #B8C6D9; }
+.cb-badge--high {
+  color: var(--ht-risk);
+  border-color: #E4C3BD;
+  background: var(--ht-risk-soft);
+}
+.cb-badge--moderate {
+  color: var(--ht-warn);
+  border-color: #E8D3B2;
+  background: var(--ht-warn-soft);
+}
+.cb-badge--low { color: var(--ht-muted); }
 .cb-gauge {
   position: relative;
-  height: 6px;
-  border-radius: 3px;
-  background: rgba(148, 163, 184, 0.16);
+  height: 5px;
+  border-radius: 999px;
+  background: #E6EDEA;
   overflow: hidden;
   margin-top: 2px;
 }
@@ -145,30 +160,30 @@ CSS = """
   display: block;
   height: 100%;
   width: var(--cb-p);
-  border-radius: 3px;
-  background: var(--ht-cyan);
+  border-radius: 999px;
+  background: var(--ht-risk);
 }
-.cb-gauge__fill--moderate { background: var(--ht-amber); }
-.cb-gauge__fill--low { background: #64748B; }
+.cb-gauge__fill--moderate { background: var(--ht-warn); }
+.cb-gauge__fill--low { background: var(--ht-sage); }
 .cb-gauge__mark {
   position: absolute;
   top: 0;
   width: 1px;
   height: 100%;
-  background: rgba(244, 248, 251, 0.52);
+  background: rgba(20, 28, 30, 0.35);
 }
 .cb-gauge__scale {
   display: flex;
   justify-content: space-between;
   color: var(--ht-muted);
-  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-family: var(--ht-mono);
   font-size: 8px;
 }
 .cb-watch {
   border: 1px solid var(--ht-line);
   border-radius: 8px;
-  padding: 6px 7px;
-  background: rgba(5, 10, 18, 0.36);
+  padding: 7px 8px;
+  background: var(--ht-surface-2);
 }
 .cb-watch--off {
   color: var(--ht-muted);
@@ -180,10 +195,9 @@ CSS = """
   justify-content: space-between;
   gap: 4px;
   color: var(--ht-muted);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-family: var(--ht-mono);
   font-size: 8px;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 .cb-watch__track {
   display: flex;
@@ -195,67 +209,69 @@ CSS = """
   flex: 1;
   height: 5px;
   border-radius: 2px;
-  background: rgba(148, 163, 184, 0.14);
+  background: #E6EDEA;
 }
-.cb-watch__seg.is-on { background: var(--ht-cyan); }
+.cb-watch__seg.is-on { background: var(--ht-accent); }
 .cb-watch__onset {
   position: absolute;
   top: -3px;
   width: 2px;
   height: 11px;
-  background: var(--ht-coral);
+  background: var(--ht-risk);
   border-radius: 1px;
 }
 .cb-watch__foot {
   color: var(--ht-muted);
-  font-size: 8px;
+  font-size: 8.5px;
   line-height: 1.35;
 }
 .cb-outcome {
   margin-top: auto;
   padding-top: 4px;
   color: var(--ht-muted);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-family: var(--ht-mono);
   font-size: 9px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   min-height: 22px;
 }
-.cb-outcome--event { color: #FDA4AF; }
-.cb-outcome--clear { color: #B8C6D9; }
+.cb-outcome--event { color: var(--ht-risk); }
+.cb-outcome--clear { color: var(--ht-good); }
 .cb-card__empty-label {
   color: var(--ht-muted);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
-  font-size: 14px;
-  letter-spacing: 0.08em;
+  font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .cb-card__empty-copy {
   color: var(--ht-muted);
-  font-size: 10px;
+  font-size: 10.5px;
   line-height: 1.45;
   margin-top: 4px;
 }
 .cb-detail {
   display: grid;
   grid-template-columns: 1.25fr 1fr;
-  gap: 14px;
+  gap: 22px;
   border: 1px solid var(--ht-line);
-  border-radius: 14px;
+  border-radius: 12px;
   padding: 18px 20px;
-  background: linear-gradient(155deg, rgba(15, 23, 42, 0.72), rgba(7, 13, 26, 0.82));
+  background: var(--ht-surface);
+  box-shadow: 0 1px 2px rgba(20, 28, 30, 0.03);
   margin-top: 14px;
 }
 .cb-detail__kicker {
-  color: #67E8F9;
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  color: var(--ht-accent);
+  font-family: var(--ht-mono);
   font-size: 9px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 .cb-detail__title {
-  color: var(--ht-text);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  color: var(--ht-ink);
+  font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
   font-size: 22px;
   font-weight: 600;
   line-height: 1.1;
@@ -263,7 +279,7 @@ CSS = """
 }
 .cb-detail__session {
   color: var(--ht-muted);
-  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-family: var(--ht-mono);
   font-size: 10px;
 }
 .cb-detail__risk {
@@ -273,9 +289,9 @@ CSS = """
   margin: 12px 0 4px;
 }
 .cb-detail__risk strong {
-  color: var(--ht-text);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
-  font-size: 34px;
+  color: var(--ht-ink);
+  font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
+  font-size: 32px;
   font-weight: 600;
   line-height: 1;
 }
@@ -287,7 +303,7 @@ CSS = """
 }
 .cb-detail__label {
   color: var(--ht-muted);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-family: var(--ht-mono);
   font-size: 9px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -302,27 +318,30 @@ CSS = """
 }
 .cb-kv dt { color: var(--ht-muted); margin: 0; }
 .cb-kv dd {
-  color: var(--ht-text);
+  color: var(--ht-ink);
   margin: 0;
-  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-family: var(--ht-mono);
   font-size: 10px;
   text-align: right;
 }
 .cb-note {
   color: var(--ht-muted);
-  font-size: 10px;
+  font-size: 10.5px;
   line-height: 1.45;
   margin: 6px 0 0;
 }
 .cb-observed {
-  border-left: 2px solid var(--ht-line-strong);
+  border-left: 2px solid var(--ht-line-2);
   padding-left: 9px;
-  color: #C7D6E6;
-  font-size: 11px;
+  color: var(--ht-muted);
+  font-size: 11.5px;
   line-height: 1.5;
 }
-.cb-observed--event { border-left-color: var(--ht-coral); }
-.cb-observed--clear { border-left-color: var(--ht-line-strong); }
+.cb-observed--event {
+  border-left-color: var(--ht-risk);
+  color: var(--ht-risk);
+}
+.cb-observed--clear { border-left-color: var(--ht-good); }
 .cb-model-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -333,18 +352,19 @@ CSS = """
   border: 1px solid var(--ht-line);
   border-radius: 10px;
   padding: 10px 12px;
+  background: var(--ht-surface);
 }
 .cb-model-cell b {
   display: block;
-  color: var(--ht-text);
-  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  color: var(--ht-ink);
+  font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
   font-size: 11px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 .cb-model-cell span {
   color: var(--ht-muted);
-  font-size: 10px;
-  line-height: 1.4;
+  font-size: 10.5px;
+  line-height: 1.45;
 }
 .cb-table {
   width: 100%;
@@ -357,9 +377,16 @@ CSS = """
   padding: 6px 8px;
   text-align: left;
 }
-.cb-table th { color: var(--ht-muted); font-weight: 500; }
-.cb-table td { color: var(--ht-text); }
-.cb-model-note { color: var(--ht-muted); font-size: 10px; line-height: 1.5; }
+.cb-table th {
+  color: var(--ht-muted);
+  font-family: var(--ht-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cb-table td { color: var(--ht-ink); }
+.cb-model-note { color: var(--ht-muted); font-size: 10.5px; line-height: 1.5; }
 @media (max-width: 980px) {
   .cb-detail { grid-template-columns: 1fr; }
 }
@@ -667,34 +694,30 @@ def render() -> None:
     chairs = board["chairs"]
     summary = board["demo"]["summary"]
     st.markdown(CSS, unsafe_allow_html=True)
-    st.markdown(theme.section(
-        "Chair board",
+    st.markdown(theme.page_head(
+        "Chair board · fold 2",
         "Five chairs, before the first cuff",
-        "A pre-session estimate from history and the planned UF goal. No BP "
-        "or current UF rate is read."), unsafe_allow_html=True)
+        "A pre-session estimate from history and the planned UF goal — no "
+        "BP, no current UF rate.",
+        pills=[
+            (f"{summary['n_chairs']} sessions · 6 bays", "info"),
+            (f"{summary['high']} high · {summary['low']} low", ""),
+            ("fold 2 · patient-disjoint", "sage"),
+            ("display-only", "warn"),
+        ]), unsafe_allow_html=True)
 
-    left, right = st.columns([3, 1])
+    left, right = st.columns([3, 1], vertical_alignment="bottom")
     with right:
         reveal = st.toggle(
             "Reveal recorded outcomes", value=False, key="chair_reveal",
             help="Retrospective demo only. The default view is the "
                  "pre-session view; revealing outcomes is not a model input.")
     with left:
-        pills = [
-            theme.pill(f"{summary['n_chairs']} sessions · 6 bays", "info"),
-            theme.pill(f"{summary['high']} high · {summary['low']} low"),
-            theme.pill("fold 2 · patient-disjoint", "violet"),
-            theme.pill("display-only", "warn"),
-        ]
-        st.markdown('<div class="ht-pills">' + "".join(pills) + "</div>",
-                    unsafe_allow_html=True)
-
-    st.markdown(
-        '<div class="cb-axis">'
-        '<span>01</span><span>02</span><span>03</span>'
-        '<span>04</span><span>05</span><span>06</span></div>'
-        '<div class="cb-axis-note">fixed chair order · pre-session risk</div>',
-        unsafe_allow_html=True)
+        st.markdown(
+            '<div class="cb-axis">'
+            '<span>01</span><span>02</span><span>03</span>'
+            '<span>04</span><span>05</span><span>06</span></div>',
+            unsafe_allow_html=True)
 
     st.session_state.setdefault("chair_selected", None)
     with st.container(key="chair_rail"):
@@ -726,9 +749,9 @@ def render() -> None:
     chair = next((c for c in chairs if c["chair"] == selected_index), None)
     if chair is None:
         st.markdown(theme.callout(
-            "Select a chair above to inspect its model inputs and, after the "
-            "reveal, its recorded crash shape. The board order is fixed; it "
-            "is not a priority list.", ""), unsafe_allow_html=True)
+            "Select a chair to inspect its model inputs and the recorded "
+            "outcome after the reveal. Board order is fixed — not a priority "
+            "list.", ""), unsafe_allow_html=True)
     else:
         st.markdown(_detail(chair, reveal), unsafe_allow_html=True)
         if st.button("Open in Case lab", key="chair_open_case",
@@ -742,9 +765,7 @@ def render() -> None:
 
     st.markdown(theme.callout(
         "Display-only. A low band is not safe. Not a treatment recommendation, "
-        "an alarm, or a chair-allocation order. Crash shape is recorded after "
-        "the reveal, not predicted.", "warn"), unsafe_allow_html=True)
+        "an alarm, or a chair-allocation order.", "warn"), unsafe_allow_html=True)
     st.caption(
-        "Five fold-2 Case Lab sessions, one per patient; the synthetic "
-        "stale-cuff guardrail is not on the board. Curated, not a prevalence "
-        "sample. Risk variant A2 (no anchor BP, no anchor-time UF).")
+        "Five fold-2 Case Lab sessions, one per patient; curated, not a "
+        "prevalence sample. Risk variant A2 · no anchor BP, no anchor-time UF.")

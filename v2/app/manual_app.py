@@ -18,7 +18,6 @@ import sys
 from math import isfinite
 from pathlib import Path
 
-import pandas as pd
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,20 +42,14 @@ SYMPTOMS = ["Dizziness", "Nausea", "Vomiting", "Cramping", "Yawning",
 SBP_RANGE = (40.0, 250.0)
 DBP_RANGE = (20.0, 150.0)
 
-st.markdown(ui_theme.section(
-    "Live session", "Enter a real session",
+st.markdown(ui_theme.page_head(
+    "Live session",
+    "Enter a real session",
     "Mirror the state at the chair, validate the cuff, walk the unit's review "
-    "pathway, and compute the fluid arithmetic. No prescription is produced."),
+    "pathway, and compute the fluid arithmetic. No prescription is produced.",
+    pills=[("Research prototype", "warn"), ("Shadow display only", "sage"),
+           ("No machine action", "")]),
     unsafe_allow_html=True)
-st.markdown(ui_theme.callout(
-    "Research workflow prototype — not approved for routine clinical use. The "
-    "risk model is a shadow display only and failed its pre-registered online "
-    "alert-utility gate. No treatment-effect or clinical-benefit claim is supported.",
-    "warn"), unsafe_allow_html=True)
-st.markdown(ui_theme.callout(
-    "Quantitative taper, pause, cooling, bolus and minimum-effective-action "
-    "recommendations are disabled. This page supplies no default dose and does "
-    "not execute machine changes.", "fail"), unsafe_allow_html=True)
 
 try:
     PROTOCOL = load_protocol()
@@ -107,301 +100,6 @@ def _latest_raw_cuff(cuffs: list[dict]) -> dict | None:
     if latest is None and cuffs:
         return cuffs[-1]
     return latest
-
-
-# --- Digital-twin surface (W3): display-only twin panel ------------------
-# Read-only, cached artifacts behind the three twin sub-cards: (1) the frozen
-# per-session v3 observational history table, (2) the conditional session
-# expectation under the observed UF trajectory, and (3) the forecast-v2
-# substrate self-measurement. Hard invariant: the twin informs and records;
-# it never gates the protocol pathway and never prescribes. All numbers stay
-# inside the claim boundary of docs/EVIDENCE_STATUS.md (observational
-# history/forecast; no treatment-effect claim, no counterfactual claim, no
-# physiological-model claim).
-V3_HIST_PARQUET = (ROOT / "artifacts" / "review_20261108"
-                   / "hist_features_v3.parquet")
-SUBSTRATE_PARQUET = (ROOT / "artifacts" / "review_20261108"
-                     / "predictions_outer_v2.parquet")
-_PB_SESSION_IDS = ({str(s.get("session_id")) for s in PB["sessions"]}
-                   if PB else set())
-
-
-@st.cache_data
-def _load_v3_hist(path: str) -> pd.DataFrame | None:
-    """The frozen per-session v3 history table (read once, then cached)."""
-    try:
-        return pd.read_parquet(path)
-    except Exception:  # noqa: BLE001 - display-only read degrades, never crashes
-        return None
-
-
-@st.cache_data
-def _load_substrate(path: str) -> pd.DataFrame | None:
-    """Forecast-v2 substrate anchors (one row per substrate session)."""
-    try:
-        return pd.read_parquet(
-            path, columns=["session_id", "t_anchor", "observed_nadir",
-                           "pred_gbdt"])
-    except Exception:  # noqa: BLE001 - display-only read degrades
-        return None
-
-
-def _finite_value(value) -> float | None:
-    try:
-        number = float(value)
-    except (TypeError, ValueError):
-        return None
-    return number if isfinite(number) else None
-
-
-def _fmt_or_dash(value, spec: str | None = None) -> str:
-    number = _finite_value(value)
-    if number is None:
-        return "—"
-    if spec is None:
-        return str(int(round(number)))
-    return format(number, spec)
-
-
-def _pct_or_dash(value) -> str:
-    number = _finite_value(value)
-    return "—" if number is None else f"{100 * number:.0f}%"
-
-
-def _history_row(hist: pd.DataFrame | None, sid_text: str):
-    if hist is None or not sid_text:
-        return None
-    try:
-        sel = hist.loc[hist["session_id"] == sid_text]
-    except Exception:  # noqa: BLE001 - display-only lookup degrades
-        return None
-    return sel.iloc[0] if len(sel) else None
-
-
-def _substrate_row(sub: pd.DataFrame | None, sid_text: str):
-    if sub is None or not sid_text:
-        return None
-    try:
-        sel = sub.loc[sub["session_id"] == sid_text]
-    except Exception:  # noqa: BLE001 - display-only lookup degrades
-        return None
-    return sel.iloc[0] if len(sel) else None
-
-
-def _profile_rows(row) -> list[dict]:
-    """The frozen v3 observational history profile (NaN -> em dash)."""
-    rows = [
-        ("Prior sessions (strictly earlier)", "hist_n_sessions", None),
-        ("Typical nadir, last 10 prior sessions (mmHg)",
-         "hist_mean_nadir10", ".1f"),
-        ("IDH rate, last 10 prior sessions", "hist_idh_rate10", "pct"),
-        ("Early-crash rate, last 10 prior sessions", "hist_early_crash10",
-         "pct"),
-        ("Typical first-to-nadir drop, last 10 (mmHg)", "hist_typical_drop10",
-         ".1f"),
-        ("Typical UF removed, last 10 prior sessions (L)", "hist_uf_mean10",
-         ".2f"),
-        ("This session: interdialytic gap (days)", "idi_days", ".1f"),
-        ("This session: interdialytic weight gain (kg)", "idwg_kg", ".1f"),
-        ("Prescribed dialysate temperature (°C)", "dia_temp_c", ".1f"),
-    ]
-    out = []
-    for label, column, spec in rows:
-        value = row.get(column)
-        shown = (_pct_or_dash(value) if spec == "pct"
-                 else _fmt_or_dash(value, spec))
-        out.append({"Metric": label, "Value": shown,
-                    "History column (v3)": column})
-    return out
-
-
-def _manual_fact_rows(start: dict, uf_goal_l: float) -> list[dict]:
-    """Only user-entered facts; the twin holds no memory for manual entry."""
-    rows = [
-        ("Session ID (entered)", start.get("session_id"), "str"),
-        ("Pre-weight (kg)", start.get("pre_weight"), ".1f"),
-        ("Dry weight (kg)", start.get("dry_weight"), ".1f"),
-        ("Age", start.get("age"), None),
-        ("Sex", start.get("sex"), "str"),
-        ("Diabetes (0/1)", start.get("dm"), None),
-        ("Dialysis vintage (years)", start.get("vintage_years"), ".1f"),
-        ("Month", start.get("month"), None),
-        ("Current-session UF goal (L)", uf_goal_l, ".1f"),
-    ]
-    out = []
-    for label, value, spec in rows:
-        if spec == "str":
-            shown = str(value) if value not in (None, "") else "—"
-        else:
-            shown = _fmt_or_dash(value, spec)
-        out.append({"Fact": label, "Value (entered)": shown})
-    return out
-
-
-def _reality_rows(row) -> list[dict]:
-    """Observed substrate nadir vs the twin's stored anchor forecast."""
-    observed = _finite_value(row.get("observed_nadir"))
-    pred = _finite_value(row.get("pred_gbdt"))
-    error = ((pred - observed)
-             if (observed is not None and pred is not None) else None)
-    return [
-        {"Quantity": "Anchor minute (substrate t_anchor)",
-         "Value": _fmt_or_dash(row.get("t_anchor"))},
-        {"Quantity": "Observed nadir (later cuffs)",
-         "Value": _fmt_or_dash(observed, ".1f") + " mmHg"},
-        {"Quantity": "Twin forecast at the anchor (forecast-v2 pred_gbdt)",
-         "Value": _fmt_or_dash(pred, ".1f") + " mmHg"},
-        {"Quantity": "Error (predicted - observed)",
-         "Value": _fmt_or_dash(error, "+.1f") + " mmHg"},
-    ]
-
-
-def _expectation_band(fc: dict) -> tuple[float, float]:
-    """Empirical residual-band offsets for the expectation chart.
-
-    The serving result exposes the band only around the nadir endpoint
-    (nadir_band); the same dev-fold residual offsets apply to the 30/60
-    endpoints (one shared band in src/forecast_serve.py). Last resort: the
-    module's built-in fallback band.
-    """
-    try:
-        nadir = float(fc["nadir_mean"])
-        lo = float(fc["nadir_band"][0]) - nadir
-        hi = float(fc["nadir_band"][1]) - nadir
-        if isfinite(lo) and isfinite(hi) and lo < 0 < hi:
-            return lo, hi
-    except (TypeError, ValueError, KeyError, IndexError):
-        pass
-    bundle = FS.load_bundle()
-    if bundle is not None:
-        return float(bundle["band"][0]), float(bundle["band"][1])
-    return FS.FALLBACK_BAND
-
-
-def _expectation_chart_frame(cuffs, anchor: float, p30: float, p60: float,
-                             nadir: float, band_lo: float,
-                             band_hi: float) -> pd.DataFrame:
-    """Wide minute-indexed frame for the display-only expectation chart.
-
-    Observed cuff SBP up to the anchor plus three forecast endpoints
-    (anchor+30, anchor+60, nadir inside the 60-minute window) bracketed by
-    the empirical residual band. A connector point at the last observed cuff
-    makes the isolated endpoints visible; this draws a conditional
-    expectation, not a simulated trajectory.
-    """
-    points: dict[float, dict] = {}
-
-    def put(minute: float, values: dict) -> None:
-        points.setdefault(minute, {}).update(values)
-
-    last_t = None
-    last_sbp = None
-    for cuff in cuffs or []:
-        t = _finite_value((cuff or {}).get("t"))
-        sbp = _finite_value((cuff or {}).get("sbp"))
-        if t is None or sbp is None or not 0.0 <= t <= anchor:
-            continue
-        put(t, {"Observed cuff SBP": sbp})
-        if last_t is None or t >= last_t:
-            last_t, last_sbp = t, sbp
-    if last_t is not None:
-        put(last_t, {"Forecast +30 min": last_sbp,
-                     "Forecast +60 min": last_sbp,
-                     "Forecast nadir (next 60 min)": last_sbp})
-    put(anchor + 30.0, {"Forecast +30 min": p30,
-                        "95% band lower": p30 + band_lo,
-                        "95% band upper": p30 + band_hi})
-    put(anchor + 60.0, {"Forecast +60 min": p60,
-                        "Forecast nadir (next 60 min)": nadir,
-                        "95% band lower": p60 + band_lo,
-                        "95% band upper": p60 + band_hi})
-    frame = pd.DataFrame([{"minute": minute, **vals}
-                          for minute, vals in sorted(points.items())]
-                         ).set_index("minute")
-    # Every expected series exists even when empty (e.g. no observed cuffs).
-    return frame.reindex(columns=list(_EXPECTATION_COLUMNS))
-
-
-_EXPECTATION_COLUMNS = ("Observed cuff SBP", "Forecast +30 min",
-                        "Forecast +60 min", "Forecast nadir (next 60 min)",
-                        "95% band lower", "95% band upper")
-
-
-def render_twin_panel(sid_text: str, playback: bool, start: dict,
-                      uf_goal_l: float) -> None:
-    """Digital-twin surface for the active session.
-
-    Hard invariant: DISPLAY-ONLY. The twin informs and records; it never
-    gates the protocol pathway and never prescribes. Every number stays
-    inside the claim boundary of docs/EVIDENCE_STATUS.md: observational
-    history or an observational conditional forecast — no treatment-effect
-    claim, no what-if treatment claim, no physiological-model claim.
-    """
-    st.subheader("Digital twin surface")
-    st.caption("Display only: the twin informs and records; it never gates "
-               "the protocol pathway and never prescribes.")
-
-    # --- 1. What the twin knows about this patient ------------------------
-    st.markdown("**What the twin knows about this patient**")
-    if playback:
-        row = _history_row(_load_v3_hist(str(V3_HIST_PARQUET)), sid_text)
-        if row is None:
-            st.caption("No v3 history row for this session in the frozen "
-                       "table; the twin shows no patient memory here.")
-        else:
-            st.dataframe(_profile_rows(row), width="stretch")
-            n = _fmt_or_dash(row.get("hist_n_sessions"))
-            st.caption(f"learned from {n} strictly earlier sessions — "
-                       "observational history, not a physiological model")
-    else:
-        st.dataframe(_manual_fact_rows(start, uf_goal_l), width="stretch")
-        st.warning("LIMITED-HISTORY / OUT-OF-DISTRIBUTION for the twin: "
-                   "no prior-session memory for manual entry")
-
-    # --- 2. Session expectation -------------------------------------------
-    st.markdown("**Session expectation**")
-    fc = st.session_state.get("forecast_result")
-    if (fc is not None and fc.get("mode") == "playback_full"
-            and all(_finite_value(fc.get(k)) is not None
-                    for k in ("nadir_mean", "p30", "p60"))
-            and _finite_value(fc.get("anchor_min")) is not None):
-        anchor = float(fc["anchor_min"])
-        st.markdown("**Conditional expectation under the observed UF "
-                    "trajectory**")
-        band_lo, band_hi = _expectation_band(fc)
-        frame = _expectation_chart_frame(
-            st.session_state.get("cuffs") or [], anchor,
-            float(fc["p30"]), float(fc["p60"]), float(fc["nadir_mean"]),
-            band_lo, band_hi)
-        st.line_chart(frame, x_label="Session minute",
-                      y_label="Cuff SBP (mmHg)")
-        st.caption("Empirical 95% residual band around 3 forecast points — "
-                   "an observational forecast, not a trajectory simulation "
-                   "and not a what-if treatment effect.")
-    elif fc is not None and fc.get("mode") == "manual_limited":
-        st.caption("No expectation chart for manual entry: there is no "
-                   "observed UF trajectory beyond the entered cuffs, so no "
-                   "conditional expectation is drawn here; the labelled "
-                   "limited-history forecast above is the only forward view.")
-    elif fc is not None:
-        st.caption("Twin expectation unavailable: "
-                   + str(fc.get("reason") or "not computable") + ".")
-    else:
-        st.caption("Expectation not computed for this evaluation yet; the "
-                   "twin's forward view appears when the assessment is "
-                   "evaluated.")
-
-    # --- 3. Twin vs reality ------------------------------------------------
-    st.markdown("**Twin vs reality**")
-    row = (_substrate_row(_load_substrate(str(SUBSTRATE_PARQUET)), sid_text)
-           if playback else None)
-    if row is None:
-        st.caption("No substrate anchor for this session.")
-    else:
-        st.dataframe(_reality_rows(row), width="stretch")
-        st.caption("Self-measurement reference — on 12,651 untouched patient "
-                   "anchors: MAE 9.60 mmHg, bias +0.15, crash recall 0.53 "
-                   "(forecast-v2, segment-measured).")
 
 
 def _load_playback():
@@ -648,12 +346,11 @@ with right:
             "Add cuffs, record current findings, and evaluate."),
             unsafe_allow_html=True)
     else:
-        colors = {"URGENT_CLINICAL_REVIEW": "#b42318", "REVIEW_NOW": "#b54708",
-                  "INSUFFICIENT_INFORMATION": "#475467", "NO_ALERT": "#067647"}
+        colors = {"URGENT_CLINICAL_REVIEW": "fail", "REVIEW_NOW": "warn",
+                  "INSUFFICIENT_INFORMATION": "sage", "NO_ALERT": "ok"}
         st.markdown(
-            f"<span style='background:{colors[rec['state']]};color:white;"
-            f"padding:4px 10px;border-radius:8px;font-weight:700'>"
-            f"{rec['state'].replace('_', ' ')}</span>",
+            ui_theme.pill(rec["state"].replace("_", " "),
+                          colors.get(rec["state"], "")),
             unsafe_allow_html=True,
         )
         st.write(rec["state_reason_text"])
@@ -676,12 +373,9 @@ with right:
                   else "time unavailable")
         sbp_text = (f"SBP {sbp_snapshot:.0f} mmHg" if sbp_snapshot is not None
                     else "SBP unavailable")
-        st.caption(f"This state is computed only from the configured protocol "
-                   f"rules and the values entered when it was evaluated "
-                   f"(session {snapshot['session_id']}, {t_text}, {sbp_text}); "
-                   "the shadow score below "
-                   "is not an input. Change inputs, then evaluate again to "
-                   "refresh.")
+        st.caption(f"Computed from the protocol rules and the values entered "
+                   f"at evaluation (session {snapshot['session_id']}, {t_text}, "
+                   f"{sbp_text}); the shadow score is not an input.")
         shadow = rec["risk_shadow"]
         st.metric("Shadow research risk",
                   f"{100 * shadow['score']:.1f}%" if shadow["score"] is not None else "unavailable")
@@ -840,6 +534,5 @@ with right:
 # validated forecast, protocol and fluid arithmetic only.
 
 st.divider()
-st.caption("Manual/CSV path, local shadow model, deterministic protocol, and "
-           "arithmetic fluid scenarios. No network, machine actuation, "
-           "authentication, or clinical-effectiveness claim.")
+st.caption("Local demo · no network, machine actuation, authentication, or "
+           "clinical-effectiveness claim.")

@@ -1,444 +1,518 @@
-"""Cinematic medical digital-twin theme for the V2 console.
+"""Continuum theme for the HemoTwin V2 console.
 
-All visual tokens live here so the app and the deck share one language:
-midnight navy, luminous cyan/teal, violet uncertainty, amber illustration,
-and coral failure. No external fonts or network calls at runtime.
+One visual language across the console and the 3D landing: a dark instrument
+bar pinned above a light mist workspace, deep teal for measurement, amber for
+caution, brick for risk, sage for uncertainty. No gradients, no glows, no
+external fonts or network calls at runtime.
 """
 from __future__ import annotations
 
-import base64
 import html
-from functools import lru_cache
-from pathlib import Path
 
 import streamlit as st
 
-ASSETS = Path(__file__).resolve().parents[2] / "assets"
-
 PALETTE = {
-    "bg": "#050A12",
-    "bg_2": "#07111F",
-    "panel": "rgba(13, 23, 42, 0.78)",
-    "line": "rgba(148, 163, 184, 0.16)",
-    "line_strong": "rgba(148, 163, 184, 0.28)",
-    "text": "#F4F8FB",
-    "muted": "#93A4B8",
-    "cyan": "#22D3EE",
-    "teal": "#2DD4BF",
-    "violet": "#A78BFA",
-    "amber": "#FBBF24",
-    "coral": "#FB7185",
-    "good": "#34D399",
+    "bg": "#EFF3F2",
+    "surface": "#FFFFFF",
+    "surface_2": "#F7FAF9",
+    "ink": "#141C1E",
+    "muted": "#5C6B6D",
+    "dim": "#7E8B8C",
+    "line": "#DCE4E1",
+    "line_2": "#C6D2CE",
+    "accent": "#17756A",
+    "accent_bright": "#5EEAD4",
+    "accent_soft": "#E4F1ED",
+    "warn": "#A8641B",
+    "warn_soft": "#FBF4E8",
+    "risk": "#B23C2C",
+    "risk_soft": "#F9EDEA",
+    "good": "#1F7A4D",
+    "sage": "#7D8B7C",
+    "chrome": "#080D10",
 }
 
-DISPLAY_FONT = '"Bahnschrift", "Segoe UI Variable Display", "Segoe UI", sans-serif'
+DISPLAY_FONT = '"Segoe UI Variable Display", "Segoe UI", sans-serif'
 BODY_FONT = '"Segoe UI", "Segoe UI Variable Text", system-ui, sans-serif'
-
-
-@lru_cache(maxsize=4)
-def _b64(path: str) -> str:
-    return base64.b64encode(Path(path).read_bytes()).decode("ascii")
-
-
-def _asset(name: str, mime: str) -> str:
-    path = ASSETS / name
-    if not path.exists():
-        return ""
-    return f"data:{mime};base64,{_b64(str(path))}"
+MONO_FONT = '"Cascadia Mono", Consolas, "SF Mono", monospace'
 
 
 def inject_css() -> None:
-    """Apply the global theme once per page render."""
+    """Apply the global Continuum theme once per page render."""
     st.markdown(f"""
 <style>
 :root {{
   --ht-bg: {PALETTE['bg']};
-  --ht-bg-2: {PALETTE['bg_2']};
-  --ht-panel: {PALETTE['panel']};
-  --ht-line: {PALETTE['line']};
-  --ht-line-strong: {PALETTE['line_strong']};
-  --ht-text: {PALETTE['text']};
+  --ht-surface: {PALETTE['surface']};
+  --ht-surface-2: {PALETTE['surface_2']};
+  --ht-ink: {PALETTE['ink']};
   --ht-muted: {PALETTE['muted']};
-  --ht-cyan: {PALETTE['cyan']};
-  --ht-teal: {PALETTE['teal']};
-  --ht-violet: {PALETTE['violet']};
-  --ht-amber: {PALETTE['amber']};
-  --ht-coral: {PALETTE['coral']};
+  --ht-dim: {PALETTE['dim']};
+  --ht-line: {PALETTE['line']};
+  --ht-line-2: {PALETTE['line_2']};
+  --ht-accent: {PALETTE['accent']};
+  --ht-accent-bright: {PALETTE['accent_bright']};
+  --ht-accent-soft: {PALETTE['accent_soft']};
+  --ht-warn: {PALETTE['warn']};
+  --ht-warn-soft: {PALETTE['warn_soft']};
+  --ht-risk: {PALETTE['risk']};
+  --ht-risk-soft: {PALETTE['risk_soft']};
   --ht-good: {PALETTE['good']};
-  --ht-radius: 18px;
-  --ht-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  --ht-sage: {PALETTE['sage']};
+  --ht-chrome: {PALETTE['chrome']};
+  --ht-mono: {MONO_FONT};
+  --ht-radius: 12px;
 }}
 
 html, body, [class*="css"] {{
   font-family: {BODY_FONT};
-  color: var(--ht-text);
+  color: var(--ht-ink);
 }}
 .stApp {{
   background:
-    radial-gradient(900px 520px at 8% -8%, rgba(34, 211, 238, 0.14), transparent 62%),
-    radial-gradient(820px 520px at 96% 2%, rgba(139, 92, 246, 0.10), transparent 60%),
-    linear-gradient(180deg, #050A12 0%, #06101C 46%, #050A12 100%);
-  background-attachment: fixed;
+    radial-gradient(1100px 480px at 82% -14%, rgba(23, 117, 106, 0.06), transparent 62%),
+    var(--ht-bg);
 }}
-.stApp::before {{
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
-  background-size: 52px 52px;
-  mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%);
-}}
-[data-testid="stHeader"] {{ background: transparent; z-index: 1000; }}
+[data-testid="stHeader"] {{ background: transparent; }}
 [data-testid="stToolbar"] {{ background: transparent; }}
 [data-testid="stDecoration"], #MainMenu, footer {{ display: none !important; }}
-.block-container {{ padding-top: 1.1rem; padding-bottom: 2.2rem; max-width: 1360px; }}
-[data-testid="stSidebarCollapseButton"] {{ visibility: visible !important; }}
-[data-testid="stExpandSidebarButton"],
-[data-testid="stSidebarCollapseButton"] button {{
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.24);
-  background: rgba(11, 21, 36, 0.92);
-  color: #E6EEF8;
-  transition: border-color 160ms ease, background 160ms ease;
+[data-testid="stMainBlockContainer"], .block-container {{
+  max-width: 1240px;
+  padding: 22px 26px 40px;
+}}
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stExpandSidebarButton"] {{
+  border-radius: 8px;
+  border: 1px solid var(--ht-line);
+  background: var(--ht-surface);
+  color: var(--ht-ink);
 }}
 [data-testid="stExpandSidebarButton"]:hover,
 [data-testid="stSidebarCollapseButton"] button:hover {{
-  border-color: rgba(34, 211, 238, 0.55);
-  background: rgba(15, 30, 48, 0.98);
-}}
-[data-testid="stExpandSidebarButton"]:focus-visible,
-[data-testid="stSidebarCollapseButton"] button:focus-visible {{
-  outline: 2px solid var(--ht-cyan);
-  outline-offset: 2px;
+  border-color: var(--ht-accent);
+  color: var(--ht-accent);
 }}
 
 h1, h2, h3, h4, h5 {{
   font-family: {DISPLAY_FONT};
-  color: var(--ht-text);
-  letter-spacing: -0.02em;
+  color: var(--ht-ink);
+  letter-spacing: -0.015em;
 }}
-p, li, label, span, div {{ color: #CBD5E1; }}
-a {{ color: #67E8F9; text-decoration: none; }}
+[data-testid="stHeadingWithActionElements"] h2 {{
+  font-size: 20px !important;
+  font-weight: 650 !important;
+  margin: 6px 0 8px !important;
+}}
+[data-testid="stHeadingWithActionElements"] h3 {{
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  margin: 4px 0 6px !important;
+}}
+p, li, label, span, div {{ color: var(--ht-ink); }}
+a {{ color: var(--ht-accent); text-decoration: none; }}
 a:hover {{ text-decoration: underline; }}
 hr {{ border-color: var(--ht-line); }}
+[data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] p {{
+  color: var(--ht-muted) !important;
+  font-size: 11.5px;
+  line-height: 1.5;
+}}
 
 [data-testid="stSidebar"] {{
-  background: linear-gradient(180deg, #060D18 0%, #050A12 100%);
-  border-right: 1px solid rgba(148, 163, 184, 0.12);
+  background: var(--ht-surface-2);
+  border-right: 1px solid var(--ht-line);
 }}
-[data-testid="stSidebar"] * {{ color: #CBD5E1; }}
-[data-testid="stSidebarNav"] {{ padding-top: 0.35rem; }}
-[data-testid="stSidebarNav"] a {{
-  border-radius: 10px;
-  margin: 2px 8px;
-  padding: 8px 10px;
-  transition: background 160ms ease, border-color 160ms ease;
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] li {{
+  color: var(--ht-muted);
 }}
-[data-testid="stSidebarNav"] a:hover {{ background: rgba(34, 211, 238, 0.08); }}
-[data-testid="stSidebarNav"] a[aria-current="page"] {{
-  background: linear-gradient(90deg, rgba(34, 211, 238, 0.16), rgba(45, 212, 191, 0.05));
-  border: 1px solid rgba(34, 211, 238, 0.24);
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {{
+  font-family: {MONO_FONT} !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ht-muted);
 }}
-[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {{ color: #93A4B8; }}
 
 div[data-testid="stButton"] > button {{
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.92), rgba(8, 14, 28, 0.96));
-  border: 1px solid rgba(148, 163, 184, 0.20);
-  border-radius: 14px;
-  color: #E2E8F0;
-  min-height: 3.15rem;
-  font-family: {DISPLAY_FONT};
-  font-size: 13px;
-  letter-spacing: 0.01em;
+  background: var(--ht-surface);
+  border: 1px solid var(--ht-line-2);
+  border-radius: 8px;
+  color: var(--ht-ink);
+  min-height: 2.65rem;
+  font-family: {BODY_FONT};
+  font-size: 12.5px;
+  font-weight: 500;
   white-space: pre-line;
-  line-height: 1.25;
-  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  line-height: 1.3;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
 }}
 div[data-testid="stButton"] > button:hover {{
-  border-color: rgba(34, 211, 238, 0.55);
-  box-shadow: 0 10px 30px rgba(34, 211, 238, 0.10);
-  transform: translateY(-1px);
+  border-color: var(--ht-accent);
+  color: var(--ht-accent);
+  background: var(--ht-surface-2);
 }}
 div[data-testid="stButton"] > button:focus-visible {{
-  outline: 2px solid var(--ht-cyan);
+  outline: 2px solid var(--ht-accent);
   outline-offset: 2px;
 }}
 div[data-testid="stButton"] > button[kind="primary"] {{
-  background: linear-gradient(135deg, #0E7490 0%, #0F766E 100%);
-  border-color: rgba(34, 211, 238, 0.55);
+  background: var(--ht-accent);
+  border-color: var(--ht-accent);
   color: #FFFFFF;
 }}
-
-div[data-baseweb="input"] > div,
-div[data-baseweb="select"] > div,
-div[data-baseweb="textarea"] > div,
-div[data-testid="stNumberInput"] input {{
-  background: rgba(8, 15, 28, 0.92) !important;
-  border-color: rgba(148, 163, 184, 0.22) !important;
-  color: #F4F8FB !important;
+div[data-testid="stButton"] > button[kind="primary"]:hover {{
+  background: #0F5F56;
+  border-color: #0F5F56;
+  color: #FFFFFF;
 }}
-input, textarea {{ color: #F4F8FB !important; }}
-div[data-testid="stSlider"] [role="slider"] {{ background: var(--ht-cyan) !important; }}
+div[data-testid="stButton"] > button[kind="tertiary"] {{
+  border-color: transparent;
+  background: transparent;
+  color: var(--ht-accent);
+}}
+
+div[data-baseweb="input"], div[data-baseweb="select"] > div,
+div[data-baseweb="base-input"], div[data-baseweb="textarea"] {{
+  border-radius: 8px !important;
+  background: var(--ht-surface) !important;
+}}
+input, textarea {{ color: var(--ht-ink) !important; }}
+div[data-testid="stSlider"] [role="slider"] {{ background: var(--ht-accent) !important; }}
 
 button[data-baseweb="tab"] {{
-  color: #93A4B8;
-  font-family: {DISPLAY_FONT};
-  letter-spacing: 0.01em;
+  color: var(--ht-muted);
+  font-family: {BODY_FONT};
+  font-size: 13px;
+  font-weight: 500;
 }}
-button[data-baseweb="tab"][aria-selected="true"] {{ color: #E6FFFB; }}
-div[data-baseweb="tab-highlight"] {{ background: var(--ht-cyan); }}
-div[data-baseweb="tab-border"] {{ background: rgba(148, 163, 184, 0.14); }}
+button[data-baseweb="tab"][aria-selected="true"] {{ color: var(--ht-ink); }}
+div[data-baseweb="tab-highlight"] {{ background: var(--ht-accent); }}
+div[data-baseweb="tab-border"] {{ background: var(--ht-line); }}
 
 div[data-testid="stAlert"] {{
-  background: rgba(15, 23, 42, 0.92) !important;
-  border: 1px solid rgba(148, 163, 184, 0.20) !important;
-  border-left: 2px solid var(--ht-cyan) !important;
-  border-radius: 12px !important;
-  color: #E2E8F0 !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--ht-line) !important;
+  font-size: 13px;
 }}
-div[data-testid="stAlert"] p,
-div[data-testid="stAlert"] span,
-div[data-testid="stAlert"] div {{ color: #E2E8F0 !important; }}
+div[data-testid="stAlert"] p {{ font-size: 13px; }}
 div[data-testid="stMetric"] {{
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.86), rgba(7, 13, 26, 0.92));
+  background: var(--ht-surface);
   border: 1px solid var(--ht-line);
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 10px;
+  padding: 12px 14px;
 }}
-div[data-testid="stMetricLabel"] {{ color: var(--ht-muted); }}
+div[data-testid="stMetricLabel"] {{
+  color: var(--ht-muted);
+  font-family: {MONO_FONT};
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}}
 div[data-testid="stMetricValue"] {{
-  color: var(--ht-text);
+  color: var(--ht-ink);
   font-family: {DISPLAY_FONT};
+  font-size: 24px;
 }}
+div[data-testid="stMetricDelta"] {{ font-size: 11px; }}
 div[data-testid="stDataFrame"] {{
   border: 1px solid var(--ht-line);
-  border-radius: 14px;
+  border-radius: 10px;
   overflow: hidden;
 }}
 details {{
-  background: rgba(8, 15, 28, 0.72);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 14px;
-  padding: 6px 12px;
+  background: var(--ht-surface);
+  border: 1px solid var(--ht-line);
+  border-radius: 10px;
+  padding: 4px 12px;
 }}
-summary {{ color: #CBD5E1; }}
+summary {{ color: var(--ht-ink); font-size: 13px; font-weight: 600; }}
+div[data-testid="stExpander"] details {{ background: var(--ht-surface-2); }}
 
-.ht-brandbar {{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 4px 0 16px;
+/* Fixed instrument bar: the dark chrome shared with the 3D landing. */
+/* Streamlit wraps the container in a content-height layout div; pin that
+   wrapper too, otherwise sticky is clamped to its 72px parent box. */
+div[data-testid="stLayoutWrapper"]:has(> .st-key-ht_topbar) {{
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  padding-top: 10px;
+  margin-top: -10px;
+  background: var(--ht-bg);
 }}
-.ht-brand {{ display: flex; align-items: center; gap: 12px; }}
-.ht-brand img {{ width: 40px; height: 40px; }}
-.ht-wordmark {{
-  font-family: {DISPLAY_FONT};
-  font-size: 18px;
-  letter-spacing: 0.16em;
-  color: var(--ht-text);
-  line-height: 1;
+.st-key-ht_topbar {{
+  position: sticky;
+  top: 10px;
+  z-index: 999;
+  background: var(--ht-chrome);
+  border: 1px solid #15211E;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 22px;
+  animation: htDrop 300ms ease both;
 }}
-.ht-brand small {{
-  display: block;
-  color: var(--ht-muted);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+.st-key-ht_topbar [data-testid="stHorizontalBlock"] {{ align-items: center; gap: 4px; }}
+.st-key-ht_topbar [data-testid="stPageLink"] {{ text-align: center; }}
+.st-key-ht_topbar [data-testid="stPageLink"] a {{
+  color: #869895;
+  font-family: {MONO_FONT};
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-top: 5px;
-}}
-.ht-status {{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }}
-.ht-dot {{
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--ht-good);
-  box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
-}}
-
-.ht-hero {{
-  position: relative;
-  border-radius: 24px;
-  overflow: hidden;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  min-height: 310px;
-  padding: 34px 38px;
-  display: flex;
-  flex-direction: column;
+  padding: 6px 2px;
+  background: transparent !important;
+  border-radius: 0 !important;
+  border-bottom: 1.5px solid transparent;
   justify-content: center;
-  box-shadow: var(--ht-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  background-size: cover;
-  background-position: center right;
+  transition: color 140ms ease, border-color 140ms ease;
 }}
-.ht-kicker {{
-  font-family: {DISPLAY_FONT};
+.st-key-ht_topbar [data-testid="stPageLink"] a:hover {{
+  color: #E7F1EE;
+  text-decoration: none;
+}}
+/* The active view is wrapped in this keyed container by the shell. */
+.st-key-ht_nav_active [data-testid="stPageLink"] a,
+.st-key-ht_topbar [data-testid="stPageLink"] a[aria-current="page"] {{
+  color: var(--ht-accent-bright) !important;
+  border-bottom-color: var(--ht-accent-bright) !important;
+}}
+
+.ht-brand {{ display: flex; align-items: center; gap: 10px; }}
+.ht-brand__mark {{
+  width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid #24534B;
+  border-radius: 5px;
+  background: #0E211D;
+  color: var(--ht-accent-bright);
+  font-family: {MONO_FONT};
   font-size: 11px;
-  letter-spacing: 0.20em;
-  text-transform: uppercase;
-  color: #67E8F9;
+  font-weight: 700;
 }}
-.ht-display {{
+.ht-brand__word {{
   font-family: {DISPLAY_FONT};
+  font-size: 12.5px;
   font-weight: 600;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
-  line-height: 1.02;
-  color: #F8FAFC;
-  margin: 12px 0 12px;
+  letter-spacing: 0.2em;
+  color: #EDF5F2;
+}}
+.ht-brand__ver {{
+  font-family: {MONO_FONT};
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: #6E8380;
+  border: 1px solid #1E2D29;
+  border-radius: 4px;
+  padding: 1px 5px;
+}}
+.ht-topright {{ display: flex; justify-content: flex-end; }}
+.ht-live {{
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: {MONO_FONT};
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7FA69E;
+  white-space: nowrap;
+}}
+.ht-live i {{
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ht-accent-bright);
+  box-shadow: 0 0 0 3px rgba(94, 234, 212, 0.14);
+}}
+
+.ht-pagehead {{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--ht-line);
+  animation: htRise 280ms ease both;
+}}
+.ht-pagehead__main {{ max-width: 760px; }}
+.ht-pagehead__side {{ display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }}
+.ht-title {{
+  font-family: {DISPLAY_FONT};
+  font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ht-ink);
+  margin: 8px 0 8px;
+}}
+.ht-lead {{
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ht-muted);
   max-width: 660px;
 }}
-.ht-display em {{ font-style: normal; color: #67E8F9; }}
-.ht-lead {{
-  font-size: 15px;
-  line-height: 1.65;
-  color: #B8C6D9;
-  max-width: 560px;
+
+.ht-kicker {{
+  font-family: {MONO_FONT};
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ht-accent);
 }}
-.ht-pills {{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }}
 .ht-pill {{
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 10px;
+  padding: 4px 9px;
   border-radius: 999px;
-  border: 1px solid var(--ht-line);
-  background: rgba(15, 23, 42, 0.62);
-  color: #B8C6D9;
-  font-family: {DISPLAY_FONT};
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  border: 1px solid var(--ht-line-2);
+  background: var(--ht-surface);
+  color: var(--ht-muted);
+  font-family: {MONO_FONT};
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }}
-.ht-pill--ok {{ color: #6EE7B7; border-color: rgba(52, 211, 153, 0.34); background: rgba(52, 211, 153, 0.08); }}
-.ht-pill--warn {{ color: #FCD34D; border-color: rgba(251, 191, 36, 0.34); background: rgba(251, 191, 36, 0.08); }}
-.ht-pill--fail {{ color: #FDA4AF; border-color: rgba(251, 113, 133, 0.36); background: rgba(251, 113, 133, 0.08); }}
-.ht-pill--info {{ color: #67E8F9; border-color: rgba(34, 211, 238, 0.34); background: rgba(34, 211, 238, 0.08); }}
-.ht-pill--violet {{ color: #C4B5FD; border-color: rgba(167, 139, 250, 0.36); background: rgba(167, 139, 250, 0.08); }}
-
-.ht-card {{
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.86), rgba(7, 13, 26, 0.93));
-  border: 1px solid var(--ht-line);
-  border-radius: var(--ht-radius);
-  box-shadow: var(--ht-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  padding: 20px 22px;
-}}
-.ht-card::after {{
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(120deg, rgba(34, 211, 238, 0.07), transparent 38%);
-}}
-.ht-card--tight {{ padding: 15px 17px; }}
-.ht-card--glow {{ border-color: rgba(34, 211, 238, 0.32); box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.06), var(--ht-shadow); }}
-.ht-card h3, .ht-card h4 {{ margin: 0 0 6px; }}
-.ht-card p {{ margin: 0; color: var(--ht-muted); font-size: 13px; line-height: 1.55; }}
-
-.ht-metric-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 12px;
-}}
-.ht-metric {{
-  background: linear-gradient(145deg, rgba(15, 23, 42, 0.86), rgba(7, 13, 26, 0.93));
-  border: 1px solid var(--ht-line);
-  border-radius: 14px;
-  padding: 15px 16px;
-  min-height: 92px;
-}}
-.ht-metric__label {{
-  font-family: {DISPLAY_FONT};
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ht-muted);
-}}
-.ht-metric__value {{
-  font-family: {DISPLAY_FONT};
-  font-size: 32px;
-  line-height: 1;
-  color: var(--ht-text);
-  margin: 9px 0 4px;
-}}
-.ht-metric__value--cyan {{ color: #67E8F9; }}
-.ht-metric__value--violet {{ color: #C4B5FD; }}
-.ht-metric__value--amber {{ color: #FCD34D; }}
-.ht-metric__value--coral {{ color: #FDA4AF; }}
-.ht-metric__sub {{ font-size: 11px; color: var(--ht-muted); line-height: 1.4; }}
+.ht-pill--ok {{ color: var(--ht-good); border-color: #BFDCCB; background: #EEF7F1; }}
+.ht-pill--warn {{ color: var(--ht-warn); border-color: #E8D3B2; background: var(--ht-warn-soft); }}
+.ht-pill--fail {{ color: var(--ht-risk); border-color: #E4C3BD; background: var(--ht-risk-soft); }}
+.ht-pill--info {{ color: var(--ht-accent); border-color: #BFDAD4; background: var(--ht-accent-soft); }}
+.ht-pill--sage {{ color: #5F6E5E; border-color: #CFD7CB; background: #F1F4EF; }}
+.ht-pills {{ display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 2px; }}
 
 .ht-section {{
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 18px;
+  gap: 22px;
   margin: 30px 0 12px;
 }}
-.ht-section > div:first-child {{ flex: 0 0 auto; min-width: 280px; }}
-.ht-section p {{ flex: 1 1 420px; }}
-.ht-section h2 {{ margin: 0; font-size: 23px; }}
-.ht-section p {{ margin: 0; color: var(--ht-muted); font-size: 13px; max-width: 560px; }}
+.ht-section > div:first-child {{ flex: 0 0 auto; }}
+.ht-section h2 {{
+  margin: 6px 0 0;
+  font-size: 21px;
+  font-weight: 600;
+}}
+.ht-section p {{
+  margin: 0;
+  color: var(--ht-muted);
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 540px;
+}}
+
+.ht-card {{
+  background: var(--ht-surface);
+  border: 1px solid var(--ht-line);
+  border-radius: var(--ht-radius);
+  box-shadow: 0 1px 2px rgba(20, 28, 30, 0.04);
+  padding: 18px 20px;
+}}
+.ht-card--tight {{ padding: 14px 16px; }}
+.ht-card--glow {{ border-color: rgba(23, 117, 106, 0.4); box-shadow: 0 0 0 3px var(--ht-accent-soft); }}
+.ht-card h3, .ht-card h4 {{ margin: 0 0 6px; font-size: 15px; }}
+.ht-card p {{ margin: 0; color: var(--ht-muted); font-size: 12.5px; line-height: 1.55; }}
+
+.ht-metric-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}}
+.ht-metric {{
+  background: var(--ht-surface);
+  border: 1px solid var(--ht-line);
+  border-radius: 10px;
+  padding: 13px 15px;
+  min-height: 84px;
+}}
+.ht-metric__label {{
+  font-family: {MONO_FONT};
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ht-muted);
+}}
+.ht-metric__value {{
+  font-family: {DISPLAY_FONT};
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ht-ink);
+  margin: 9px 0 4px;
+}}
+.ht-metric__value--cyan {{ color: var(--ht-accent); }}
+.ht-metric__value--violet {{ color: var(--ht-sage); }}
+.ht-metric__value--amber {{ color: var(--ht-warn); }}
+.ht-metric__value--coral {{ color: var(--ht-risk); }}
+.ht-metric__sub {{ font-size: 11px; color: var(--ht-muted); line-height: 1.45; }}
 
 .ht-callout {{
-  border-left: 2px solid var(--ht-cyan);
-  background: rgba(34, 211, 238, 0.06);
-  border-radius: 0 12px 12px 0;
-  padding: 11px 15px;
-  color: #C7D6E6;
-  font-size: 13px;
+  border-left: 2px solid var(--ht-accent);
+  background: var(--ht-accent-soft);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  color: var(--ht-ink);
+  font-size: 12.5px;
   line-height: 1.55;
 }}
-.ht-callout--warn {{ border-left-color: var(--ht-amber); background: rgba(251, 191, 36, 0.06); }}
-.ht-callout--fail {{ border-left-color: var(--ht-coral); background: rgba(251, 113, 133, 0.06); }}
-
-.ht-orb-card {{ display: flex; align-items: center; gap: 14px; }}
-.ht-orb {{
-  width: 112px;
-  height: 112px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 22px rgba(34, 211, 238, 0.32));
-  animation: htFloat 7s ease-in-out infinite;
-}}
-@keyframes htFloat {{
-  0%, 100% {{ transform: translateY(0) scale(1); }}
-  50% {{ transform: translateY(-6px) scale(1.015); }}
-}}
+.ht-callout--warn {{ border-left-color: var(--ht-warn); background: var(--ht-warn-soft); }}
+.ht-callout--fail {{ border-left-color: var(--ht-risk); background: var(--ht-risk-soft); }}
 
 .ht-footer {{
-  margin-top: 46px;
-  padding-top: 16px;
+  margin-top: 44px;
+  padding-top: 14px;
   border-top: 1px solid var(--ht-line);
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 24px;
+  gap: 6px 22px;
   justify-content: space-between;
-  color: #7F91A6;
-  font-size: 12px;
+  color: var(--ht-muted);
+  font-family: {MONO_FONT};
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }}
-.ht-grid-2 {{ display: grid; grid-template-columns: 1.45fr 1fr; gap: 16px; }}
-.ht-grid-3 {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }}
+.ht-footer span {{ color: var(--ht-muted); }}
+.ht-grid-2 {{ display: grid; grid-template-columns: 1.45fr 1fr; gap: 14px; }}
+.ht-grid-3 {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }}
 .ht-grid-2 > .ht-card, .ht-grid-3 > .ht-card {{ height: 100%; }}
 
-@media (max-width: 1300px) {{
-  .ht-orb-card {{ flex-direction: column; align-items: flex-start; }}
-  .ht-orb {{ width: 88px; height: 88px; }}
+@keyframes htRise {{
+  from {{ opacity: 0; transform: translateY(6px); }}
+  to {{ opacity: 1; transform: translateY(0); }}
+}}
+@keyframes htDrop {{
+  from {{ opacity: 0; transform: translateY(-5px); }}
+  to {{ opacity: 1; transform: translateY(0); }}
+}}
+@media (max-width: 1200px) {{
+  .st-key-case_buttons [data-testid="stHorizontalBlock"] {{ flex-wrap: wrap; row-gap: 8px; }}
+  .st-key-case_buttons [data-testid="stColumn"] {{
+    flex: 1 1 28% !important;
+    width: auto !important;
+    min-width: 150px;
+  }}
+  [data-testid="stWidgetLabel"] p {{ font-size: 12px; }}
+}}
+@media (max-width: 1120px) {{
+  .st-key-ht_topbar [data-testid="stPageLink"] a {{ font-size: 9.5px; letter-spacing: 0.05em; }}
+  .st-key-ht_topbar .ht-brand__word {{ font-size: 11.5px; letter-spacing: 0.14em; }}
+  .st-key-ht_topbar .ht-live span {{ display: none; }}
 }}
 @media (max-width: 980px) {{
   .ht-metric-grid, .ht-grid-3 {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
   .ht-grid-2 {{ grid-template-columns: 1fr; }}
-  .ht-hero {{ min-height: 360px; padding: 24px; }}
+  .ht-pagehead {{ flex-direction: column; align-items: flex-start; gap: 10px; }}
+  .ht-pagehead__side {{ justify-content: flex-start; }}
+  .ht-section {{ flex-direction: column; gap: 6px; }}
+}}
+@media (max-width: 760px) {{
+  .st-key-ht_topbar .ht-brand__ver {{ display: none; }}
+  .st-key-ht_topbar [data-testid="stPageLink"] a {{ font-size: 9px; letter-spacing: 0.04em; }}
+  .st-key-ht_topbar .ht-live span {{ display: none; }}
 }}
 @media (max-width: 640px) {{
   .ht-metric-grid, .ht-grid-3 {{ grid-template-columns: 1fr; }}
-  .ht-brandbar {{ flex-direction: column; align-items: flex-start; }}
-  .ht-section {{ flex-direction: column; align-items: flex-start; }}
-  .ht-section > div:first-child {{ min-width: 0; }}
-  .ht-section p {{ flex: 0 0 auto; }}
 }}
 @media (prefers-reduced-motion: reduce) {{
   *, *::before, *::after {{
@@ -486,6 +560,26 @@ def section(kicker: str, title: str, lead: str = "") -> str:
     )
 
 
+def page_head(kicker: str, title: str, lead: str = "",
+              pills: list[tuple[str, str]] | None = None) -> str:
+    side = ""
+    if pills:
+        side = ('<div class="ht-pagehead__side">'
+                + "".join(pill(label, tone) for label, tone in pills)
+                + "</div>")
+    lead_html = f'<p class="ht-lead">{e(lead)}</p>' if lead else ""
+    return f"""
+<div class="ht-pagehead">
+  <div class="ht-pagehead__main">
+    <div class="ht-kicker">{e(kicker)}</div>
+    <div class="ht-title">{e(title)}</div>
+    {lead_html}
+  </div>
+  {side}
+</div>
+"""
+
+
 def card(body: str, tight: bool = False, glow: bool = False) -> str:
     cls = "ht-card" + (" ht-card--tight" if tight else "") + (" ht-card--glow" if glow else "")
     return f'<div class="{cls}">{body}</div>'
@@ -496,48 +590,19 @@ def callout(text: str, tone: str = "") -> str:
     return f'<div class="{cls}">{e(text)}</div>'
 
 
-def brandbar() -> str:
-    mark = _asset("brand/mark.svg", "image/svg+xml")
-    return f"""
-<div class="ht-brandbar">
-  <div class="ht-brand">
-    <img src="{mark}" alt="HemoTwin mark"/>
-    <div><div class="ht-wordmark">HEMOTWIN</div>
-    <small>Chair-side session twin</small></div>
-  </div>
-  <div class="ht-status">
-    <span class="ht-dot"></span>{pill("Research prototype", "warn")}
-    {pill("Decision support, not prescription", "info")}
-  </div>
+def brand_html() -> str:
+    return """
+<div class="ht-brand">
+  <span class="ht-brand__mark">H</span>
+  <span class="ht-brand__word">HEMOTWIN</span>
+  <span class="ht-brand__ver">V2</span>
 </div>
 """
 
 
-def hero(kicker: str, title_html: str, lead: str, pills: list[tuple[str, str]] | None = None) -> str:
-    bg = _asset("3d/hero_kidney.jpg", "image/jpeg")
-    pill_html = "".join(pill(label, tone) for label, tone in (pills or []))
-    return f"""
-<div class="ht-hero" style="background-image:
-  linear-gradient(90deg, rgba(5,10,18,0.98) 0%, rgba(5,10,18,0.92) 38%, rgba(5,10,18,0.22) 72%, rgba(5,10,18,0.05) 100%),
-  url('{bg}');">
-  <div class="ht-kicker">{e(kicker)}</div>
-  <div class="ht-display">{title_html}</div>
-  <div class="ht-lead">{e(lead)}</div>
-  <div class="ht-pills">{pill_html}</div>
-</div>
-"""
-
-
-def orb_card(title: str, body: str) -> str:
-    orb = _asset("3d/twin_orb.webp", "image/webp")
-    return f"""
-<div class="ht-card ht-card--glow">
-  <div class="ht-orb-card">
-    <img class="ht-orb" src="{orb}" alt="Digital twin state orb"/>
-    <div><h3>{e(title)}</h3><p>{e(body)}</p></div>
-  </div>
-</div>
-"""
+def status_html() -> str:
+    return ('<div class="ht-topright"><span class="ht-live"><i></i>'
+            '<span>Local demo</span></span></div>')
 
 
 def footer() -> str:
