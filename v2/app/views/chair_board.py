@@ -524,6 +524,10 @@ def _outcome(chair: dict, reveal: bool, detail: bool = False) -> str:
             'No IDH event</span>')
 
 
+def _patient_label(chair: dict) -> str:
+    return f"Patient {chair['chair']}"
+
+
 def _card(chair: dict, reveal: bool, selected: bool) -> str:
     band = chair["risk_band"]
     patient = chair["patient"]
@@ -534,11 +538,11 @@ def _card(chair: dict, reveal: bool, selected: bool) -> str:
                   else f"{int(patient['n_prior_sessions'])} prior sessions")
     return (
         f'<article class="{cls}" aria-label="Chair {chair["chair"]}, '
-        f'{_e(chair["case_select"])}, {_risk_label(band)} risk, '
+        f'{_e(_patient_label(chair))}, {_risk_label(band)} risk, '
         f'{_pct(chair["risk_probability"], 0)}">'
         f'<div class="cb-card__top"><span class="cb-card__no">CHAIR '
         f'{chair["chair"]:02d}</span>{_badge(band)}</div>'
-        f'<div class="cb-card__name">{_e(chair["case_select"])}</div>'
+        f'<div class="cb-card__name">{_e(_patient_label(chair))}</div>'
         f'<div class="cb-card__session">{_e(session)}</div>'
         f'<div class="cb-card__prob cb-card__prob--{band}">'
         f'{100.0 * float(chair["risk_probability"]):.0f}<span>%</span></div>'
@@ -630,7 +634,7 @@ def _detail(chair: dict, reveal: bool) -> str:
         f'<div class="cb-detail">'
         f'<div><div class="cb-detail__kicker">CHAIR {chair["chair"]:02d} · '
         f'FOLD 2 · PRE-SESSION</div>'
-        f'<div class="cb-detail__title">{_e(chair["case_select"])}</div>'
+        f'<div class="cb-detail__title">{_e(_patient_label(chair))}</div>'
         f'<div class="cb-detail__session">{_e(chair["session_id"])} · '
         f'{_e(_patient_line(patient))}</div>'
         f'<div class="cb-detail__risk"><strong>{_pct(chair["risk_probability"], 1)}</strong>'
@@ -657,7 +661,7 @@ def _session_details(chair: dict) -> None:
         float(case.get("cuff_age_min") or 0) > 35)
     st.markdown(theme.section(
         "Session details",
-        f"{chair['case_select']} · forecast and fluid arithmetic",
+        f"{_patient_label(chair)} · forecast and fluid arithmetic",
         "The same frozen v4 evidence as Case lab, without leaving the board."),
         unsafe_allow_html=True)
     st.plotly_chart(

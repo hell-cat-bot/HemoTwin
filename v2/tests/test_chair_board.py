@@ -129,6 +129,10 @@ class ChairBoardAppTest(unittest.TestCase):
         self.assertIn("forecast and fluid arithmetic", blob)
         self.assertIn("Fluid arithmetic · what each policy changes", blob)
         self.assertIn("retired twin's mechanism sketch", blob)
+        self.assertIn("Patient 4", blob)
+        columns = list(at.dataframe[0].value.columns)
+        self.assertIn("Next-session UF (mL/kg/h)", columns)
+        self.assertNotIn("Δ SBP vs hold (mmHg)", columns)
 
     def test_case_select_stays_in_sync_after_page_switch(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()

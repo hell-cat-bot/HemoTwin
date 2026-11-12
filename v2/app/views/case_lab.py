@@ -377,9 +377,9 @@ def _fluid_table(case: dict, stale: bool) -> None:
         if has_fluid:
             row["Fluid left (L)"] = left
             row["Δ fluid left vs hold (L)"] = delta
+            row["Next-session UF (mL/kg/h)"] = scenario.get(
+                "next_session_uf_intensity_ml_kg_h")
         row["Expected SBP +60 (mmHg)"] = sketch_row.get("projected_nadir_mmhg")
-        row["Δ SBP vs hold (mmHg)"] = sketch_row.get(
-            "expected_nadir_stabilization_vs_hold_mmhg")
         rows.append(row)
     table = pd.DataFrame(rows)
     numeric = list(table.columns[1:])
@@ -390,14 +390,15 @@ def _fluid_table(case: dict, stale: bool) -> None:
         "Expected SBP +60 (mmHg)": st.column_config.NumberColumn(
             format="%.1f", help="Uncalibrated mechanism sketch, not a "
                                 "validated treatment effect."),
-        "Δ SBP vs hold (mmHg)": st.column_config.NumberColumn(
-            format="%+.1f", help="Sketch gain against holding the current UF."),
     }
     if has_fluid:
         config.update({
             "Fluid left (L)": st.column_config.NumberColumn(format="%.2f"),
             "Δ fluid left vs hold (L)": st.column_config.NumberColumn(
                 format="%+.2f"),
+            "Next-session UF (mL/kg/h)": st.column_config.NumberColumn(
+                format="%.1f", help="Today's fluid left behind, cleared on "
+                                    "top of the usual goal."),
         })
     st.dataframe(table, hide_index=True, width="stretch",
                  column_config=config)
