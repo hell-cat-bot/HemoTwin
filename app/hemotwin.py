@@ -12,6 +12,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src import sim_build  # noqa: E402
+
+# Rebuild the 3D bay when sim/ drifted from the committed build. No-op when
+# current (fresh clones ship the prebuilt bay + matching stamp); on failure
+# the committed build is served and the reason printed. See src/sim_build.py.
+_status, _detail = sim_build.ensure_synced()
+if _status != "current":
+    print(f"[sim] bay {_status}: {_detail}")
+
 import streamlit as st  # noqa: E402
 
 from app.ui import shell  # noqa: E402

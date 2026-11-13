@@ -58,15 +58,21 @@ be re-textured or animated from the JS side without touching the asset.
 
 ## Embedding into the console
 
-The Streamlit Home view does not run this dev server — it serves a built copy.
-`scripts/sync_sim.py` (repo root) runs `npm run build -- --base=./` here, copies
-`dist/` into `app/static/sim/`, patches asset paths, and writes `embed.html`
-(the preload + iframe wrapper with the scroll-into-Chair-board gesture). Run it
-from the repo root after any change to this app:
+The Streamlit Home view does not run this dev server — it serves a built copy
+in `app/static/sim/` (committed, so a fresh clone needs no Node.js). Two ways
+to refresh that copy after editing this app:
 
-```bash
-python scripts/sync_sim.py
-```
+- **Automatic** — just start the console. On `streamlit run app/hemotwin.py`
+  the entrypoint fingerprints this folder; if it drifted from the built copy
+  it runs the build and syncs (`npm install` runs first if `node_modules/`
+  is missing). Without Node.js the app still starts and serves the last
+  committed build.
+- **Manual** — from the repo root: `python scripts/sync_sim.py` (same
+  pipeline, always rebuilds).
+
+What the sync does: `npm run build -- --base=./` here, copy `dist/` into
+`app/static/sim/`, patch asset paths, and write `embed.html` (the preload +
+iframe wrapper with the scroll-into-Chair-board gesture).
 
 ## Notes for integration
 

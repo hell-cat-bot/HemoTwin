@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -76,12 +77,30 @@ def main() -> int:
         if not ok:
             failures.append(bad)
 
-    # Package size (repo content only; .git is not part of the package).
-    total = sum(p.stat().st_size for p in ROOT.rglob("*")
-                if p.is_file() and ".git" not in p.parts)
+    # Package size — the committed content, not local build caches
+    # (node_modules/dist reappear whenever the sim is developed).
+    try:
+        tracked = subprocess.run(
+            ["git", "ls-files", "-z"], cwd=ROOT, check=True,
+            stdout=subprocess.PIPE).stdout.split(b"\0")
+        total = 0
+        for raw in tracked:
+            if not raw:
+                continue
+            path = ROOT / raw.decode("utf-8", "surrogateescape")
+            try:
+                total += path.stat().st_size
+            except OSError:
+                pass
+        note = "tracked files"
+    except Exception:  # noqa: BLE001 — no git on PATH
+        skip = {".git", "node_modules", "dist", "__pycache__"}
+        total = sum(p.stat().st_size for p in ROOT.rglob("*")
+                    if p.is_file() and not skip.intersection(p.parts))
+        note = "workspace, build caches excluded"
     mb = total / (1024 * 1024)
     ok = mb < 60
-    print(f"{'PASS' if ok else 'FAIL'}  package size {mb:.1f} MB (<60 MB)")
+    print(f"{'PASS' if ok else 'FAIL'}  package size {mb:.1f} MB (<60 MB, {note})")
     if not ok:
         failures.append("package-size")
 

@@ -142,6 +142,11 @@ streamlit run app/hemotwin.py
 Validated with Python 3.14 and the versions in `requirements.txt`
 (Streamlit 1.66.1, Plotly 6.8.0, pandas 3.0.2, LightGBM 4.6.0).
 
+No Node.js needed: the 3D bay ships prebuilt. If you edit its source in
+`sim/`, the next `streamlit run` rebuilds it automatically (Node.js
+required; `npm install` inside `sim/` once) — or force it anytime with
+`python scripts/sync_sim.py`.
+
 ### Tests and checks
 
 ```bash
@@ -199,7 +204,8 @@ The boundary is part of the product. It is why the rest is trustworthy.
 │   ├── ui/              theme, charts, shell
 │   └── views/           Case lab, Chair board, Session replay, Evidence & handoff
 ├── sim/                 3D bay source (Vite + three.js + Blender scene);
-│                        scripts/sync_sim.py builds it into app/static/sim/
+│                        rebuilt into app/static/sim/ automatically on
+│                        streamlit start — scripts/sync_sim.py forces it
 ├── assets/              brand mark + replay/replay.html
 ├── src/                 forecast serving, protocol engine, fluid arithmetic,
 │                        v4 twin, G7 identification, FHIR, audit
