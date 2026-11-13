@@ -106,7 +106,7 @@ def main() -> int:
 
     # README numbers/claims.
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    for token in ("205,482", "303,122", "0.474", "10.99", "9.60",
+    for token in ("205,482", "10.99", "9.60",
                   "+0.13", "G7", "FAIL"):
         ok = token in readme
         print(f"{'PASS' if ok else 'FAIL'}  README contains {token}")

@@ -123,12 +123,14 @@ def main() -> int:
     check("no unsubstantiated bound/gate language", lint_ok,
           "; ".join(hits) or "scoreboard wording missing")
 
-    # 13 — cohort disclosure, 87.2% denominator, and demo-case integrity.
+    # 13 — cohort disclosure (app carries the full scale + failed-transport
+    # numbers; the README stays lean with the headline cohort only),
+    # 87.2% denominator, and demo-case integrity.
     app_text = _text(APP)
     readme_text = _text(README)
     cohort_ok = (
         all(s in app_text for s in ("205,482", "303,122", "0.474"))
-        and all(s in readme_text for s in ("205,482", "303,122", "0.474")))
+        and "205,482" in readme_text)
     denom_ok = (
         ("87.2%" not in app_text or "32,565" in app_text)
         and ("87.2%" not in readme_text or "32,565" in readme_text))

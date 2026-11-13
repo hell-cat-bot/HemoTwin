@@ -51,15 +51,8 @@ decide first. HemoTwin shadows that session end to end:
 
 ### The data behind them
 
-| | |
-|---|---|
-| HEMOBP cohort (Taiwan, CC BY 4.0) | **205,482** QC-eligible sessions · **1,070** patients · **4.19M** telemetry rows |
-| Combined raw scale | **303,122** sessions · **1,828** patients across the Taiwan + Spanish frames |
-| Spanish external transport | **AUROC 0.474 — failed.** Label semantics differ; this is *not* external validation |
-
-Two labels are reported separately and never combined: **10.4%** of HEMOBP
-sessions have a labelled nadir below 90 mmHg; **25.5%** of the Spanish cohort
-carries a clinician-defined symptomatic label. They mean different things.
+**205,482** QC-eligible HEMOBP sessions (Taiwan, CC BY 4.0) ·
+**1,070** patients · **4.19M** telemetry rows.
 
 ### The seven pre-registered checks (G1–G7)
 
@@ -75,13 +68,6 @@ do not need them to use the console.
 | G5 · 90% bands cover reality | **pass** | 89.2% HOLD · 90.1% TAPER coverage |
 | G6 · future-invariant, bounded cold starts | **pass** | 200/200 invariance · 284 cold starts |
 | **G7 · the twin test** — does early UF reduction raise SBP? | **FAIL** | **+0.13 mmHg per 0.25 L/h** · 95% CI [−2.63, +3.06] · sham control +2.91 |
-
-**G7 is the one that matters.** 581 matched events across 158 patients, a
-non-reactive step-down design with matched within-patient controls: the
-estimated effect is indistinguishable from zero. That is why the what-if twin
-stays a labelled mechanism illustration (off by default) and the operational
-gain claim stays **0**. The validated surfaces are the calibrated forecast and
-the fluid arithmetic.
 
 ![Evidence — the checks scoreboard](docs/img/evidence.png)
 
@@ -131,10 +117,11 @@ anchor. For a stale cuff, the projection and fluid arithmetic are withheld.
 
 ## Run it
 
-No raw data and no lab artifacts are needed: the package ships the frozen
-evidence and the small model bundles.
+Clone, install, run — that is the whole setup. No raw data, no lab artifacts,
+and no Node.js: the 3D bay ships prebuilt.
 
 ```bash
+git clone <this repo> && cd HemoTwin
 pip install -r requirements.txt
 streamlit run app/hemotwin.py
 ```
@@ -142,10 +129,9 @@ streamlit run app/hemotwin.py
 Validated with Python 3.14 and the versions in `requirements.txt`
 (Streamlit 1.66.1, Plotly 6.8.0, pandas 3.0.2, LightGBM 4.6.0).
 
-No Node.js needed: the 3D bay ships prebuilt. If you edit its source in
-`sim/`, the next `streamlit run` rebuilds it automatically (Node.js
-required; `npm install` inside `sim/` once) — or force it anytime with
-`python scripts/sync_sim.py`.
+If you edit the bay's source in `sim/`, the next `streamlit run` rebuilds it
+automatically — Node.js required, and `npm install` runs by itself on that
+start. `python scripts/sync_sim.py` forces the same rebuild anytime.
 
 ### Tests and checks
 
