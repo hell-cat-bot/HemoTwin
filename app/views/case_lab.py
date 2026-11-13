@@ -446,8 +446,9 @@ def render() -> None:
             value=False,
             key="show_ill",
             help="Dashed fan: uncalibrated mechanism sketch, not a measured effect.")
-        st.caption("205,482 QC-eligible HEMOBP sessions · fold 2 untouched · "
-                   "Spanish-frame AUROC 0.474 (transport failed).")
+        st.caption("205,482 QC-eligible HEMOBP sessions · 303,122 combined raw "
+                   "scale · fold 2 untouched · Spanish-frame AUROC 0.474 "
+                   "(transport failed).")
 
     case = by_id[st.session_state["case_id"]]
     stale = bool(case.get("synthetic_demo")) or (
