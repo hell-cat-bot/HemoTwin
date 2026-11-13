@@ -1,6 +1,7 @@
 """Build the Blender bay and copy it into the console's static folder.
 
-Run from anywhere with the v2 venv: ``python scripts/sync_sim.py``.
+Run from the repo root: ``python scripts/sync_sim.py`` (needs npm + the
+``sim/`` dependencies installed once via ``npm install``).
 The built app is served by Streamlit at /app/static/sim/ (static serving).
 """
 from __future__ import annotations
@@ -10,7 +11,7 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SIM = ROOT.parent / "blender simulation"
+SIM = ROOT / "sim"
 TARGET = ROOT / "app" / "static" / "sim"
 
 EMBED = """<!doctype html>

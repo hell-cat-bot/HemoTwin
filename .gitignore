@@ -4,6 +4,9 @@ data/raw/
 # Generated pipeline outputs
 artifacts/
 
+# Runtime logs from the Live session view (created on demand)
+demo/manual_logs/
+
 # Python
 __pycache__/
 *.py[cod]

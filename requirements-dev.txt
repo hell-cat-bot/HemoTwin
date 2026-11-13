@@ -1,6 +1,0 @@
--r requirements.txt
-
-# Deck/asset builders (not needed to run the console)
-matplotlib>=3.10,<4.0
-Pillow>=11,<13
-pywin32>=311; sys_platform == "win32"

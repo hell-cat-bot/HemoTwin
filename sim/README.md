@@ -56,6 +56,18 @@ The script rebuilds everything procedurally, exports `public/models/dialysis_bay
 (`SM_MachineScreen`, `SM_MonitorScreen`, `SM_AlarmLens`, `SM_Blanket`, `CTRL_Droplet`), so they can
 be re-textured or animated from the JS side without touching the asset.
 
+## Embedding into the console
+
+The Streamlit Home view does not run this dev server — it serves a built copy.
+`scripts/sync_sim.py` (repo root) runs `npm run build -- --base=./` here, copies
+`dist/` into `app/static/sim/`, patches asset paths, and writes `embed.html`
+(the preload + iframe wrapper with the scroll-into-Chair-board gesture). Run it
+from the repo root after any change to this app:
+
+```bash
+python scripts/sync_sim.py
+```
+
 ## Notes for integration
 
 - The demo is intentionally self-contained and does not import anything from the main app. The
