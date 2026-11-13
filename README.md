@@ -1,8 +1,10 @@
 # HemoTwin
 
-**A chair-side session twin for dialysis.** One console, five views: a calibrated
-pre-anchor forecast, exact fluid arithmetic, and the unit's review pathway —
-built for the technician at the chair, not a prescription engine.
+**HemoTwin mirrors a dialysis session while it runs.** It flags who is likely to
+crash today before the first cuff is taken, forecasts the systolic blood-pressure
+drop about an hour before it lands, and turns every ultrafiltration choice into
+exact fluid arithmetic — so the technician at the chair can act and call the
+remote doctor earlier. Decision support that buys time, not a prescription engine.
 
 ![HemoTwin home — the live 3D dialysis bay](docs/img/home_3d.png)
 
@@ -10,6 +12,28 @@ built for the technician at the chair, not a prescription engine.
 > clinical-benefit claim.** Seven pre-registered checks: five pass, one is
 > partial, and **the twin test fails** — we ship that result honestly. Fold 2
 > was never touched by tuning.
+
+## What the twin does
+
+In dialysis, blood pressure often falls mid-session — a "crash" (systolic below
+90 mmHg) — while the doctor is remote and the technician at the chair has to
+decide first. HemoTwin shadows that session end to end:
+
+- **Before the session — Chair board.** Scores all five chairs from patient
+  history and the planned UF goal alone — no BP has been taken yet, no current
+  UF rate. One chair comes up high, four low; recorded outcomes stay hidden
+  behind a reveal. Untouched-fold AUROC **0.8313**.
+- **During the session — Case lab & Live view.** A calibrated forecast of the
+  systolic pressure **+60 min ahead** (MAE **10.99 mmHg** on patients the model
+  never saw), drawn as a fan chart against the 90 mmHg floor next to the
+  observed cuffs — with a stale-cuff guardrail when readings go quiet.
+- **At the decision — fluid arithmetic.** Taper, hold, or pause the UF: every
+  option is priced against the same calibrated projection, and the table shows
+  exactly what changes in the UF schedule and the fluid carried forward.
+  Display-only — nothing adjusts the machine.
+- **After the session — Replay & Evidence.** Watch the forecast compete against
+  the recorded cuffs minute by minute, then open the evidence ledger: seven
+  pre-registered checks, including the twin test we **failed**.
 
 ---
 
