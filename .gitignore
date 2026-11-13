@@ -27,6 +27,7 @@ desktop.ini
 .vscode/
 .idea/
 *.swp
+.zcode
 
 # Local secrets and logs
 .env
