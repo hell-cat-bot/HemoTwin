@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>HemoTwin — System Brief</title>
+<style>
+  * { box-sizing: border-box; }
+  @page { size: A4; margin: 0; }
+  :root {
+    --chrome: #080D10;
+    --ink: #141C1E;
+    --muted: #5C6B6D;
+    --dim: #7E8B8C;
+    --line: #DCE4E1;
+    --line-2: #C6D2CE;
+    --bg: #EFF3F2;
+    --surface: #FFFFFF;
+    --surface-2: #F7FAF9;
+    --accent: #17756A;
+    --accent-2: #5EEAD4;
+    --accent-soft: #E4F1ED;
+    --warn: #A8641B;
+    --warn-soft: #FBF4E8;
+    --risk: #B23C2C;
+    --risk-soft: #F9EDEA;
+    --good: #1F7A4D;
+    --sage: #7D8B7C;
+    --mono: "Cascadia Mono", Consolas, "SF Mono", monospace;
+    --display: "Segoe UI Variable Display", "Segoe UI", sans-serif;
+    --body: "Segoe UI", "Segoe UI Variable Text", system-ui, sans-serif;
+  }
+  html, body { margin: 0; padding: 0; background: #DDE5E2; }
+  body {
+    font-family: var(--body); color: var(--ink); font-size: 9pt; line-height: 1.55;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    font-feature-settings: "ss01" 1;
+  }
+  .sheet {
+    width: 210mm; height: 297mm; padding: 13mm 14mm 10mm; background: #fff;
+    position: relative; overflow: hidden; page-break-after: always;
+    margin: 0 auto 7mm; box-shadow: 0 6px 28px rgba(20,28,30,.14);
+  }
+  @media print {
+    html, body { background: #fff; }
+    .sheet { margin: 0; box-shadow: none; }
+  }
+  .sheet:last-child { page-break-after: auto; }
+
+  .phead {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--mono); font-size: 6.8pt; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--line); padding-bottom: 5px; margin-bottom: 7mm;
+  }
+  .phead b { color: var(--ink); font-weight: 600; }
+  .pfoot {
+    position: absolute; left: 14mm; right: 14mm; bottom: 7mm;
+    display: flex; justify-content: space-between; gap: 10px;
+    font-family: var(--mono); font-size: 6.4pt; letter-spacing: .05em;
+    color: var(--dim); border-top: 1px solid var(--line); padding-top: 4px;
+  }
+  .pfoot span:last-child { text-align: right; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 6.8pt; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+  }
+  .sec-h {
+    font-family: var(--display); font-size: 23pt; font-weight: 600;
+    letter-spacing: -.025em; line-height: 1.05; margin: 2mm 0 1.5mm;
+  }
+  .sec-index {
+    font-family: var(--mono); font-size: 8pt; color: var(--accent);
+    border: 1px solid #BFDAD4; background: var(--accent-soft);
+    border-radius: 4px; padding: 2px 6px; display: inline-block; margin-right: 6px;
+  }
+  .lead { color: var(--muted); font-size: 9.8pt; line-height: 1.55; max-width: 168mm; margin: 0 0 5mm; }
+  h2 { font-family: var(--display); font-size: 12.5pt; font-weight: 600; letter-spacing: -.01em; margin: 4mm 0 2mm; }
+  h2:first-child { margin-top: 0; }
+  h3 { font-family: var(--display); font-size: 10.5pt; font-weight: 600; margin: 3mm 0 1.2mm; }
+  p { margin: 0 0 2.2mm; }
+  ul, ol { margin: 0 0 2.4mm; padding-left: 4.8mm; }
+  li { margin-bottom: 1.1mm; }
+  strong { font-weight: 600; }
+  em { color: var(--muted); }
+  code, .mono { font-family: var(--mono); }
+  .small { font-size: 7.6pt; line-height: 1.5; color: var(--muted); }
+  .tiny { font-size: 7pt; line-height: 1.45; color: var(--muted); }
+  .rule { border: 0; border-top: 1px solid var(--line); margin: 3.5mm 0; }
+
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 3.4mm 4mm; }
+  .card--soft { background: var(--surface-2); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3.6mm; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3.2mm; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.6mm; }
+
+  .stat {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px;
+    padding: 2.8mm 3mm 2.4mm; min-height: 21mm;
+  }
+  .stat .k { font-family: var(--mono); font-size: 6.4pt; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .stat .v { font-family: var(--display); font-size: 20pt; font-weight: 600; line-height: 1; letter-spacing: -.02em; margin: 2mm 0 1mm; }
+  .stat .s { font-size: 7.2pt; color: var(--muted); line-height: 1.4; }
+  .v-teal { color: var(--accent); }
+  .v-risk { color: var(--risk); }
+  .v-warn { color: var(--warn); }
+
+  .tag { display: inline-block; font-family: var(--mono); font-size: 6.4pt; letter-spacing: .08em;
+    text-transform: uppercase; padding: 1.5px 6px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted); }
+  .tag--pass { color: var(--good); border-color: #BFDCCB; background: #EEF7F1; }
+  .tag--fail { color: var(--risk); border-color: #E4C3BD; background: var(--risk-soft); }
+  .tag--part { color: var(--warn); border-color: #E8D3B2; background: var(--warn-soft); }
+  .tag--info { color: var(--accent); border-color: #BFDAD4; background: var(--accent-soft); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 7.9pt; line-height: 1.42; }
+  th {
+    font-family: var(--mono); font-size: 6.2pt; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; text-align: left; padding: 2mm 2mm 1.4mm;
+    border-bottom: 1px solid var(--line-2); vertical-align: bottom;
+  }
+  td { padding: 1.7mm 2mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.num { font-family: var(--mono); font-size: 7.6pt; white-space: nowrap; }
+  td.means { color: var(--muted); }
+  table.tight td { padding: 1.25mm 2mm; }
+  table.tight th { padding: 1.6mm 2mm 1.2mm; }
+
+  .note { border-left: 2.5px solid var(--accent); background: var(--accent-soft); border-radius: 0 7px 7px 0; padding: 2.6mm 3.2mm; margin: 3mm 0; }
+  .note .t { font-family: var(--mono); font-size: 6.4pt; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1mm; }
+  .note p { margin: 0; font-size: 8.4pt; }
+  .note--warn { border-color: var(--warn); background: var(--warn-soft); }
+  .note--warn .t { color: var(--warn); }
+  .note--fail { border-color: var(--risk); background: var(--risk-soft); }
+  .note--fail .t { color: var(--risk); }
+
+  .kv { display: grid; grid-template-columns: 34mm 1fr; gap: 1.2mm 3mm; font-size: 8.2pt; }
+  .kv dt { font-family: var(--mono); font-size: 6.8pt; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: .6mm; }
+  .kv dd { margin: 0; }
+
+  .codebox { font-family: var(--mono); font-size: 7.6pt; line-height: 1.65; background: #0B1214; color: #DCEAE6;
+    border-radius: 7px; padding: 3mm 3.6mm; }
+  .codebox .c { color: #6E8380; }
+  .codebox .a { color: var(--accent-2); }
+
+  .callout-num { font-family: var(--display); font-size: 30pt; font-weight: 600; line-height: 1; letter-spacing: -.03em; color: var(--accent); }
+
+  .cite { font-size: 6.6pt; color: var(--dim); vertical-align: super; font-family: var(--mono); }
+  .srcs { font-size: 7.4pt; line-height: 1.55; }
+  .srcs li { margin-bottom: 1.6mm; }
+  .srcs b { font-family: var(--mono); font-size: 6.6pt; color: var(--accent); }
+
+  /* Cover */
+  .cover { background: var(--chrome); color: #E8F0ED; padding: 16mm 15mm 13mm; }
+  .cover .phead { border-color: #1B2825; color: #7E8B8C; margin-bottom: 0; }
+  .cover .phead b { color: #EDF5F2; }
+  .cover-brand { display: flex; align-items: center; gap: 3mm; margin-top: 12mm; }
+  .mark { width: 11mm; height: 11mm; border-radius: 2.4mm; border: 1px solid #24534B; background: #0E211D;
+    color: var(--accent-2); display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 16pt; font-weight: 700; }
+  .cover-word { font-family: var(--display); font-size: 13pt; font-weight: 600; letter-spacing: .2em; }
+  .cover-ver { font-family: var(--mono); font-size: 7pt; color: #7E8B8C; border: 1px solid #1E2D29; border-radius: 3px; padding: 2px 6px; letter-spacing: .08em; }
+  .cover h1 { font-family: var(--display); font-weight: 600; font-size: 34pt; line-height: 1.02; letter-spacing: -.035em; margin: 28mm 0 0; max-width: 150mm; }
+  .cover h1 span { color: var(--accent-2); }
+  .cover .sub { font-size: 11pt; color: #A9BFBA; line-height: 1.6; margin-top: 5mm; max-width: 120mm; }
+  .cover .trace { position: absolute; right: 0; bottom: 46mm; width: 205mm; height: 95mm; opacity: .95; }
+  .cover .meta { position: absolute; left: 15mm; right: 15mm; bottom: 27mm; display: flex; flex-wrap: wrap; gap: 2mm; }
+  .cover .meta span { font-family: var(--mono); font-size: 6.6pt; letter-spacing: .1em; text-transform: uppercase;
+    color: #A9BFBA; border: 1px solid #1E2D29; border-radius: 999px; padding: 3px 9px; }
+  .cover .meta span.hot { color: var(--accent-2); border-color: #24534B; background: #0E211D; }
+  .cover .cfoot { position: absolute; left: 15mm; right: 15mm; bottom: 13mm; display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 6.4pt; color: #6E8380; border-top: 1px solid #16221F; padding-top: 3mm; letter-spacing: .04em; }
+
+  /* contents */
+  .toc { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4mm 8mm; margin-top: 2mm; }
+  .toc div { display: flex; gap: 2.4mm; align-items: baseline; border-bottom: 1px solid var(--line); padding: 1.6mm 0; font-size: 8.4pt; }
+  .toc .n { font-family: var(--mono); font-size: 6.6pt; color: var(--accent); width: 6mm; flex: 0 0 auto; }
+  .toc .t { font-weight: 600; }
+  .toc .d { margin-left: auto; font-family: var(--mono); font-size: 6.4pt; color: var(--dim); }
+
+  /* bars (staffing + alarm) */
+  .barchart { margin: 3mm 0 1mm; }
+  .bar-row { display: grid; grid-template-columns: 42mm 1fr 20mm; gap: 2.5mm; align-items: center; margin-bottom: 2.2mm; font-size: 7.8pt; }
+  .bar-track { height: 5.2mm; background: #EEF3F1; border-radius: 2px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+  .bar-fill--muted { background: #9FB3AE; }
+  .bar-fill--rule { background: var(--sage); }
+  .bar-fill--gate { background: transparent; border: 1px dashed var(--line-2); }
+  .bar-val { font-family: var(--mono); font-size: 7.2pt; color: var(--ink); text-align: right; }
+  .bar-note { grid-column: 2 / 4; font-size: 6.8pt; color: var(--dim); margin-top: -1mm; }
+
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.8mm; margin: 3mm 0; }
+  .step { background: #fff; border: 1px solid var(--line); border-radius: 7px; padding: 2.4mm 2.6mm; position: relative; }
+  .step .n { font-family: var(--mono); font-size: 6.2pt; color: var(--accent); letter-spacing: .1em; }
+  .step .h { font-weight: 600; font-size: 8pt; margin: 1mm 0 .6mm; line-height: 1.25; }
+  .step .b { font-size: 6.9pt; color: var(--muted); line-height: 1.4; }
+
+  .two-col { columns: 2; column-gap: 7mm; }
+  .two-col p, .two-col li { break-inside: avoid; }
+
+  .diagram { border: 1px solid var(--line); border-radius: 8px; background: #FBFDFC; padding: 3mm 3mm 2mm; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4mm; font-family: var(--mono); font-size: 6.4pt; color: var(--muted); letter-spacing: .04em; margin-top: 1.6mm; }
+  .legend i { display: inline-block; width: 7mm; height: 2.6mm; border-radius: 2px; margin-right: 1.4mm; vertical-align: middle; border: 1px solid var(--line-2); }
+  .legend .sw-focal { background: var(--accent-soft); border-color: var(--accent); }
+  .legend .sw-node { background: #fff; }
+  .legend .sw-dash { background: transparent; border: 1px dashed var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<section class="sheet cover">
+  <div class="phead"><span><b>HEMOTWIN</b> · SYSTEM BRIEF</span><span>NOVEMBER 2026 · V2</span></div>
+
+  <div class="cover-brand">
+    <div class="mark">H</div>
+    <div class="cover-word">HEMOTWIN</div>
+    <div class="cover-ver">V2 · RESEARCH</div>
+  </div>
+
+  <h1>See the drop<br><span>before it lands.</span></h1>
+  <div class="sub">What the models actually do, what the evidence numbers mean, and what this system can honestly claim before it reaches a chair.</div>
+
+  <svg class="trace" viewBox="0 0 900 360" fill="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="covband" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5EEAD4" stop-opacity=".22"/>
+        <stop offset="1" stop-color="#5EEAD4" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <g stroke="#152420" stroke-width="1">
+      <line x1="0" y1="90" x2="900" y2="90"/><line x1="0" y1="150" x2="900" y2="150"/>
+      <line x1="0" y1="210" x2="900" y2="210"/><line x1="0" y1="270" x2="900" y2="270"/>
+      <line x1="120" y1="0" x2="120" y2="360"/><line x1="330" y1="0" x2="330" y2="360"/>
+      <line x1="540" y1="0" x2="540" y2="360"/><line x1="750" y1="0" x2="750" y2="360"/>
+    </g>
+    <line x1="0" y1="270" x2="900" y2="270" stroke="#B23C2C" stroke-width="1" stroke-dasharray="5 5" opacity=".55"/>
+    <path d="M0 118 H120 L150 104 L180 126 L210 108 L240 122 L270 116 L300 132 L330 128 L360 140 L390 136 L420 152 L450 166 L480 196 L510 252 L540 292" stroke="#5EEAD4" stroke-width="2.2" stroke-linejoin="round"/>
+    <path d="M540 292 C600 276 660 232 720 214 C780 196 840 196 900 200 V260 C840 250 780 250 720 264 C660 280 600 306 540 318 Z" fill="url(#covband)"/>
+    <path d="M540 292 C600 280 660 244 720 228 C780 212 840 212 900 216" stroke="#5EEAD4" stroke-width="1.6" stroke-dasharray="4 5" opacity=".85"/>
+    <circle cx="540" cy="292" r="4.5" fill="#5EEAD4"/>
+    <circle cx="540" cy="292" r="10" stroke="#5EEAD4" stroke-opacity=".35"/>
+    <text x="556" y="288" fill="#A9BFBA" font-family="Cascadia Mono, Consolas, monospace" font-size="11" letter-spacing="1">CALIBRATED +60 MIN</text>
+    <text x="14" y="262" fill="#B23C2C" font-family="Cascadia Mono, Consolas, monospace" font-size="10" letter-spacing="1">SBP 90 · REVIEW THRESHOLD</text>
+  </svg>
+
+  <div class="meta">
+    <span class="hot">Research prototype</span>
+    <span>Not a medical device</span>
+    <span>Display-only · no prescription</span>
+    <span>205,482 sessions · 1,070 patients</span>
+    <span>Fold 2 untouched</span>
+  </div>
+  <div class="cfoot">
+    <span>Prepared from the v2 evidence package · 11 November 2026</span>
+    <span>HEMOBP Taiwan · CC BY 4.0 · no Indian cohort yet</span>
+  </div>
+</section>
+
+<!-- ============================ PAGE 2 — BRIEF ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>THE BRIEF IN ONE PAGE</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">The honest summary</div>
+  <h1 class="sec-h">A calibrated forecast, exact arithmetic, and a review pathway — not a treatment engine.</h1>
+  <p class="lead">HemoTwin mirrors a dialysis session, projects the next hour of systolic blood pressure, and structures what the unit should review. It does not decide treatment. The what-if UF effect was tested and not found, so it stays clearly labelled as an illustration.</p>
+
+  <div class="grid-4" style="margin-bottom:4mm">
+    <div class="stat"><div class="k">Forecast error</div><div class="v v-teal">10.99</div><div class="s">mmHg typical miss (MAE), fair 59-feature model, fold 2.</div></div>
+    <div class="stat"><div class="k">Chair-risk ranking</div><div class="v v-teal">0.831</div><div class="s">AUROC for pre-session crash risk (A2), fold 2.</div></div>
+    <div class="stat"><div class="k">UF effect test</div><div class="v v-risk">+0.13</div><div class="s">mmHg per 0.25 L/h; 95% CI includes zero. Verdict: fail.</div></div>
+    <div class="stat"><div class="k">Alert authority</div><div class="v v-warn">0</div><div class="s">The event model is shadow-only; it does not alarm or page.</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="eyebrow">What we can claim</div>
+      <ul style="margin-top:2mm">
+        <li>A calibrated pre-anchor forecast of the 60-minute cuff-sampled nadir, with a 90% band.</li>
+        <li>Exact volumetric fluid arithmetic, including what a scenario leaves behind for the next session.</li>
+        <li>A deterministic, versioned review pathway and a local, auditable session record.</li>
+        <li>Honest negative results: the what-if twin and the oracle comparison are reported as failures.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="color:var(--risk)">What we refuse to claim</div>
+      <ul style="margin-top:2mm">
+        <li>That reducing UF early reliably raises SBP, or that any option is minimum-effective.</li>
+        <li>Validated alert utility, diagnosis, prescription, or autonomous machine action.</li>
+        <li>A treatment effect from the mechanism animation, or a per-minute confidence band.</li>
+        <li>External, prospective, symptomatic-IDH, or Indian-unit validation.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="margin-top:5mm">How to read this brief</h2>
+  <p class="small" style="margin-bottom:2mm">Every number is labelled with the model and the data split it belongs to, because several numbers in this project look similar but are not interchangeable. Each section pairs a figure with a plain-language reading: <em>what it means</em>, and <em>what it does not</em>.</p>
+  <div class="toc">
+    <div><span class="n">01</span><span class="t">The two models</span><span class="d">forecast + chair risk</span></div>
+    <div><span class="n">02</span><span class="t">Evidence tab, decoded</span><span class="d">G1–G7</span></div>
+    <div><span class="n">03</span><span class="t">Why this matters</span><span class="d">staffing context</span></div>
+    <div><span class="n">04</span><span class="t">System diagram</span><span class="d">what runs where</span></div>
+    <div><span class="n">05</span><span class="t">The alarm budget</span><span class="d">attention as a resource</span></div>
+    <div><span class="n">06</span><span class="t">The fluid math</span><span class="d">worked example</span></div>
+    <div><span class="n">07</span><span class="t">Why interventions break it</span><span class="d">and how to fix it</span></div>
+    <div><span class="n">08</span><span class="t">Into the workflow</span><span class="d">what nurses see</span></div>
+    <div><span class="n">09</span><span class="t">Next direction</span><span class="d">wearables &amp; evidence</span></div>
+    <div><span class="n">—</span><span class="t">Sources &amp; boundary</span><span class="d">references</span></div>
+  </div>
+
+  <div class="grid-2" style="margin-top:4mm; align-items:start">
+    <div class="note note--warn" style="margin:0">
+      <div class="t">The one-sentence version</div>
+      <p>The forecast is useful as a projection, the arithmetic is trustworthy as arithmetic, and the review pathway is trustworthy as process. The treatment effect is not established — so the system shows the trade-off instead of pretending to know it.</p>
+    </div>
+    <div class="note note--fail" style="margin:0">
+      <div class="t">The oracle trap, stated once</div>
+      <p>The 9.60 mmHg display forecast consumes 13 observed <em>future</em> UF features. It looks better because it already knows what the machine will do. It is a display-only card, not the serving model, and never a like-for-like comparison.</p>
+    </div>
+  </div>
+
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>02</span></div>
+</section>
+
+<!-- ============================ PAGE 3 — FORECAST ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>01 · THE TWO MODELS</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">1A · Case lab forecast</div>
+  <h1 class="sec-h">A 60-minute nadir forecast, not a treatment oracle.</h1>
+  <p class="lead" style="margin-bottom:3.5mm">The curve in Case lab is a LightGBM gradient-boosted model. It reads the session up to a blood-pressure cuff and predicts the lowest SBP the cuffs will record in the next hour. The solid line is the calibrated projection; the band is its 90% nadir interval.</p>
+
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <h3>Model at a glance</h3>
+      <div class="kv">
+        <dt>Task</dt><dd>Predict the 60-minute cuff-sampled nadir from the current anchor.</dd>
+        <dt>Model</dt><dd>LightGBM GBDT, 3-seed ensemble, nadir-specialised refit (Forecast-v2 lineage).</dd>
+        <dt>Serving contract</dt><dd>59 pre-anchor features; no future UF; isotonic calibration; 90% band.</dd>
+        <dt>Training data</dt><dd>HEMOBP, Taiwan: 1,070 patients, 205,482 sessions; fold 2 untouched (12,651 anchors).</dd>
+        <dt>Role</dt><dd>Display-only projection. It never gates the review pathway.</dd>
+      </div>
+    </div>
+    <div>
+      <h3>What each score means</h3>
+      <table class="tight">
+        <tr><th>Score</th><th>Value</th><th>Plain reading</th></tr>
+        <tr><td>MAE</td><td class="num">10.99 mmHg</td><td class="means">A typical miss is about 11 mmHg. At a 90 threshold, that is the gap between 90 and 79 or 101 — which is why the band matters.</td></tr>
+        <tr><td>RMSE</td><td class="num">14.65</td><td class="means">Higher than MAE, so some sessions miss badly. The tail is real.</td></tr>
+        <tr><td>Bias</td><td class="num">−2.42 mmHg</td><td class="means">Predictions sit slightly <em>below</em> the observed nadir — cautious, not a safety margin.</td></tr>
+        <tr><td>Band coverage</td><td class="num">89.2% / 90.1%</td><td class="means">The nominal 90% band contains the observed nadir about nine times in ten (HOLD / TAPER).</td></tr>
+        <tr><td>G1 taper MAE</td><td class="num">11.60 vs 15.55</td><td class="means">On 374 taper anchors the new surface is 25% closer than the retired v3 twin.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2>What the model sees</h2>
+  <p class="small" style="margin-bottom:1.5mm">59 causal features, all built from data available at the anchor. The 13 future-UF features are deliberately excluded; a separate 72-feature <em>oracle display</em> reaches 9.60 mmHg but is not deployable and is not the comparison baseline.</p>
+  <table class="tight">
+    <tr><th style="width:30mm">Family</th><th>Representative features</th><th style="width:42mm">Why it is there</th></tr>
+    <tr><td><b>Blood pressure</b></td><td class="mono" style="font-size:7.1pt">sbp_now, dbp_now, map_now; means, minima and slopes over 15 / 30 / 60 / 120 min; drop from session max; pulse pressure; SBP variability</td><td class="means">The current level and the shape of the fall.</td></tr>
+    <tr><td><b>Ultrafiltration</b></td><td class="mono" style="font-size:7.1pt">uf_Lh, cum_uf_L, uf_ml_kg_h, frac_uf_done, uf_slope_15/30, uf_over13</td><td class="means">How hard fluid is being pulled now, and how much is left.</td></tr>
+    <tr><td><b>Machine</b></td><td class="mono" style="font-size:7.1pt">blood_flow, conductivity, dia_temp, temp_dev, cond_dev</td><td class="means">Settings that change the physiological response.</td></tr>
+    <tr><td><b>Session context</b></td><td class="mono" style="font-size:7.1pt">dry_weight, pre_weight, elapsed_min, gap_since_last, n_bp_60, month</td><td class="means">Position in the session and measurement cadence.</td></tr>
+    <tr><td><b>Twin state</b></td><td class="mono" style="font-size:7.1pt">k_pat, beta_pat, twin_D_now, twin_refill_Lh, twin_refill_ratio, twin_pred_nadir</td><td class="means">A compact physiological state description; it is an input, not a validated effect model.</td></tr>
+    <tr><td><b>Patient history</b></td><td class="mono" style="font-size:7.1pt">hist_idh_rate10, hist_mean_nadir3/10, hist_prev_nadir, hist_early_crash10, hist_last_idh</td><td class="means">Strictly earlier sessions only; prior crashes and prior nadirs.</td></tr>
+    <tr><td><b>Static</b></td><td class="mono" style="font-size:7.1pt">age, sex_M, dm, vintage_years</td><td class="means">Baseline risk; vintage carries real signal.</td></tr>
+  </table>
+
+  <div class="note" style="margin-top:2.2mm">
+    <div class="t">What the forecast means in practice</div>
+    <p>Use it as a <strong>direction and a range</strong>: “the next hour is likely to land near 86, with a band from 67 to 105.” It is not a per-minute confidence band, and it is not a promise about symptoms.</p>
+  </div>
+
+  <p class="tiny" style="margin-top:1.2mm">Sources: model card and FACTS [2]; forecast-v2 feature contract and fold-2 confirm [3]. Fold 2 = patients never seen in training or tuning; its result was read once.</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>03</span></div>
+</section>
+
+<!-- ============================ PAGE 4 — CHAIR RISK ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>01 · THE TWO MODELS</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">1B · Chair board risk (variant A2)</div>
+  <h1 class="sec-h">A pre-session risk score that is computable before the first cuff.</h1>
+  <p class="lead">The Chair board answers a different question from the forecast: <em>at session start, which chairs deserve a closer look?</em> A2 reads history, static patient fields and the planned UF goal — no blood pressure and no current UF rate — so it cannot leak the outcome it is trying to predict.</p>
+
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <h3>Model at a glance</h3>
+      <div class="kv">
+        <dt>Task</dt><dd>Observational pre-session risk of a crash (SBP &lt; 90) during the session.</dd>
+        <dt>Model</dt><dd>LightGBM booster on a 31-column surface including missing-value indicators; variant A2.</dd>
+        <dt>Features</dt><dd>Prior IDH rate and nadirs, early-crash share, interdialytic interval and weight gain, planned UF goal, age, sex, diabetes, vintage, dry weight. Excludes <span class="mono">sbp_anchor</span> and anchor-time <span class="mono">uf_ml_kg_h</span>.</dd>
+        <dt>Split</dt><dd>Fold 2: 12,651 sessions, 3,109 crashes (24.6%); patients never in training.</dd>
+        <dt>Role</dt><dd>Attention cue. Fixed chair order; never an allocation or priority order.</dd>
+      </div>
+    </div>
+    <div>
+      <h3>What each score means</h3>
+      <table>
+        <tr><th>Score</th><th>Value</th><th>Plain reading</th></tr>
+        <tr><td>AUROC</td><td class="num">0.8313</td><td class="means">Pick a crashed and a non-crashed session at random: the crashed one ranks higher 83% of the time.</td></tr>
+        <tr><td>Recall@25</td><td class="num">0.6015</td><td class="means">Review the top 25% of chairs and you capture 60% of the crashes — 40% are outside the referral set.</td></tr>
+        <tr><td>PPV@25</td><td class="num">0.5914</td><td class="means">Of the chairs in that top quarter, 59% actually crashed; 41% did not.</td></tr>
+        <tr><td>ECE10</td><td class="num">0.0184</td><td class="means">Calibration error about 1.8 probability points: predicted percentages are close to observed rates.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2>What the bands actually look like on fold 2</h2>
+  <table>
+    <tr><th>Band</th><th>Cut</th><th>Share of sessions</th><th>Crash rate inside</th><th>How to read it</th></tr>
+    <tr><td><span class="tag tag--fail">High</span></td><td class="num">≥ 0.35</td><td class="num">27.8%</td><td class="num">57.0%</td><td class="means">Most of these crash, but 43% do not. Not a diagnosis.</td></tr>
+    <tr><td><span class="tag tag--part">Moderate</span></td><td class="num">0.20–0.35</td><td class="num">12.7%</td><td class="num">27.1%</td><td class="means">A mixed group; useful only as a review prompt.</td></tr>
+    <tr><td><span class="tag tag--pass">Low</span></td><td class="num">&lt; 0.20</td><td class="num">59.5%</td><td class="num">8.9%</td><td class="means">Lower risk, not safe: 21.5% of all crashes were scored low.</td></tr>
+  </table>
+
+  <div class="grid-2" style="margin-top:4mm; align-items:start">
+    <div class="note note--warn">
+      <div class="t">The sentence that must travel with the score</div>
+      <p><strong>A low band is not safe, and a high band is not a diagnosis.</strong> In the curated five-chair demo, 1 high chair and 0 low chairs crashed — that is a story chosen to show the range, not an accuracy estimate.</p>
+    </div>
+    <div class="note">
+      <div class="t">Why A2 and not the better-looking model</div>
+      <p>The anchor-time models score higher (B: AUROC 0.8788). They also read BP and UF from roughly 90 minutes into the session, which makes them partly circular as a <em>pre-session</em> card. We accept the lower A2 score so the number is available before the first cuff.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top:5mm">What this changes for a unit</h2>
+  <p>At a 25% referral burden (two of eight chairs), the board points attention at roughly 1.2 true crashes for every two chairs reviewed — while missing about 40% of crashes. That is why it is a <strong>review-attention surface</strong>, not a triage rule, and why the board order stays fixed by chair number. The value is in starting the conversation earlier, not in certifying anyone as safe.</p>
+
+  <p class="tiny" style="margin-top:3mm">Feature honesty: the planned UF goal encodes clinician behaviour, not physiology, and 391 first sessions without history are imputed from stored medians and flagged. A2 is observational — it can say “sessions that looked like this often crashed,” never “lowering this goal would prevent a crash.” Sources: CRASHRISK [3]; crashrisk pre-registration; evidence/chair_risk.json. Recall@25 and PPV@25 use the pre-registered top-25% referral set.</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>04</span></div>
+</section>
+
+<!-- ============================ PAGE 5 — EVIDENCE ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>02 · EVIDENCE TAB, DECODED</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">What the numbers in Evidence actually mean</div>
+  <h1 class="sec-h">Seven pre-registered checks — not a score, and not clinical validation.</h1>
+  <p class="lead">The Evidence tab is a transparency page. “Pass” means an engineering criterion written down before the result was seen was met. It does not mean a patient benefit was demonstrated. The tab’s most important finding is a <em>failure</em>: the UF what-if test.</p>
+
+  <div style="display:flex; gap:2mm; flex-wrap:wrap; margin:2.5mm 0 4mm">
+    <span class="tag tag--pass">G1 pass</span><span class="tag tag--part">G2 partial</span><span class="tag tag--fail">G3 fail</span>
+    <span class="tag tag--pass">G4 pass</span><span class="tag tag--pass">G5 pass</span><span class="tag tag--pass">G6 pass</span><span class="tag tag--fail">G7 fail</span>
+    <span class="tag tag--info">5 of 6 gate booleans true</span>
+  </div>
+
+  <table>
+    <tr><th style="width:24mm">What you see</th><th style="width:30mm">The number</th><th>Plain language</th><th style="width:52mm">What it implies</th></tr>
+    <tr><td><b>G1 · taper</b></td><td class="num">MAE 11.595 vs 15.550<br>ratio 0.746</td><td class="means">On sessions where UF was tapered, the new pre-anchor surface predicts the nadir with 25% less error than the retired v3 twin.</td><td class="means">The new substrate is better than the old one on the slice that matters for tapering. It does not say the taper helps.</td></tr>
+    <tr><td><b>G2 · baseline</b></td><td class="num">10.99 / 9.60<br>fair / oracle</td><td class="means">The fair model ties its own base at gain 0 and loses to the oracle display forecast, which uses 13 future-UF features.</td><td class="means">We pass against our own baseline, fail against an oracle we cannot deploy. Both are reported.</td></tr>
+    <tr><td><b>G3 · actual vs hold</b></td><td class="num">ΔMAE 0.000<br>CI [0, 0]</td><td class="means">At the calibrated gain of 0, the “actual UF” and “hold UF” projections are identical.</td><td class="means">The what-if mechanism was not validated. This is the reason the mechanism sketch is off by default.</td></tr>
+    <tr><td><b>G4 · monotonicity</b></td><td class="num">0 violations<br>3,086,844 checks</td><td class="means">Stepping UF down more never produces a worse projected pressure at unit gain, and the projection is continuous at the anchor.</td><td class="means">The simulation is internally coherent — an engineering pass, not evidence of a real effect.</td></tr>
+    <tr><td><b>G5 · band coverage</b></td><td class="num">89.2% HOLD<br>90.1% TAPER</td><td class="means">The 90% uncertainty band contains the observed nadir about 90% of the time on held-out sessions.</td><td class="means">The uncertainty is roughly honest at the population level. It is marginal coverage, not a per-patient guarantee.</td></tr>
+    <tr><td><b>G6 · invariance</b></td><td class="num">200/200<br>284 cold starts</td><td class="means">Changing future UF records does not change the pre-anchor prediction, and new patients stay bounded.</td><td class="means">No future leakage; the score is computable at the moment it claims.</td></tr>
+    <tr><td><b>G7 · UF effect</b></td><td class="num">+0.13 mmHg<br>CI [−2.63, +3.06]</td><td class="means">Reducing UF by 0.25 L/h early raised SBP by 0.13 mmHg more than matched controls — indistinguishable from zero.</td><td class="means"><b>Verdict: fail.</b> The twin remains a labelled mechanism illustration; operational gain 0.</td></tr>
+  </table>
+
+  <div class="grid-2" style="margin-top:4mm; align-items:start">
+    <div class="card">
+      <div class="eyebrow">How to read a forest plot</div>
+      <p class="small" style="margin-top:1.5mm">The dot is the estimated effect; the horizontal line is its 95% confidence interval. If the interval crosses zero, the data cannot distinguish the effect from no effect. G7’s interval runs from −2.63 to +3.06 mmHg, so “no detectable effect” is the honest reading — not proof that UF never matters.</p>
+      <p class="small" style="margin:0"><b>Sham control +2.91 mmHg</b> passed its own pre-trend but failed as a placebo check; <b>P6a +0.43 mmHg</b> means the out-of-sample trajectory error got slightly worse, not better.</p>
+    </div>
+    <div class="card">
+      <div class="eyebrow">The other rows in the tab</div>
+      <p class="small" style="margin-top:1.5mm"><b>Temporal-order diagnostic:</b> of 397 actual-vs-hold rows, 234 UF cuts happened at the anchor with no preceding observed drop. That weakens the earlier “staff reacted to a fall” explanation, but it does not create a positive effect.</p>
+      <p class="small" style="margin:0"><b>Protocol hash, FHIR bundle, audit chain:</b> engineering evidence that the pathway and record are reproducible and exportable. They are <em>not</em> clinical evidence, and the hash chain is a local demo object, not an immutable clinical record.</p>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:3.5mm">
+    <div class="t">The one line to take away</div>
+    <p>“5 of 6 pass” is an engineering scoreboard. The clinically decisive result is that the pre-registered UF effect test <strong>failed</strong>. A product that hides that failure would be less trustworthy than one that prints it.</p>
+  </div>
+
+  <p class="tiny" style="margin-top:2mm">Sources: EVIDENCE_STATUS [3]; evidence/g7_report.json; demo_twin.json; crashrisk confirm files. G2 is a vacuous self-tie at gain 0 and is marked partial for that reason.</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>05</span></div>
+</section>
+
+<!-- ============================ PAGE 6 — STAFFING ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>03 · WHY THIS MATTERS</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">The staffing gap behind the product</div>
+  <h1 class="sec-h">The person at the chair often has the least support and the most immediate decisions.</h1>
+  <p class="lead">Haemodialysis is a high-frequency, high-consequence workflow: roughly three sessions per patient per week, with a doctor usually covering many chairs and sometimes several units. The gap is not another risk score. It is time, shared language, and explicit trade-offs.</p>
+
+  <div class="card" style="padding:3.6mm 4mm 2.4mm">
+    <div class="eyebrow">Nephrologist density · per million population</div>
+    <div class="barchart">
+      <div class="bar-row"><span>India · working figure</span><div class="bar-track"><div class="bar-fill" style="width:5%"></div></div><span class="bar-val">1.0–1.5</span></div>
+      <div class="bar-row"><span>Global median</span><div class="bar-track"><div class="bar-fill bar-fill--muted" style="width:40.5%"></div></div><span class="bar-val">11.75</span></div>
+      <div class="bar-row"><span>High-income median</span><div class="bar-track"><div class="bar-fill bar-fill--rule" style="width:100%"></div></div><span class="bar-val">29.02</span></div>
+      <div class="bar-note">Bars are relative to 29.02 pmp. India’s 1.0–1.5 is a project working figure consistent with ISN-GKHA country data; global and income-group figures are from ISN-GKHA 2023. [4][5]</div>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:3.5mm">
+    <div class="stat"><div class="k">India · working figure</div><div class="v v-risk" style="font-size:17pt">1–1.5</div><div class="s">nephrologists per million — roughly one per 0.7–1 million people; about 20× below high-income density. [2][4]</div></div>
+    <div class="stat"><div class="k">Uttar Pradesh example</div><div class="v v-risk" style="font-size:17pt">145</div><div class="s">nephrologists in a state of ~240 million. Only three centres provide dialysis-technician courses. [7]</div></div>
+    <div class="stat"><div class="k">PMNDP footprint</div><div class="v v-teal" style="font-size:17pt">13,824</div><div class="s">haemodialysis machines across 1,925 centres in 751 districts (official dashboard). [6]</div></div>
+  </div>
+
+  <h2 style="margin-top:5mm">The scenario the system is built for</h2>
+  <p>In many district hospitals under the national dialysis programme, the chair is run by nurses or technicians with limited formal nephrology training; the nephrologist is remote and covers a large population. The Uttar Pradesh review is explicit: most dialysis at district hospitals is performed by nurses or technicians with limited working knowledge, and technician-course capacity is scarce. [7] This is not a criticism of the staff — it is a description of the support they are given.</p>
+  <p>A technician who learned from experience can recognise “this patient looks off,” but has little time to work through the fluid arithmetic, no shared vocabulary for a remote doctor, and no structured list of what to check before calling. The result is predictable: calls happen late, handoffs are verbal, and the same trade-off is rediscovered at every chair.</p>
+
+  <div class="note" style="margin-top:3mm">
+    <div class="t">Why a support layer can make a difference</div>
+    <p>Not because it predicts better than a person. Because it <strong>mirrors the session</strong> (what has actually happened), <strong>structures the review</strong> (what to check, in what order), and <strong>shows the arithmetic</strong> (what a choice leaves behind). That buys the technician time and gives the remote nephrologist a shared, compact picture before the call.</p>
+  </div>
+
+  <div class="grid-2" style="margin-top:3mm; align-items:start">
+    <div class="card">
+      <div class="eyebrow">The scale we are talking about</div>
+      <p class="small" style="margin-top:1.5mm">HEMOBP records a hypotensive nadir (&lt;90 mmHg) in <b>10.4%</b> of sessions. The Spanish cohort records clinician-defined symptomatic hypotension in <b>25.5%</b> — different labels, never combined. Applying the 10.4% rate to an estimated ~34 million Indian sessions per year gives roughly <b>3.5 million</b> hypotensive episodes a year. That is arithmetic on estimates, not a measured burden. [2][3]</p>
+    </div>
+    <div class="card">
+      <div class="eyebrow">And the staff already act</div>
+      <p class="small" style="margin-top:1.5mm">In HEMOBP, staff cut UF by more than 20% mid-session in <b>87.2%</b> of sessions; the median rate falls from <b>0.58 to 0.10 L/h</b>. The intervention is not missing — what is missing is a shared record of <em>why</em>, <em>when</em>, and <em>what it cost</em>. That is exactly the layer HemoTwin tries to add. [2]</p>
+    </div>
+  </div>
+
+  <p class="tiny" style="margin-top:2mm">Sources: ISN-GKHA 2023 / Lancet Global Health 2024 [4]; ISN Atlas income-group figures [5]; PMNDP official dashboard [6]; Indian J Nephrol, Uttar Pradesh services review [7]; HemoTwin FACTS [2]. The India density figure is a planning figure, not a census.</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>06</span></div>
+</section>
+
+<!-- ============================ PAGE 7 — DIAGRAM ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>04 · SYSTEM DIAGRAM</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">What runs where</div>
+  <h1 class="sec-h">One local console, one record — no network call at runtime.</h1>
+  <p class="lead">The bay is a separate WebGL build. The console is Python/Streamlit. Models, protocol rules and fluid math run locally; the only outbound interface is an export the user triggers.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 960 640" role="img" aria-labelledby="sys-title sys-desc" style="width:100%;height:auto;display:block">
+      <title id="sys-title">HemoTwin system architecture</title>
+      <desc id="sys-desc">Session inputs and the pre-session record feed a local console with a session mirror, a chair-risk model, a forecast service and a protocol plus fluid engine; the five views and an evidence store sit on the output side.</desc>
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#5C6B6D"/>
+        </marker>
+        <marker id="ar-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#17756A"/>
+        </marker>
+      </defs>
+
+      <!-- zones -->
+      <rect x="16" y="16" width="236" height="608" rx="8" fill="#141C1E" fill-opacity=".025" stroke="#C6D2CE" stroke-width="0.8" stroke-dasharray="4 4"/>
+      <rect x="276" y="16" width="384" height="608" rx="8" fill="#141C1E" fill-opacity=".025" stroke="#C6D2CE" stroke-width="0.8" stroke-dasharray="4 4"/>
+      <rect x="684" y="16" width="260" height="608" rx="8" fill="#141C1E" fill-opacity=".025" stroke="#C6D2CE" stroke-width="0.8" stroke-dasharray="4 4"/>
+      <text x="28" y="40" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="10" letter-spacing="1.4">CHAIR-SIDE INPUT</text>
+      <text x="288" y="40" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="10" letter-spacing="1.4">LOCAL CONSOLE · PYTHON / STREAMLIT</text>
+      <text x="696" y="40" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="10" letter-spacing="1.4">VIEWS &amp; RECORD</text>
+
+      <!-- arrows first -->
+      <path d="M232 212 H288" fill="none" stroke="#5C6B6D" stroke-width="1.4" marker-end="url(#ar)"/>
+      <path d="M232 102 H288" fill="none" stroke="#5C6B6D" stroke-width="1.4" marker-end="url(#ar)"/>
+      <path d="M640 102 H696" fill="none" stroke="#5C6B6D" stroke-width="1.4" marker-end="url(#ar)"/>
+      <path d="M448 222 H480" fill="none" stroke="#5C6B6D" stroke-width="1.4" marker-end="url(#ar)"/>
+      <path d="M368 264 V300" fill="none" stroke="#17756A" stroke-width="1.6" marker-end="url(#ar-teal)"/>
+      <path d="M560 264 V300" fill="none" stroke="#5C6B6D" stroke-width="1.4" marker-end="url(#ar)"/>
+      <path d="M640 348 H688 V174 H696" fill="none" stroke="#17756A" stroke-width="1.6" marker-end="url(#ar-teal)"/>
+      <path d="M810 300 V200" fill="none" stroke="#5C6B6D" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#ar)"/>
+
+      <!-- nodes -->
+      <g>
+        <rect x="36" y="60" width="196" height="84" rx="6" fill="#F7FAF9" stroke="#C6D2CE" stroke-width="1"/>
+        <text x="52" y="88" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Pre-session record</text>
+        <text x="52" y="108" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">history · static fields</text>
+        <text x="52" y="126" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">planned UF goal</text>
+      </g>
+      <g>
+        <rect x="36" y="170" width="196" height="84" rx="6" fill="#F7FAF9" stroke="#C6D2CE" stroke-width="1"/>
+        <text x="52" y="198" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Session inputs</text>
+        <text x="52" y="218" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">cuffs · UF · symptoms</text>
+        <text x="52" y="236" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">manual or CSV</text>
+      </g>
+
+      <g>
+        <rect x="288" y="60" width="352" height="84" rx="6" fill="#FFFFFF" stroke="#C6D2CE" stroke-width="1"/>
+        <text x="304" y="88" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Chair board · A2 risk</text>
+        <text x="304" y="108" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">pre-session · no BP, no current UF</text>
+        <text x="304" y="126" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">fixed chair order · display only</text>
+      </g>
+      <g>
+        <rect x="288" y="180" width="160" height="84" rx="6" fill="#FFFFFF" stroke="#C6D2CE" stroke-width="1"/>
+        <text x="304" y="208" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Session mirror</text>
+        <text x="304" y="228" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">state · stale guard</text>
+      </g>
+      <g>
+        <rect x="480" y="180" width="160" height="84" rx="6" fill="#FFFFFF" stroke="#C6D2CE" stroke-width="1"/>
+        <text x="496" y="208" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Review pathway</text>
+        <text x="496" y="228" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">+ fluid arithmetic</text>
+      </g>
+      <g>
+        <rect x="288" y="300" width="352" height="96" rx="6" fill="#E4F1ED" stroke="#17756A" stroke-width="1.6"/>
+        <text x="304" y="330" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Forecast service</text>
+        <text x="304" y="350" fill="#17756A" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">59-feature GBDT · isotonic calibration</text>
+        <text x="304" y="368" fill="#17756A" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">90% nadir band · display only</text>
+      </g>
+
+      <g>
+        <rect x="696" y="60" width="228" height="140" rx="6" fill="#FFFFFF" stroke="#C6D2CE" stroke-width="1"/>
+        <text x="712" y="88" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Five console views</text>
+        <text x="712" y="108" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">case lab · chair board</text>
+        <text x="712" y="126" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">live · replay · evidence</text>
+        <text x="712" y="150" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="10.5">read-only projections</text>
+      </g>
+      <g>
+        <rect x="696" y="300" width="228" height="260" rx="6" fill="#F3F6F5" stroke="#C6D2CE" stroke-width="1"/>
+        <text x="712" y="330" fill="#141C1E" font-family="Segoe UI, sans-serif" font-size="17" font-weight="600">Evidence &amp; audit</text>
+        <text x="712" y="350" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">frozen JSON · G1–G7</text>
+        <text x="712" y="368" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">FHIR R4 bundle · handoff</text>
+        <text x="712" y="386" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="11.5">local SHA-256 audit chain</text>
+        <line x1="712" y1="404" x2="908" y2="404" stroke="#DCE4E1" stroke-width="1"/>
+        <text x="712" y="426" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="10.5">demo object, not an immutable</text>
+        <text x="712" y="444" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="10.5">clinical record</text>
+      </g>
+
+      <!-- record-flow label, kept clear of the dashed line -->
+      <rect x="818" y="240" width="96" height="16" fill="#FBFDFC"/>
+      <text x="866" y="252" text-anchor="middle" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="9.5">FROZEN EVIDENCE</text>
+    </svg>
+    <div class="legend">
+      <span><i class="sw-focal"></i>Forecast surface (validated for projection)</span>
+      <span><i class="sw-node"></i>Local engine / view</span>
+      <span><i class="sw-dash"></i>Read-only record flow</span>
+      <span>Teal arrows: forecast path · grey: state and record path</span>
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-top:4mm">
+    <div class="card card--soft"><div class="eyebrow">No hidden cloud</div><p class="small" style="margin-top:1mm">The app makes no network call at runtime. Models, evidence and audit are files on the machine; exports are user-triggered.</p></div>
+    <div class="card card--soft"><div class="eyebrow">Device-agnostic by design</div><p class="small" style="margin-top:1mm">Cuffs, UF and symptoms are entered manually or imported from CSV. Machine integration is a future adapter, not a dependency.</p></div>
+    <div class="card card--soft"><div class="eyebrow">The human stays in charge</div><p class="small" style="margin-top:1mm">The pathway is a checklist, not an order. The forecast is a shadow; measured rules set the review state.</p></div>
+  </div>
+
+  <p class="tiny" style="margin-top:2mm">The what-if ODE twin is intentionally not on the validated path in this diagram; it appears only as a labelled illustration inside Case lab. Evidence artifacts are frozen JSON generated from the research workspace.</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>07</span></div>
+</section>
+
+<!-- ============================ PAGE 8 — ALARM BUDGET ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>05 · THE ALARM BUDGET</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">Attention is the scarce resource</div>
+  <h1 class="sec-h">Why a model with AUROC 0.88 still lost its alert authority.</h1>
+  <p class="lead">An alarm budget is the number of false or non-useful alerts per session a unit is willing to absorb before staff start ignoring the system. A model can rank well and still fail at a fixed budget — because ranking is not the same as an operating point.</p>
+
+  <div class="card" style="padding:3.6mm 4mm 2.4mm">
+    <div class="eyebrow">Timely detection at the pre-registered budget (≤0.25 non-useful alerts per session)</div>
+    <div class="barchart">
+      <div class="bar-row"><span>Event model (AUROC 0.880)</span><div class="bar-track"><div class="bar-fill" style="width:13.7%"></div></div><span class="bar-val">8.2%</span></div>
+      <div class="bar-row"><span>Current-SBP rule (&lt; ~98.9)</span><div class="bar-track"><div class="bar-fill bar-fill--rule" style="width:33.7%"></div></div><span class="bar-val">20.2%</span></div>
+      <div class="bar-row"><span>Pre-registered utility gate</span><div class="bar-track"><div class="bar-fill bar-fill--gate" style="width:100%"></div></div><span class="bar-val">60%</span></div>
+      <div class="bar-note">The gate was written before the result. The model missed it by a wide margin and lost alert authority. [3]</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:4mm; align-items:start">
+    <div>
+      <h2 style="margin-top:0">What the numbers say</h2>
+      <table>
+        <tr><th>Quantity</th><th>Value</th><th>Meaning</th></tr>
+        <tr><td>AUROC (Task 02)</td><td class="num">0.880</td><td class="means">Good ranking — but ranking alone does not save a fixed alert budget.</td></tr>
+        <tr><td>Detection at 0.25/session</td><td class="num">8.2%</td><td class="means">Less than one in twelve crash sessions was caught in time.</td></tr>
+        <tr><td>Rescue rule at 0.26</td><td class="num">14.1%</td><td class="means">A simple SBP + refractory rule caught roughly twice as many on fold 2; the model score added burden, not alerts. [3]</td></tr>
+        <tr><td>Sensitivity @ 90% specificity</td><td class="num">0.721</td><td class="means">A different operating point: fewer false alarms, but about one third of events missed.</td></tr>
+        <tr><td>Shipped historical point</td><td class="num">18.2%</td><td class="means">False-alarm session rate — roughly one false alarm every five sessions. Retired.</td></tr>
+      </table>
+    </div>
+    <div>
+      <h2 style="margin-top:0">What it means on a ward</h2>
+      <p>At eight chairs, 0.25 alerts per session is about <strong>two extra alerts per treatment round</strong>; an 18.2% false-alarm session rate is about <strong>1.5 false alarms per round</strong>. That is the real cost: not the model’s error, but the nurse’s attention.</p>
+      <p>The event model is therefore <strong>shadow-only</strong>: it never pages, ranks, or gates the review pathway. The working alert is a measured rule (SBP below ~99 with a non-resetting 60-minute refractory), and even that is a retrospective replay result, not a prospective safety claim.</p>
+      <div class="note note--warn" style="margin-top:2.5mm">
+        <div class="t">The trade-off in one sentence</div>
+        <p>Lower the threshold and you catch more crashes but drown the unit in alarms; raise it and you miss the ones that matter. The product exposes the threshold instead of hiding it.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:5mm">The Chair board has a budget too: 25% referral</h2>
+  <p class="small" style="margin-bottom:1.5mm">The pre-registered referral rule is “review the top 25% by risk” — at eight chairs, two chairs. On fold 2 that captures <b>60.15%</b> of crashes and <b>59.14%</b> of referred chairs crash. It misses about <b>40%</b> of crashes and mislabels about <b>41%</b> of referrals. That is why the board is fixed-order, display-only, and shifts attention rather than replacing it.</p>
+  <div style="display:flex; gap:2mm; flex-wrap:wrap">
+    <span class="tag tag--info">2 of 8 chairs</span>
+    <span class="tag tag--pass">~1.2 true crashes per round</span>
+    <span class="tag tag--fail">~40% of crashes outside</span>
+    <span class="tag tag--warn">21.5% of crashes scored low</span>
+  </div>
+
+  <p class="tiny" style="margin-top:3mm">Sources: Task 02 alert-utility evaluation; alert-v1 rescue-rule sweep; FACTS [2][3]. “Non-useful alerts per session” counts alerts that did not precede an event in the warning window. Retrospective replay only; no prospective alert claim.</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>08</span></div>
+</section>
+
+<!-- ============================ PAGE 9 — FLUID MATH ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>06 · THE FLUID MATH</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">Exact arithmetic, not a physiological prediction</div>
+  <h1 class="sec-h">Where the fluid goes when a session ends early.</h1>
+  <p class="lead">The arithmetic answers a narrow, honest question: if this much UF is left unfinished, and this much extra fluid is given, how much is carried into the next session — and what does that do to the prescribed intensity? It does not predict SBP.</p>
+
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <h3>The five formulas</h3>
+      <div class="codebox">
+        <span class="c"># goal, removed and carry are litres (converted to mL)</span><br>
+        remaining = max(goal − removed, 0)<br>
+        left = q_left × remaining<br>
+        carry = left + extra_fluid<br>
+        next_volume = next_prescription + carry<br><br>
+        <span class="c"># reference flag, not a prescription limit</span><br>
+        intensity = next_volume<sub>mL</sub> / (weight<sub>kg</sub> × duration<sub>h</sub>)<br>
+        flag = intensity &gt; <span class="a">13 mL/kg/h</span>
+      </div>
+      <p class="small" style="margin-top:2mm"><b>q_left</b> is the fraction of the remaining prescription the scenario does not deliver (0 = finish, 1 = stop). <b>extra_fluid</b> is an added bolus or intake assumed to stay in the patient until session end. The 13 mL/kg/h line is the KDOQI reference ceiling used as a flag — not an order.</p>
+    </div>
+    <div>
+      <h3>Worked example</h3>
+      <table>
+        <tr><th>Input</th><th>Value</th></tr>
+        <tr><td>UF goal</td><td class="num">3.00 L</td></tr>
+        <tr><td>Already removed</td><td class="num">1.20 L</td></tr>
+        <tr><td>q_left (unfinished fraction)</td><td class="num">0.50</td></tr>
+        <tr><td>Extra fluid (bolus)</td><td class="num">0.25 L</td></tr>
+        <tr><td>Next prescription · duration · weight</td><td class="num">3.00 L · 4 h · 70 kg</td></tr>
+      </table>
+      <div class="codebox" style="margin-top:2mm">
+        remaining = 3.00 − 1.20 = <span class="a">1.80 L</span><br>
+        left = 0.50 × 1.80 = <span class="a">0.90 L</span><br>
+        carry = 0.90 + 0.25 = <span class="a">1.15 L</span><br>
+        next_volume = 3.00 + 1.15 = <span class="a">4.15 L</span><br>
+        intensity = 4150 / (70 × 4) = <span class="a">14.8 mL/kg/h</span> → over 13
+      </div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:3.5mm">
+    <div class="t">Reading the worked example</div>
+    <p>Half-finishing the UF and giving a 250 mL bolus leaves 1.15 L to carry forward. The next session’s prescription is unchanged at 3.00 L, so its true starting load is 4.15 L — about 14.8 mL/kg/h, above the 13 reference. The arithmetic makes that cost visible; it does not say whether accepting it is clinically right.</p>
+  </div>
+
+  <h2 style="margin-top:4mm">The projection model (labelled illustration)</h2>
+  <p class="small" style="margin-bottom:1.5mm">Case lab also draws a dashed mechanism sketch. It is an ODE with two fitted patient parameters and a literature-anchored immediate-refill term; the calibrated gain is <b>0</b>, so it does not move the solid forecast. It is shown to make the physiology legible, not to claim an effect.</p>
+  <div class="codebox">
+    dD/dt = (1 − φ) · UF/60 − k · D        <span class="c"># plasma-deficit D, UF in L/h</span><br>
+    φ = 0.30   <span class="c">immediate refill fraction (Wang 2023 range 30–50%)</span><br>
+    k ≈ 0.245 /h  <span class="c">population refill rate (session IQR 0.10–1.31)</span><br>
+    β ≈ 16.3 mmHg/L  <span class="c">population SBP sensitivity to deficit</span>
+  </div>
+  <div class="grid-2" style="margin-top:3mm; align-items:start">
+    <div class="card">
+      <div class="eyebrow">What each symbol means</div>
+      <p class="small" style="margin-top:1mm"><b>φ</b>: share of each litre removed that is replaced immediately by refill. <b>k</b>: how fast the remaining deficit refills. <b>β</b>: how many mmHg the pressure falls per litre of deficit. <b>Gain</b>: how strongly the simulation lets a UF change move SBP; it calibrated to 0.</p>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Why it is not a treatment claim</div>
+      <p class="small" style="margin-top:1mm">The what-if test (G7) found <b>+0.13 mmHg per 0.25 L/h</b>, CI <b>[−2.63, +3.06]</b> — no detectable effect. At gain 0, actual and hold projections are identical (G3). The animation is honest only while it stays labelled as a mechanism illustration.</p>
+    </div>
+  </div>
+
+  <p class="tiny" style="margin-top:2mm">Assumptions shipped with the arithmetic: additional fluid stays in the patient; carry-forward is added only in the displayed scenario; 13 mL/kg/h is a reference flag. Sources: src/session_twin/fluid.py; KDOQI 2015 [10]; Wang 2023 / Mitsides 2019 [9]; G7 report [12].</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>09</span></div>
+</section>
+
+<!-- ============================ PAGE 10 — INTERVENTIONS ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>07 · WHY INTERVENTIONS BREAK THE FORECAST</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">The hardest problem in the data</div>
+  <h1 class="sec-h">The nurse changes UF. The future changes too.</h1>
+  <p class="lead">A forecast learns from observed sessions. In those sessions, staff already respond to falling pressure: they taper, pause, or give fluid. That makes the treatment and the outcome entangled — and it is why a model trained on the record cannot answer “what would have happened if we had acted differently?”</p>
+
+  <div class="card" style="padding:3mm 4mm 2mm">
+    <div class="eyebrow">Conceptual timeline — illustration, not data</div>
+    <svg viewBox="0 0 860 190" style="width:100%;height:auto;display:block" aria-hidden="true">
+      <defs>
+        <linearGradient id="gapband" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#A8641B" stop-opacity=".05"/><stop offset="1" stop-color="#A8641B" stop-opacity=".22"/>
+        </linearGradient>
+      </defs>
+      <g stroke="#E7EEEC" stroke-width="1">
+        <line x1="40" y1="40" x2="820" y2="40"/><line x1="40" y1="80" x2="820" y2="80"/>
+        <line x1="40" y1="120" x2="820" y2="120"/><line x1="40" y1="160" x2="820" y2="160"/>
+      </g>
+      <text x="40" y="28" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="9">SBP</text>
+      <text x="820" y="28" fill="#7E8B8C" font-family="Cascadia Mono, Consolas, monospace" font-size="9" text-anchor="end">SESSION TIME →</text>
+      <path d="M40 60 H180 L240 72 L300 88 L360 100" stroke="#141C1E" stroke-width="2" fill="none"/>
+      <path d="M360 100 L440 116 L520 136 L600 150 L680 156 L760 160" stroke="#B23C2C" stroke-width="2" fill="none"/>
+      <path d="M360 100 C420 94 480 90 540 92 C600 95 660 100 720 104 L820 108" stroke="#17756A" stroke-width="2" stroke-dasharray="5 4" fill="none"/>
+      <path d="M360 100 C420 94 480 90 540 92 C600 95 660 100 720 104 L820 108 L820 160 L360 100 Z" fill="url(#gapband)"/>
+      <line x1="360" y1="40" x2="360" y2="160" stroke="#A8641B" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <circle cx="360" cy="100" r="4" fill="#A8641B"/>
+      <rect x="368" y="72" width="170" height="16" fill="#FFFFFF"/>
+      <text x="374" y="84" fill="#A8641B" font-family="Cascadia Mono, Consolas, monospace" font-size="9.5">NURSE TAPERS UF</text>
+      <rect x="548" y="76" width="196" height="16" fill="#FFFFFF"/>
+      <text x="554" y="88" fill="#17756A" font-family="Cascadia Mono, Consolas, monospace" font-size="9.5">UNOBSERVED COUNTERFACTUAL</text>
+      <rect x="40" y="164" width="210" height="14" fill="#FFFFFF"/>
+      <text x="46" y="175" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="9">OBSERVED SESSION</text>
+      <rect x="470" y="164" width="240" height="14" fill="#FFFFFF"/>
+      <text x="476" y="175" fill="#5C6B6D" font-family="Cascadia Mono, Consolas, monospace" font-size="9">IF NOTHING HAD CHANGED</text>
+    </svg>
+  </div>
+
+  <h2>Why the simple version fails</h2>
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <p><b>1. Confounding by indication.</b> Staff taper when the patient is already deteriorating. In the record, “UF was reduced” often precedes a crash — not because the taper caused it, but because it was a response to the fall. A model that learns that association learns the opposite of the causal lever.</p>
+      <p><b>2. The action is not known at prediction time.</b> At the anchor, the future taper has not happened. A feature like “UF changed by −0.3 L/h at minute 95” cannot be used by a forecast made at minute 60 without leaking the future.</p>
+      <p><b>3. The policy changes when you deploy.</b> If the console changes what staff do, the next data distribution changes too. A model trained on yesterday’s practice is calibrated to yesterday’s decisions.</p>
+    </div>
+    <div>
+      <p><b>4. The measurement is too sparse.</b> Cuffs arrive roughly every 30 minutes. The immediate response to a UF change can wash out between readings, and the labels inherit that cadence.</p>
+      <p><b>5. The effect may be genuinely small.</b> The G7 experiment estimated <b>+0.13 mmHg per 0.25 L/h</b> with a CI from −2.63 to +3.06 — indistinguishable from zero. That does not prove UF never matters; it does mean the data cannot support a confident positive claim at this scale.</p>
+      <div class="note note--fail" style="margin-top:2mm">
+        <div class="t">The practical consequence</div>
+        <p>The what-if sketch is off by default. The console shows arithmetic (what a choice leaves behind) and a projection under the observed trajectory — not a promise about what an intervention will do.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:3mm">
+    <div class="t">The difference in one line</div>
+    <p><b>What the model learns:</b> P(crash | a taper happened). <b>What a decision needs:</b> P(crash | we choose a taper). Those two are equal only if tapers were assigned at random — and they were not: staff tapered because the patient was already falling. That is confounding by indication, and no extra feature removes it without a change in design.</p>
+  </div>
+
+  <p class="tiny" style="margin-top:2mm">Supporting facts: staff cut UF &gt;20% mid-session in 87.2% of sessions; median 0.58 → 0.10 L/h; 81.7% end below 80% of peak UF [2]. G7: 581 matched events, 158 patients, MDE 2.33 mmHg; sham +2.91; P6a +0.43 [3][12].</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>10</span></div>
+</section>
+
+<!-- ============================ PAGE 11 — SOLUTIONS ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>07 · WHY INTERVENTIONS BREAK THE FORECAST</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">So can we just add “UF changed ±X” as a feature?</div>
+  <h1 class="sec-h">Yes for nowcasting. No for causality.</h1>
+  <p class="lead">Action history is useful — it is one of the strongest signals that a clinician has seen something the cuffs have not yet shown. But it answers a different question from “what will this action do?” The distinction decides what you are allowed to ship.</p>
+
+  <table>
+    <tr><th style="width:36mm">Use of action data</th><th>What it can improve</th><th>What it cannot answer</th><th style="width:36mm">Risk</th></tr>
+    <tr><td><b>Past changes</b><br><span class="mono" style="font-size:6.8pt">ΔUF, time since change, cumulative change, reason flag</span></td><td class="means">Short-horizon nowcasting: the action is a proxy for the clinician’s assessment, so the next cuff becomes easier to anticipate.</td><td class="means">The effect of a <em>new</em> action, or what would have happened without the past one.</td><td class="means">Can encode clinician behaviour and drift when practice changes.</td></tr>
+    <tr><td><b>Future changes</b><br><span class="mono" style="font-size:6.8pt">next UF segment, future rate</span></td><td class="means">Display metrics — that is the 9.60 oracle card.</td><td class="means">Anything usable at decision time; it already knows the future.</td><td class="means">Leakage: better numbers, no deployable predictor.</td></tr>
+    <tr><td><b>Joint action + outcome model</b><br><span class="mono" style="font-size:6.8pt">propensity / policy head</span></td><td class="means">Forecasts conditioned on a planned action, with inverse-probability weighting; supports “what if the unit follows this protocol?”</td><td class="means">A causal effect without assumptions about unmeasured confounding.</td><td class="means">Fragile under policy shift; needs action logs and overlap checks.</td></tr>
+    <tr><td><b>Designed experiment</b><br><span class="mono" style="font-size:6.8pt">target trial emulation, protocolised step-down</span></td><td class="means">An actual effect estimate with a pre-registered estimand and power calculation.</td><td class="means">Quick answers — effects are small and need many matched events.</td><td class="means">Ethics, cost, and a real prospective protocol.</td></tr>
+  </table>
+
+  <h2 style="margin-top:4mm">The route we would take next</h2>
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <p><b>1 · Log the action, not just the state.</b> Every UF change gets a timestamp, a rate delta, a duration and an optional reason. This is the dataset the current record lacks — and it is a prerequisite for every option above.</p>
+      <p><b>2 · Separate the two products.</b> Keep the state mirror and the observational forecast honest; build any effect estimator as a separate, clearly labelled research surface with its own validation.</p>
+      <p><b>3 · Start with nowcasting.</b> Test whether past-action features improve next-cuff prediction under a patient-disjoint split. If they do, ship them as a prediction feature — never as a treatment recommendation.</p>
+    </div>
+    <div>
+      <p><b>4 · Then identify an effect.</b> Use target-trial emulation with time-varying confounders, or a protocolised/randomised step-down with a pre-registered SBP endpoint. G7 shows the effect is small enough that the design, not the model, is the limiting factor (MDE 2.33 mmHg).</p>
+      <p><b>5 · Increase the measurement density.</b> Continuous or 5-minute BP, plus symptom and action labels, would let the data see a response that 30-minute cuffs cannot resolve.</p>
+      <div class="note" style="margin-top:1mm">
+        <div class="t">The discipline</div>
+        <p>Never let a prediction model masquerade as a treatment effect. The current console enforces that separation in its copy, its gates, and its default view.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:3mm">
+    <div class="eyebrow">What “adding the feature” would actually do</div>
+    <p class="small" style="margin-top:1.5mm">If you add “UF changed” to a model trained on historical sessions, the model will likely learn <em>the clinician’s policy</em>: tapers happen when pressure falls, so the feature is a proxy for deterioration. The model may predict the next cuff better and still be useless as a guide to action. That is not a bug in the feature; it is the difference between <b>prediction</b> and <b>intervention</b>. The only way to close that gap is a design that makes the action exogenous — a protocol, a randomised step, or a defensible natural experiment — plus a pre-registered effect estimate.</p>
+  </div>
+
+  <p class="tiny" style="margin-top:2mm">Directions are research plans, not current capabilities. See EVIDENCE_STATUS “Next evidence required” [3].</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>11</span></div>
+</section>
+
+<!-- ============================ PAGE 12 — WORKFLOW ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>08 · INTO THE WORKFLOW</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">What the nurse actually sees</div>
+  <h1 class="sec-h">A five-step loop that fits the chair, not a new workflow.</h1>
+  <p class="lead">The console is designed around the moments that already exist: before the first cuff, at each cuff, when something looks wrong, and at handoff. It adds structure to those moments without taking the decision away from the team.</p>
+
+  <div class="steps">
+    <div class="step"><div class="n">01 · PRE-SESSION</div><div class="h">Look at the board</div><div class="b">Fixed-order chairs with an A2 risk band. No BP, no current UF. Attention cue only.</div></div>
+    <div class="step"><div class="n">02 · START</div><div class="h">Enter the session</div><div class="b">Starting BP, UF goal, dry weight, symptoms. The mirror begins; missing data is flagged.</div></div>
+    <div class="step"><div class="n">03 · EACH CUFF</div><div class="h">Read the projection</div><div class="b">Nadir forecast, 90% band, protocol state, stale-cuff guard. The forecast never sets the state.</div></div>
+    <div class="step"><div class="n">04 · IF REVIEW</div><div class="h">Work the pathway</div><div class="b">Assess, repeat BP, review UF, check fluid. Role-scoped steps, deterministic order.</div></div>
+    <div class="step"><div class="n">05 · HANDOFF</div><div class="h">Export the record</div><div class="b">FHIR bundle, bilingual card, frozen evidence, local audit chain. Replay for teaching.</div></div>
+  </div>
+
+  <h2>What changes for the technician at the chair</h2>
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <table>
+        <tr><th>Moment</th><th>Without the console</th><th>With the console</th></tr>
+        <tr><td>Before the cuff</td><td class="means">A list of names and a planned UF goal.</td><td class="means">A fixed board with a pre-session risk band and the planned goal.</td></tr>
+        <tr><td>Falling pressure</td><td class="means">A number and a judgement call.</td><td class="means">A 60-minute projection with a range and the measured state.</td></tr>
+        <tr><td>Calling the doctor</td><td class="means">A verbal summary and a guess at the fluid balance.</td><td class="means">A compact handoff with the same numbers and the arithmetic.</td></tr>
+        <tr><td>Change of plan</td><td class="means">Decision made; the cost is remembered, not recorded.</td><td class="means">Carry-forward arithmetic is explicit; the action is logged.</td></tr>
+      </table>
+    </div>
+    <div>
+      <p><b>What it helps with.</b> Time: the projection and the checklist shorten the “what do I do now?” pause. Shared language: the same five views travel with the patient from the chair to the phone call. Memory: the replay and audit chain preserve what was seen and done.</p>
+      <p><b>What it does not do.</b> It does not alarm, prescribe, allocate chairs, or act on the machine. The protocol state is driven by measured rules (SBP, symptoms, drop from baseline), not by the forecast. Missing required data produces <em>INSUFFICIENT_DATA</em>, not a guess.</p>
+      <div class="note note--warn" style="margin-top:2mm">
+        <div class="t">Integration path</div>
+        <p>Today: manual entry or CSV on a local machine, with no machine connection and no network call. Next: a read-only machine-log adapter and a local deployment package. Later: identity, role enforcement, and a validated interface — all require a pilot and ethics approval first.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:5mm">Who does what</h2>
+  <div class="grid-3">
+    <div class="card"><div class="eyebrow">Technician / dialysis nurse</div><p class="small" style="margin-top:1mm">Enters cuffs and UF; reads the band and the state; works the pathway; escalates. The primary user at the chair.</p></div>
+    <div class="card"><div class="eyebrow">Remote nephrologist</div><p class="small" style="margin-top:1mm">Receives the handoff; sees the same numbers; decides. The console is a shared picture, not a second opinion engine.</p></div>
+    <div class="card"><div class="eyebrow">Unit lead / clinical engineer</div><p class="small" style="margin-top:1mm">Owns the protocol version, the local calibration, the audit review, and the override log for any pilot.</p></div>
+  </div>
+
+  <p class="tiny" style="margin-top:2mm">The current prototype has no authentication, no role enforcement, no machine integration, and no external notification. The audit chain is a local demo object. These are prototype limits, not hidden features.</p>
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>12</span></div>
+</section>
+
+<!-- ============================ PAGE 13 — NEXT ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>09 · NEXT DIRECTION</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">What would make this real</div>
+  <h1 class="sec-h">Earn the right to predict, then earn the right to advise.</h1>
+  <p class="lead">The next phase is not a bigger model. It is better evidence, denser measurement, and a clear separation between a mirror, a forecast, and a treatment effect.</p>
+
+  <div class="grid-3" style="margin-bottom:2mm">
+    <div class="card">
+      <div class="eyebrow">Now · 0–6 months</div>
+      <ul class="small" style="margin-top:1.5mm">
+        <li>Local Indian cohort + label harmonisation (SBP&lt;90 vs symptomatic).</li>
+        <li>Log every UF change with time, delta, duration, reason.</li>
+        <li>Prospective silent-mode run: does the workflow fit the chair?</li>
+        <li>Recalibrate on the local unit; publish subgroup metrics.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Next · 6–18 months</div>
+      <ul class="small" style="margin-top:1.5mm">
+        <li>Action-aware nowcasting, evaluated as prediction only.</li>
+        <li>Pre-registered causal pilot (target trial or protocolised step-down).</li>
+        <li>Continuous / 5-minute BP feasibility and symptom labels.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="eyebrow">Later · 18 months+</div>
+      <ul class="small" style="margin-top:1.5mm">
+        <li>Wearable fusion — only after incremental-value studies.</li>
+        <li>Read-only machine integration and local deployment package.</li>
+        <li>Regulatory strategy (CDSCO SaMD, DPDP Act 2023).</li>
+        <li>Prospective outcome evaluation, not a model demo.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="margin-top:2mm">Could wearables add signal?</h2>
+  <p class="small" style="margin-bottom:1.5mm">Yes — as research features, not as a cuff replacement. Dialysis is a 3–5 hour window with repeated sitting still, which is unusually friendly to optical and motion sensing. The constraint is not the sensor; it is validation, missingness, and workflow.</p>
+  <table>
+    <tr><th style="width:32mm">Sensor</th><th>Signal</th><th>Potential feature</th><th style="width:52mm">Caveat</th></tr>
+    <tr><td><b>Wrist PPG / chest strap</b></td><td>Heart rate, HRV</td><td class="means">Beat-to-beat response to falling volume; early sympathetic activation</td><td class="means">Motion artefact; hypotension can also cause bradycardia; needs per-patient baselines.</td></tr>
+    <tr><td><b>Pulse oximeter</b></td><td>SpO₂, pulse</td><td class="means">Peripheral perfusion during UF; desaturation episodes</td><td class="means">Finger probes already in some units; not a BP surrogate.</td></tr>
+    <tr><td><b>Accelerometer</b></td><td>Movement, posture</td><td class="means">Restlessness, sleep, still periods; artefact detection</td><td class="means">Indirect; dialysis chairs constrain movement.</td></tr>
+    <tr><td><b>Skin temperature / EDA</b></td><td>Thermoregulation, stress</td><td class="means">Cooling and vasoconstriction patterns around events</td><td class="means">Noisy; ambient temperature confounds.</td></tr>
+    <tr><td><b>Cuffless BP (research)</b></td><td>PPG morphology</td><td class="means">Continuous trend between cuffs</td><td class="means">Not validated for dialysis; cannot replace the cuff today.</td></tr>
+    <tr><td><b>Bioimpedance</b></td><td>Fluid status</td><td class="means">Refill and volume state</td><td class="means">Sensitive to placement and posture; not a drop-in wearable.</td></tr>
+  </table>
+
+  <div class="grid-2" style="margin-top:2mm; align-items:start">
+    <div class="note">
+      <div class="t">What a credible wearable study would require</div>
+      <p>Clock synchronisation to the cuff and machine; a prespecified incremental-value metric (does it improve MAE or recall at the same alarm budget?); patient-disjoint validation; handling of missing and artefactual windows; and a clear separation of monitoring from alerting.</p>
+    </div>
+    <div class="note note--warn">
+      <div class="t">What would not be credible</div>
+      <p>A wearable demo that correlates with BP in a convenience sample. The bar is incremental value over the measured cuff + UF state, with the same clinical claim boundary.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:2mm; padding:2.6mm 3.4mm; border-color:#BFDAD4; background:var(--accent-soft)">
+    <div class="eyebrow">The product thesis, unchanged</div>
+    <p style="margin:1mm 0 0; font-size:10pt; line-height:1.5"><b>The gap is time and a shared trade-off.</b> A mirror, a structured review, and honest arithmetic buy the technician enough time to react and seek advice. Prediction is one feature of that — not the product.</p>
+  </div>
+
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype</span><span>13</span></div>
+</section>
+
+<!-- ============================ PAGE 14 — SOURCES ============================ -->
+<section class="sheet">
+  <div class="phead"><span><b>SOURCES &amp; CLAIM BOUNDARY</b></span><span>HEMOTWIN · SYSTEM BRIEF</span></div>
+
+  <div class="eyebrow">References</div>
+  <h1 class="sec-h">Where every number comes from.</h1>
+  <p class="lead">Internal numbers are from the frozen v2 evidence package (11 Nov 2026). External context is cited below. Where a figure is a planning estimate, it says so.</p>
+
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <h3>Internal evidence</h3>
+      <ul class="srcs">
+        <li><b>[2]</b> HemoTwin v2 model card (2026-11-10) and <span class="mono">docs/FACTS.md</span>: forecast lineage, features, scores, India context, published-work comparisons.</li>
+        <li><b>[3]</b> HemoTwin <span class="mono">docs/EVIDENCE_STATUS.md</span> (2026-11-11), <span class="mono">docs/CRASHRISK.md</span>, <span class="mono">evidence/g7_report.json</span>, <span class="mono">evidence/chair_risk.json</span>, <span class="mono">evidence/demo_twin.json</span>: G1–G7, A2 metrics, Task 02 and alert-v1 results.</li>
+        <li><b>[12]</b> G7 pre-registration and report: 581 matched events, 158 patients, MDE 2.33 mmHg, τ30 +0.13 [−2.63, +3.06], sham +2.91, P6a +0.43, protocol SHA-256 <span class="mono">9ec625ec…c2fd73</span>.</li>
+        <li><b>[13]</b> Task 02 online alert-utility evaluation and alert-v1 rescue-rule sweep: 8.2% at ≤0.25 alerts/session; 14.1% at 0.26 on fold 2; model channel adds no alerts at affordable slices.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>External context</h3>
+      <ul class="srcs">
+        <li><b>[1]</b> Lin et al., “HEMOBP: a benchmarking database from a hospital-based haemodialysis program,” <i>Scientific Data</i> 2019. DOI 10.1038/s41597-019-0319-8. CC BY 4.0.</li>
+        <li><b>[4]</b> Bello et al., “An update on the global disparities in kidney disease burden and care across continents,” <i>Lancet Global Health</i> 2024; Okpechi et al., “A global assessment of kidney care workforce,” <i>NDT</i> 2024 (median 11.75 nephrologists pmp, IQR 1.78–24.76).</li>
+        <li><b>[5]</b> ISN Global Kidney Health Atlas 2023 (ISN-GKHA): income-group nephrologist density; low-income ~0.35 pmp vs high-income ~29.02 pmp.</li>
+        <li><b>[6]</b> Pradhan Mantri National Dialysis Programme (PMNDP), official dashboard: 36 states/UTs, 751 districts, 1,925 centres, 13,824 haemodialysis machines, 33.16 lakh patients. pmndp.mohfw.gov.in.</li>
+        <li><b>[7]</b> “Nephrology Services in Uttar Pradesh,” <i>Indian Journal of Nephrology</i> 2024: 145 nephrologists; only three centres provide dialysis-technician courses; most district-hospital PMNDP dialysis by nurses or technicians with limited working knowledge. indianjnephrol.org.</li>
+        <li><b>[8]</b> Stefánsson et al., <i>Kidney International</i> 2014 (IDH and mortality); Chang et al., <i>CJASN</i> 2011 (IDH and access thrombosis). Quoted via FACTS [2].</li>
+        <li><b>[9]</b> Wang et al., <i>Kidney360</i> 2023 (refill 30–50% early; refill-to-UF ratio rises before collapse); Mitsides et al. 2019 (plasma refill 0.12–0.36 L/h).</li>
+        <li><b>[10]</b> KDOQI 2015 HD adequacy guidelines: UFR &gt;13 mL/kg/h reference ceiling.</li>
+        <li><b>[11]</b> Zhang et al., <i>NDT</i> 2023: XGBoost, 693 patients, AUROC 0.89 at 15–75 min. We do not claim to beat it; the horizon differs.</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="rule" style="margin:4mm 0 3mm">
+
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <h3>The boundary, in full</h3>
+      <p class="small"><b>We can claim:</b> a calibrated pre-anchor nadir forecast; exact fluid arithmetic; a deterministic, versioned review pathway; honest negative results from the twin and oracle tests; a local FHIR export and hash-chained demo audit.</p>
+      <p class="small"><b>We refuse to claim:</b> validated alert utility, clinical benefit, or a safety layer; a treatment effect from any UF option; prospective, external, symptomatic-IDH, or Indian-unit validation; authentication, role enforcement, immutable audit, or machine integration.</p>
+    </div>
+    <div>
+      <h3>How to cite this brief</h3>
+      <p class="small mono" style="font-size:7pt; background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:2.4mm 3mm">HemoTwin Team. <i>HemoTwin System Brief: models, evidence, and next direction.</i> Research prototype, v2, 13 November 2026. Not a medical device.</p>
+      <p class="tiny" style="margin-top:2mm">Data licences: HEMOBP and the Mendeley Dialysis Database are CC BY 4.0. Raw data is not redistributed in this package. No Indian cohort has been collected; deployment in India requires local retraining, recalibration, and ethics approval.</p>
+    </div>
+  </div>
+
+  <div class="pfoot"><span>HemoTwin · system brief · research prototype · not a medical device</span><span>14</span></div>
+</section>
+
+</body>
+</html>
