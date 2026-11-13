@@ -3,8 +3,8 @@
 **HemoTwin mirrors a dialysis session while it runs.** It flags who is likely to
 crash today before the first cuff is taken, forecasts the systolic blood-pressure
 drop about an hour before it lands, and turns every ultrafiltration choice into
-exact fluid arithmetic — so the technician at the chair can act and call the
-remote doctor earlier. Decision support that buys time, not a prescription engine.
+exact fluid arithmetic — so the technician at the chair can take better decisions or call the
+remote doctor earlier.
 
 ![HemoTwin home — the live 3D dialysis bay](docs/img/home_3d.png)
 
