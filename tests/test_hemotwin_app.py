@@ -34,10 +34,14 @@ class HomePageTest(unittest.TestCase):
         self.assertIn("./models/dialysis_bay.glb", bundle)
         home = (ROOT / "app" / "views" / "home_page.py").read_text(
             encoding="utf-8")
-        self.assertIn("/app/static/sim/embed.html", home)
+        self.assertIn('"app/static/sim/embed.html"', home)
+        self.assertIn("urljoin", home)
+        self.assertIn("st.context.url", home)
         embed = sim.parent / "embed.html"
-        self.assertIn("index.html?embed=1",
-                      embed.read_text(encoding="utf-8"))
+        embed_text = embed.read_text(encoding="utf-8")
+        self.assertIn("index.html?embed=1", embed_text)
+        self.assertIn("window.parent", embed_text)
+        self.assertNotIn("window.top", embed_text)
         nav = (ROOT / "app" / "hemotwin.py").read_text(encoding="utf-8")
         self.assertLess(nav.index("views/home_page.py"),
                         nav.index("views/case_lab_page.py"))
