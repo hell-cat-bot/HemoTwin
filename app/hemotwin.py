@@ -62,6 +62,10 @@ pages = [
     ),
 ]
 
+if st.query_params.get("view") == "chairs":
+    st.query_params.clear()
+    st.switch_page(pages[2])
+
 shell.header(pages)
 pg = st.navigation(pages, position="hidden")
 pg.run()

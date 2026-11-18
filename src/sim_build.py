@@ -48,7 +48,7 @@ iframe { display: block; width: 100%; height: 100%; border: 0; }
 // dissolves the scene into the console and opens the Chair board; while a
 // session is running the gesture is ignored. The nav link is clicked in the
 // host document so Streamlit keeps its client-side navigation (no reload).
-const CHAIRS_HREF = "chair_board_page";
+const CHAIRS_QUERY = "?view=chairs";
 let leaving = false;
 let acc = 0;
 let lastWheel = 0;
@@ -92,10 +92,7 @@ function openChairs() {
     doc.documentElement.classList.add("ht-leaving");
   }
   window.setTimeout(() => {
-    const link = window.parent.document.querySelector(
-      '.st-key-ht_topbar a[href="' + CHAIRS_HREF + '"]');
-    if (link) link.click();
-    else window.parent.location.href = CHAIRS_HREF;
+    window.parent.location.href = CHAIRS_QUERY;
   }, 300);
 }
 
