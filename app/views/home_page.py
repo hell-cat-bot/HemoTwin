@@ -7,9 +7,22 @@ static/sim/embed.html).
 """
 from __future__ import annotations
 
+from urllib.parse import urljoin
+
 import streamlit as st
 
-SIM_URL = "/app/static/sim/embed.html"
+# Streamlit Cloud serves the app under /~/+/; build an absolute URL from the
+# app's own base so st.iframe keeps that prefix. Relative strings are treated
+# as local file paths by st.iframe in Streamlit 1.66.
+try:
+    _base = st.context.url or "/"
+except Exception:  # no request context (tests/imports)
+    _base = "/"
+_base = _base.rstrip("/") + "/"
+if "/~/" not in _base and _base.startswith("https://") \
+        and ".streamlit.app" in _base:
+    _base += "~/+/"
+SIM_URL = urljoin(_base, "app/static/sim/embed.html")
 
 st.markdown("""
 <style>

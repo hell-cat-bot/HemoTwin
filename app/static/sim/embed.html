@@ -63,10 +63,10 @@ function openChairs() {
     doc.documentElement.classList.add("ht-leaving");
   }
   window.setTimeout(() => {
-    const link = window.top.document.querySelector(
+    const link = window.parent.document.querySelector(
       '.st-key-ht_topbar a[href="' + CHAIRS_HREF + '"]');
     if (link) link.click();
-    else window.top.location.href = "/" + CHAIRS_HREF;
+    else window.parent.location.href = CHAIRS_HREF;
   }, 300);
 }
 
