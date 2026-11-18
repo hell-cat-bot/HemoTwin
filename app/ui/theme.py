@@ -73,8 +73,13 @@ html, body, [class*="css"] {{
     radial-gradient(1100px 480px at 82% -14%, rgba(23, 117, 106, 0.06), transparent 62%),
     var(--ht-bg);
 }}
-[data-testid="stHeader"] {{ background: transparent; }}
-[data-testid="stToolbar"] {{ background: transparent; }}
+/* Streamlit's fixed header sits above the instrument bar and otherwise
+   intercepts every nav click. Let pointer events fall through to the custom
+   bar; its own controls stay reachable. */
+[data-testid="stHeader"] {{ background: transparent; pointer-events: none; }}
+[data-testid="stToolbar"] {{ background: transparent; pointer-events: none; }}
+[data-testid="stExpandSidebarButton"],
+[data-testid="stToolbarActionButton"] {{ pointer-events: auto; }}
 [data-testid="stDecoration"], #MainMenu, footer {{ display: none !important; }}
 [data-testid="stMainBlockContainer"], .block-container {{
   max-width: 1240px;

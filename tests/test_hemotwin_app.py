@@ -41,6 +41,9 @@ class HomePageTest(unittest.TestCase):
         embed_text = embed.read_text(encoding="utf-8")
         self.assertIn("index.html?embed=1", embed_text)
         self.assertIn("window.parent", embed_text)
+        self.assertIn("stPageLink-NavLink", embed_text)
+        self.assertIn("chair_board_page", embed_text)
+        self.assertNotIn("window.parent.location", embed_text)
         self.assertNotIn("window.top", embed_text)
         nav = (ROOT / "app" / "hemotwin.py").read_text(encoding="utf-8")
         self.assertLess(nav.index("views/home_page.py"),
@@ -48,6 +51,13 @@ class HomePageTest(unittest.TestCase):
 
 
 class ShellAndCaseLabTest(unittest.TestCase):
+    def test_cloud_header_cannot_block_nav(self):
+        theme = (ROOT / "app" / "ui" / "theme.py").read_text(encoding="utf-8")
+        header_rule = next(
+            line for line in theme.splitlines()
+            if '[data-testid="stHeader"]' in line)
+        self.assertIn("pointer-events: none", header_rule)
+
     def test_case_lab_loads_without_exception(self):
         at = AppTest.from_file(str(APP), default_timeout=120).run()
         at.switch_page("views/case_lab_page.py").run()

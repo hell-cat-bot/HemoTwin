@@ -46,9 +46,9 @@ iframe { display: block; width: 100%; height: 100%; border: 0; }
 <script>
 // The bay cannot scroll. On the idle landing a downward wheel or swipe
 // dissolves the scene into the console and opens the Chair board; while a
-// session is running the gesture is ignored. The nav link is clicked in the
-// host document so Streamlit keeps its client-side navigation (no reload).
-const CHAIRS_QUERY = "?view=chairs";
+// session is running the gesture is ignored. The embed is sandboxed and may
+// not navigate its parent, so it clicks the parent's Chairs page link instead;
+// Streamlit then keeps its client-side navigation (no reload).
 let leaving = false;
 let acc = 0;
 let lastWheel = 0;
@@ -73,8 +73,23 @@ function landingIdle(doc) {
   return !!app && app.dataset.live === "false";
 }
 
+function chairsLink() {
+  try {
+    const doc = window.parent.document;
+    return doc.querySelector(
+      'a[data-testid="stPageLink-NavLink"][href="chair_board_page"]')
+      || [...doc.querySelectorAll("a")]
+        .find((a) => (a.textContent || "").trim() === "Chairs")
+      || null;
+  } catch (err) {
+    return null;
+  }
+}
+
 function openChairs() {
   if (leaving) return;
+  const link = chairsLink();
+  if (!link) return;  // not inside the console: leave the scene alone
   leaving = true;
   const doc = parts().doc;
   if (doc) {
@@ -92,7 +107,14 @@ function openChairs() {
     doc.documentElement.classList.add("ht-leaving");
   }
   window.setTimeout(() => {
-    window.parent.location.href = CHAIRS_QUERY;
+    link.click();
+    // If the page switch is blocked, restore the bay instead of leaving a
+    // black iframe behind.
+    window.setTimeout(() => {
+      if (!doc || !doc.documentElement.classList.contains("ht-leaving")) return;
+      doc.documentElement.classList.remove("ht-leaving");
+      leaving = false;
+    }, 1600);
   }, 300);
 }
 
