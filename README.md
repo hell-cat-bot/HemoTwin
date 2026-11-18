@@ -1,7 +1,7 @@
 # HemoTwin
 
 **HemoTwin mirrors a dialysis session while it runs.** It flags who is likely to
-crash today before the first cuff is taken, forecasts the systolic blood-pressure
+crash today even before the session starts, forecasts the systolic blood-pressure
 drop about an hour before it lands, and turns every ultrafiltration choice into
 exact fluid arithmetic — so the technician at the chair can take better decisions or call the
 remote doctor earlier.
@@ -15,8 +15,8 @@ remote doctor earlier.
 
 ## What the twin does
 
-In dialysis, blood pressure often falls mid-session — a "crash" (systolic below
-90 mmHg) — while the doctor is remote and the technician at the chair has to
+In dialysis, blood pressure often suddenly falls mid-session — a "crash" (SBP below
+90 mmHg) — while the doctor is remote and the technician/nurse at the chair has to
 decide first. HemoTwin shadows that session end to end:
 
 - **Before the session — Chair board.** Scores all five chairs from patient
