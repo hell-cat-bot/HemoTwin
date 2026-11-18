@@ -9,9 +9,9 @@ remote doctor earlier.
 ![HemoTwin home — the live 3D dialysis bay](docs/img/home_3d.png)
 
 > **Research prototype. Not a medical device. No treatment-effect or
-> clinical-benefit claim.** Seven pre-registered checks: five pass, one is
-> partial, and **the twin test fails** — we ship that result honestly. Fold 2
-> was never touched by tuning.
+> clinical-benefit claim.** Seven pre-registered checks: four pass, one is
+> partial, and **two fail — G3 (the twin effect) and G7 (the twin test)**. We
+> ship both failures honestly. Fold 2 was never touched by tuning.
 
 ## What the twin does
 
@@ -27,13 +27,18 @@ decide first. HemoTwin shadows that session end to end:
   systolic pressure **+60 min ahead** (MAE **10.99 mmHg** on patients the model
   never saw), drawn as a fan chart against the 90 mmHg floor next to the
   observed cuffs — with a stale-cuff guardrail when readings go quiet.
+- **The crash score — ranking, not an alarm.** At every cuff the v3 model ranks
+  the risk of the first SBP<90 in the next 15–60 minutes. On the retrospective
+  patient-disjoint test it reached **AUROC 0.923** and caught **75.1%** of crash
+  sessions at an **18.2%** false-alarm session rate. It is a **shadow display**
+  only; needs more work to use it as a reliable alarm system.
 - **At the decision — fluid arithmetic.** Taper, hold, or pause the UF: every
-  option is priced against the same calibrated projection, and the table shows
+  option is priced against the same calibrated projection (i.e it shows the trafeoff of different choices), and the table shows
   exactly what changes in the UF schedule and the fluid carried forward.
   Display-only — nothing adjusts the machine.
 - **After the session — Replay & Evidence.** Watch the forecast compete against
   the recorded cuffs minute by minute, then open the evidence ledger: seven
-  pre-registered checks, including the twin test we **failed**.
+  pre-registered checks, including the two twin failures.
 
 ---
 
@@ -41,13 +46,16 @@ decide first. HemoTwin shadows that session end to end:
 
 ### Models
 
-| Model | Fold-2 result | Role in the console |
+| Model | Result | Role in the console |
 |---|---|---|
-| **Pre-anchor forecast** — 59 features, no future-UF oracle | **MAE 10.99 mmHg** · RMSE 14.65 | the calibrated forecast shown at the chair |
-| Oracle-assisted display forecast — 72 features incl. 13 observed future-UF | MAE 9.60 | display-only card; **not** the G2 baseline |
-| **Chair-board pre-session risk** (A2 variant, LightGBM) | **AUROC 0.8313** · recall@25 0.6015 · PPV@25 0.5914 · ECE10 0.0184 | five-chair board; no anchor BP, no anchor-time UF |
-| Crash-shape timing (P(early onset \| crash)) | AUROC 0.7716 · PPV@25 0.6615 | second line of the risk card |
-| Event model | AUROC 0.880 — but 8.2% detection at the 0.26 false-alert budget | failed its alert-utility gate; **shadow only**, never alarms |
+| **Pre-anchor forecast** — 59 features, no future-UF oracle | **Fold-2 MAE 10.99 mmHg** · RMSE 14.65 | the calibrated forecast shown at the chair |
+| Oracle-assisted display forecast — 72 features incl. 13 observed future-UF | Fold-2 MAE 9.60 | display-only card; **not** the G2 baseline |
+| **Chair-board pre-session risk** (A2 variant, LightGBM) | **Fold-2 AUROC 0.8313** · recall@25 0.6015 · PPV@25 0.5914 · ECE10 0.0184 | five-chair board; no anchor BP, no anchor-time UF |
+| Crash-shape timing (P(early onset \| crash)) | Fold-2 AUROC 0.7716 · PPV@25 0.6615 | second line of the risk card |
+| **Crash-risk ranking** (v3, 62 features) | **Test AUROC 0.923** (95% CI 0.906–0.937) · **75.1%** of crash sessions caught at an **18.2%** false-alarm session rate | ranking / shadow display; **not an alarm** |
+
+The 0.923 is a retrospective ranking result, not a catch rate. The strict online
+alarm test is in [When the crash model was tested as a live alarm](#when-the-crash-model-was-tested-as-a-live-alarm).
 
 ### The data behind them
 
@@ -78,6 +86,41 @@ number is an oracle-assisted display forecast that consumes 13 observed
 future-UF features; it appears only on the display-only card and is **not** the
 G2 baseline. Comparing 9.60 to 10.99 as if they were the same model is wrong.
 
+### How the crash model compares with published work
+
+The **0.923** is an internal, retrospective ranking result. It is **not** a
+like-for-like win over published IDH predictors, because the tasks differ.
+
+| Work | Cohort and horizon | Split | AUROC | What it also reports |
+|---|---|---|---|---|
+| **HemoTwin v3** | HEMOBP Taiwan · 1,070 patients / 205,482 sessions · **15–60 min** | patient-disjoint 70/15/15 | **0.923** (0.906–0.937) | 75.1% retrospective detection at 18.2% false-alarm sessions |
+| Zhang et al., *NDT* 2023 | 693 US patients / 42,656 sessions · **15–75 min** | session-randomized 80/20; patient-randomized 80/20 | **0.887 / 0.876** | 65% sensitivity at 90% specificity per SBP; 73.4% session sensitivity at 78% specificity |
+| Dong et al., *CMPB* 2023 | multicentre | internal | **0.82** | LightGBM, Fall30/Nadir90 definitions |
+| Hong et al., *Sci Rep* 2026 (meta-analysis) | 19 studies | mixed | **0.86 pooled** (0.83–0.89) | high heterogeneity; single-cohort and inconsistent definitions are the main weakness |
+
+Our horizon is narrower (15–60 vs 15–75), which is an easier task; the cohort
+and case mix differ; our split is patient-disjoint; and both our model and
+Zhang's are single-cohort internal evaluations. Against Zhang's
+patient-randomized split (0.876), our 0.923 is higher, but the horizon and
+cohorts still differ — it is not a like-for-like win. At the closest
+session-level operating point, our **75.1% detection at 18.2% false-alarm
+sessions** is comparable to Zhang's **73.4% sensitivity at 78.0%
+specificity**; our PPV is lower (30.6% vs 39.1%) because our test-split crash
+prevalence is about half (8.6% vs 16.1%).
+
+**Honest claim:** the 0.923 sits in the upper range of published single-cohort
+results, and our split is stricter than Zhang's session-randomized headline. We
+do not claim to beat the field. A fair head-to-head would need the same label,
+horizon, cohort and external validation.
+
+The 0.923 model is scored at a cuff. It is **not** the pre-session Chair-board
+model: the Chair board's AUROC 0.8313 answers a different, harder question — no
+BP and no current UF — and is not comparable to 0.923.
+
+Comparators: Zhang et al., *Nephrol Dial Transplant* 2023
+(doi:10.1093/ndt/gfad070); Dong et al., *Comput Methods Programs Biomed* 2023
+(PMID 37429246); Hong et al., *Sci Rep* 2026 meta-analysis (PMID 42386817).
+
 ---
 
 ## What is in the console
@@ -94,6 +137,8 @@ One Streamlit app — the 3D-bay landing plus five views:
 | **Evidence & handoff** | Checks scoreboard, twin-test forest plot, mechanism checks, temporal-order diagnostic, frozen protocol hash, claim boundary, FHIR R4 bundle, bilingual English/हिन्दी handoff card, SHA-256 audit chain. |
 
 ![Case lab — True crash](docs/img/case_lab.png)
+
+![Fluid tradeoff — hold, taper, or pause: exact fluid left behind](docs/img/fluid_tradeoff.png)
 
 ![Chair board — five chairs, before the first cuff](docs/img/chair_board.png)
 
@@ -178,6 +223,24 @@ symptomatic-IDH, or Indian-unit validation; a prescription, a default dose, or
 autonomous machine action.
 
 The boundary is part of the product. It is why the rest is trustworthy.
+
+## When the crash model was tested as a live alarm
+
+The **AUROC 0.923** and **75.1%** above are retrospective ranking results. We
+also tested the same model family under a pre-registered online rule:
+
+- score every cuff;
+- allow one alert per 60 minutes at most (non-resetting refractory);
+- count an alert as timely only if the first SBP<90 starts 15–60 minutes later;
+- cap non-useful alerts at **0.25–0.26 per session** — about one nuisance alert
+  every four sessions.
+
+**When tested against this rule, the result was 8.2% timely detection** (strict
+AUROC 0.880). A simple current-SBP rule reached about 20% at a comparable or
+lower nuisance burden. That is why the crash model is a **shadow display only**
+and never fires an alarm. The 0.923 is a ranking result; the 8.2% is the
+live-alarm result. Full protocol and numbers:
+[`docs/EVIDENCE_STATUS.md`](docs/EVIDENCE_STATUS.md).
 
 ---
 

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HemoTwin — Happiest Health Digital Twin Challenge 2026</title>
+<style>
+  :root{
+    --ivory:#F7F2E9;
+    --paper:#FCFBF8;
+    --ink:#161A19;
+    --muted:#6E675D;
+    --terracotta:#B4472F;
+    --sage:#3F6B5E;
+    --amber:#A9761F;
+    --bay:#0B0D0E;
+    --cream:#EDE3D3;
+    --line:rgba(22,26,25,.16);
+    --line-soft:rgba(22,26,25,.09);
+    --terracotta-soft:#F3E4DE;
+    --sage-soft:#E7EEE7;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#D9D2C3;color:var(--ink);}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;padding:24px 0 40px;}
+  .slide{
+    position:relative;width:1280px;height:720px;margin:0 auto 26px;
+    background:var(--ivory);overflow:hidden;
+    box-shadow:0 18px 40px rgba(30,24,16,.18);
+  }
+  .display{font-family:Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:-.022em;}
+  .body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;font-weight:400;}
+  .label{
+    font-family:Bahnschrift,'Segoe UI',sans-serif;font-weight:600;
+    font-size:11px;line-height:1.2;letter-spacing:.16em;text-transform:uppercase;
+  }
+  .mono{font-family:Consolas,'Courier New',monospace;}
+  .eyebrow{color:var(--terracotta);}
+  .pagenum{
+    position:absolute;right:64px;bottom:30px;font-family:Bahnschrift,'Segoe UI',sans-serif;
+    font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;
+  }
+  .foot{
+    position:absolute;left:64px;bottom:30px;font-family:Bahnschrift,'Segoe UI',sans-serif;
+    font-size:8.5px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;
+  }
+  .rule{position:absolute;height:1px;background:var(--line);}
+
+  /* ---------- cover ---------- */
+  .cover{background:var(--bay);}
+  .cover-bay{position:absolute;inset:0;width:1280px;height:720px;object-fit:cover;object-position:center;}
+  .cover-overlay{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(90deg,rgba(11,13,14,.98) 0%,rgba(11,13,14,.93) 38%,rgba(11,13,14,.55) 62%,rgba(11,13,14,.12) 82%,rgba(11,13,14,.55) 100%),
+      linear-gradient(0deg,rgba(11,13,14,.78) 0%,rgba(11,13,14,0) 44%);
+  }
+  .cover-brand{position:absolute;left:64px;top:46px;display:flex;align-items:center;gap:12px;color:var(--cream);}
+  .cover-mark{
+    width:31px;height:31px;border:1px solid rgba(237,227,211,.55);border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:Georgia,serif;font-weight:700;font-size:18px;color:var(--cream);
+  }
+  .cover-word{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:15px;letter-spacing:.18em;font-weight:600;}
+  .cover-v{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:9px;letter-spacing:.14em;color:rgba(237,227,211,.55);border:1px solid rgba(237,227,211,.28);border-radius:3px;padding:2px 6px;}
+  .cover-eyebrow{position:absolute;left:64px;top:196px;color:rgba(237,227,211,.70);}
+  .cover-eyebrow .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--terracotta);margin-right:9px;vertical-align:1px;}
+  .cover-title{position:absolute;left:64px;top:238px;margin:0;color:var(--cream);font-size:76px;line-height:.98;}
+  .cover-sub{position:absolute;left:64px;top:432px;color:rgba(237,227,211,.88);font-size:21px;line-height:1.35;}
+  .cover-rule{position:absolute;left:64px;top:498px;width:84px;height:2px;background:var(--terracotta);}
+  .cover-meta{position:absolute;left:64px;top:522px;color:rgba(237,227,211,.62);font-size:11px;line-height:1.55;letter-spacing:.02em;}
+  .cover-disclaimer{position:absolute;right:64px;bottom:34px;text-align:right;color:rgba(237,227,211,.58);font-size:9px;line-height:1.5;}
+
+  /* ---------- shared ---------- */
+  .kicker{position:absolute;left:64px;top:54px;}
+  .h1{position:absolute;left:64px;margin:0;font-size:54px;line-height:1.03;color:var(--ink);}
+  .lede{position:absolute;font-size:17px;line-height:1.45;color:var(--muted);}
+  .big{font-family:Georgia,serif;font-weight:700;letter-spacing:-.03em;color:var(--ink);}
+  .cap{position:absolute;font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:9px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);line-height:1.4;}
+  .plate{
+    position:absolute;background:var(--paper);border:1px solid var(--line-soft);border-radius:10px;
+    box-shadow:0 12px 26px rgba(30,24,16,.08);overflow:hidden;
+  }
+  .plate img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center;}
+  .plate-label{position:absolute;left:16px;top:13px;font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+
+  /* ---------- problem ---------- */
+  .problem-chart{position:absolute;left:620px;top:104px;width:596px;height:486px;padding:18px 18px 12px;}
+  .problem-chart svg{display:block;width:100%;height:100%;}
+  .huge-stat{position:absolute;left:64px;top:398px;font-size:106px;line-height:.9;color:var(--terracotta);}
+  .huge-cap{position:absolute;left:68px;top:512px;width:330px;font-size:12px;line-height:1.45;color:var(--muted);}
+  .problem-quote{position:absolute;left:64px;top:596px;width:470px;font-family:Georgia,serif;font-size:19px;line-height:1.35;color:var(--ink);font-style:italic;}
+  .source{position:absolute;left:64px;bottom:56px;font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:8px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;}
+
+  /* ---------- scale ---------- */
+  .scale-num{font-family:Georgia,serif;font-weight:700;font-size:78px;line-height:.95;letter-spacing:-.035em;color:var(--ink);}
+  .scale-cap{font-size:13px;line-height:1.4;color:var(--ink);margin-top:10px;}
+  .scale-sub{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:8.5px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);margin-top:6px;}
+  .deal-band{position:absolute;left:64px;top:470px;width:1152px;height:156px;background:var(--sage-soft);border-radius:8px;padding:22px 26px;}
+  .deal-item{font-size:14px;line-height:1.45;color:var(--ink);}
+
+  /* ---------- why twin ---------- */
+  .why-grid{position:absolute;left:64px;top:252px;width:1152px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;}
+  .why-icon{width:42px;height:42px;margin-bottom:18px;}
+  .why-title{font-family:Georgia,serif;font-weight:700;font-size:24px;letter-spacing:-.02em;margin:0 0 8px;color:var(--ink);}
+  .why-body{font-size:14px;line-height:1.5;color:var(--muted);margin:0;}
+  .why-quote{position:absolute;left:64px;top:596px;width:1000px;font-family:Georgia,serif;font-style:italic;font-size:22px;color:var(--ink);}
+  .why-timeline{position:absolute;left:64px;top:462px;width:1152px;}
+  .why-timeline .line{position:absolute;left:0;right:0;top:4px;height:1px;background:var(--line);}
+  .why-steps{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;}
+  .why-step .dot{width:9px;height:9px;border-radius:50%;background:var(--ink);position:relative;z-index:2;margin-bottom:14px;}
+  .why-step .step-label{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);}
+  .why-step .step-text{font-size:12px;line-height:1.4;color:var(--muted);margin-top:4px;}
+
+  /* ---------- product ---------- */
+  .stat-row{display:flex;gap:28px;}
+  .stat-num{font-family:Georgia,serif;font-weight:700;font-size:30px;line-height:1;letter-spacing:-.02em;color:var(--ink);}
+  .stat-cap{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:8.5px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);margin-top:5px;line-height:1.35;}
+  .callout{position:absolute;font-size:13px;line-height:1.5;color:var(--ink);}
+  .muted{color:var(--muted);}
+  .tiny{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:8px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;line-height:1.5;}
+
+  /* ---------- trust ---------- */
+  .claim-col{position:absolute;top:168px;width:510px;}
+  .claim-item{padding:15px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.5;color:var(--ink);}
+  .claim-item b{font-weight:600;}
+  .g7-band{position:absolute;left:64px;top:470px;width:1152px;height:160px;background:var(--terracotta-soft);border-radius:8px;padding:20px 26px;display:flex;align-items:center;gap:34px;}
+  .g7-band svg{flex:0 0 560px;height:92px;}
+  .g7-copy{flex:1;}
+
+  /* ---------- impact ---------- */
+  .impact-grid{position:absolute;left:64px;top:170px;width:1152px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px;}
+  .impact-item{font-size:13.5px;line-height:1.5;color:var(--ink);padding:13px 0;border-top:1px solid var(--line);}
+  .ask-band{position:absolute;left:64px;top:486px;width:1152px;height:126px;background:var(--sage-soft);border-radius:8px;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:30px;}
+  .ask-title{font-family:Georgia,serif;font-size:29px;font-weight:700;letter-spacing:-.02em;line-height:1.1;color:var(--ink);}
+  .ask-sub{font-size:12.5px;line-height:1.5;color:var(--muted);text-align:right;max-width:390px;}
+
+  /* ---------- technical ---------- */
+  .model-col{position:absolute;top:160px;width:530px;}
+  .model-q{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:5px;}
+  .model-name{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;}
+  .model-big{font-family:Georgia,serif;font-weight:700;font-size:82px;line-height:.9;letter-spacing:-.04em;color:var(--ink);}
+  .model-unit{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--muted);margin-top:8px;}
+  .model-metrics{font-size:12.5px;line-height:1.5;color:var(--ink);margin-top:16px;}
+  .model-desc{font-size:12.5px;line-height:1.5;color:var(--muted);margin-top:8px;}
+  .data-band{position:absolute;left:64px;top:500px;width:1152px;border-top:1px solid var(--line);padding-top:14px;font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);line-height:1.6;}
+  .compare{position:absolute;left:64px;top:558px;width:1152px;display:flex;align-items:flex-end;gap:28px;}
+  .dotplot{position:relative;flex:0 0 640px;height:74px;border-bottom:1px solid var(--line);}
+  .dot{position:absolute;bottom:-5px;width:10px;height:10px;border-radius:50%;}
+  .dot-label{position:absolute;bottom:14px;transform:translateX(-50%);text-align:center;font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:8px;letter-spacing:.07em;color:var(--muted);line-height:1.3;text-transform:uppercase;}
+  .compare-note{flex:1;font-size:10px;line-height:1.5;color:var(--muted);}
+
+  .bars{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+  .bar-row{display:grid;grid-template-columns:205px 1fr 42px;align-items:center;gap:10px;}
+  .bar-label{font-family:'Segoe UI',sans-serif;font-size:12px;line-height:1.3;color:var(--ink);}
+  .bar-track{height:9px;background:rgba(22,26,25,.08);border-radius:2px;overflow:hidden;}
+  .bar-fill{height:9px;background:var(--ink);border-radius:2px;}
+  .bar-fill.terra{background:var(--terracotta);}
+  .bar-fill.grey{background:#9A9488;}
+  .bar-val{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:10px;color:var(--muted);text-align:right;}
+  .note-row{position:absolute;left:64px;top:452px;width:1152px;display:flex;gap:40px;}
+  .note-row .note{flex:1;font-size:10px;line-height:1.55;color:var(--muted);}
+  .close-band{position:absolute;left:0;top:646px;width:1280px;height:74px;background:var(--bay);display:flex;align-items:center;justify-content:space-between;padding:0 64px;}
+  .close-line{font-family:Georgia,serif;font-size:23px;letter-spacing:-.015em;color:var(--cream);}
+  .close-ask{font-family:Bahnschrift,'Segoe UI',sans-serif;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(237,227,211,.70);}
+
+  @media print{
+    body{padding:0;background:#fff;}
+    .slide{margin:0;box-shadow:none;page-break-after:always;}
+    @page{size:1280px 720px;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= 1 · COVER ================= -->
+<section class="slide cover" id="s1">
+  <img class="cover-bay" src="../summit_assets/bay_clean.png" alt="Stylised dialysis bay with a patient at the chair">
+  <div class="cover-overlay"></div>
+  <div class="cover-brand">
+    <div class="cover-mark">H</div>
+    <div class="cover-word">HEMOTWIN</div>
+    <div class="cover-v">V2</div>
+  </div>
+  <div class="cover-eyebrow label"><span class="dot"></span>Happiest Health Digital Twin Challenge 2026 · Finals</div>
+  <h1 class="cover-title display">See the drop<br>before it lands.</h1>
+  <div class="cover-sub body">A chair-side digital twin for dialysis.</div>
+  <div class="cover-rule"></div>
+  <div class="cover-meta body">Reimagining and Reforming Healthcare in India Summit<br>Bengaluru · 20 November 2026</div>
+  <div class="cover-disclaimer body">Research prototype. Not a medical device.<br>No treatment-effect, alert-utility, or outcome claim.</div>
+</section>
+
+<!-- ================= 2 · PROBLEM ================= -->
+<section class="slide" id="s2">
+  <div class="kicker label eyebrow">The problem</div>
+  <h1 class="h1 display" style="top:96px;width:540px;font-size:52px;">The crash hides<br>between two cuffs.</h1>
+  <p class="lede" style="left:64px;top:252px;width:470px;">In one in ten sessions, systolic pressure falls below 90 mmHg. The drop starts before the next reading — and the decision lands on the technician at the chair.</p>
+  <div class="huge-stat big">1 in 10</div>
+  <div class="huge-cap">sessions in our cohort fall below 90 mmHg. The dangerous gap is not the number; it is the time between readings.</div>
+  <div class="problem-quote">“The doctor is remote. The person at the chair has minutes.”</div>
+  <div class="source">HEMOBP cohort, Taiwan · 205,482 sessions · 10.4% with nadir &lt;90 mmHg</div>
+
+  <div class="plate problem-chart">
+    <div class="plate-label">One session · cuff-sampled</div>
+    <svg viewBox="0 0 560 400" role="img" aria-label="Systolic pressure over one dialysis session falling below the 90 mmHg floor between cuff readings">
+      <!-- crash window -->
+      <rect x="330.8" y="30" width="112.3" height="315" fill="#B4472F" opacity=".08"></rect>
+      <!-- grid labels -->
+      <g font-family="Bahnschrift, Segoe UI, sans-serif" font-size="9" fill="#6E675D" letter-spacing=".06em">
+        <text x="20" y="62" text-anchor="end">160</text>
+        <text x="20" y="135" text-anchor="end">130</text>
+        <text x="20" y="208" text-anchor="end">100</text>
+        <text x="20" y="281" text-anchor="end">70</text>
+        <text x="45" y="366">0</text>
+        <text x="167" y="366" text-anchor="middle">60</text>
+        <text x="290" y="366" text-anchor="middle">120</text>
+        <text x="412" y="366" text-anchor="middle">180</text>
+        <text x="535" y="366" text-anchor="end">240</text>
+        <text x="300" y="390" text-anchor="middle" letter-spacing=".12em">SESSION MINUTES</text>
+      </g>
+      <!-- 90 floor -->
+      <line x1="45" y1="259.1" x2="535" y2="259.1" stroke="#B4472F" stroke-width="1.4" stroke-dasharray="5 5"></line>
+      <text x="528" y="251" text-anchor="end" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="9" fill="#B4472F" letter-spacing=".06em">90 mmHg floor</text>
+      <!-- line -->
+      <polyline points="45,58.6 106.3,72.9 167.5,93 228.8,121.6 269.6,173.2 330.8,236.2 392.1,270.5 443.1,293.4 494.2,253.4"
+        fill="none" stroke="#161A19" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"></polyline>
+      <!-- cuffs -->
+      <g fill="#A9761F">
+        <path d="M45 53.6 L50 58.6 L45 63.6 L40 58.6Z"></path>
+        <path d="M106.3 67.9 L111.3 72.9 L106.3 77.9 L101.3 72.9Z"></path>
+        <path d="M167.5 88 L172.5 93 L167.5 98 L162.5 93Z"></path>
+        <path d="M228.8 116.6 L233.8 121.6 L228.8 126.6 L223.8 121.6Z"></path>
+        <path d="M269.6 168.2 L274.6 173.2 L269.6 178.2 L264.6 173.2Z"></path>
+        <path d="M330.8 231.2 L335.8 236.2 L330.8 241.2 L325.8 236.2Z"></path>
+        <path d="M392.1 265.5 L397.1 270.5 L392.1 275.5 L387.1 270.5Z"></path>
+        <path d="M443.1 288.4 L448.1 293.4 L443.1 298.4 L438.1 293.4Z"></path>
+        <path d="M494.2 248.4 L499.2 253.4 L494.2 258.4 L489.2 253.4Z"></path>
+      </g>
+      <!-- labels -->
+      <g font-family="Bahnschrift, Segoe UI, sans-serif" font-size="9" letter-spacing=".06em">
+        <text x="280" y="163" fill="#6E675D">last cuff · 120</text>
+        <text x="455" y="311" fill="#B4472F">crash · 78</text>
+      </g>
+    </svg>
+  </div>
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">02 / 11</div>
+</section>
+
+<!-- ================= 3 · SCALE ================= -->
+<section class="slide" id="s3">
+  <div class="kicker label eyebrow">The ground reality</div>
+  <h1 class="h1 display" style="top:96px;width:900px;">The bottleneck is attention,<br>not machines.</h1>
+
+  <div style="position:absolute;left:64px;top:246px;width:340px;">
+    <div class="scale-num">34M</div>
+    <div class="scale-cap">dialysis sessions a year in India</div>
+    <div class="scale-sub">Estimate · label it as an estimate</div>
+  </div>
+  <div style="position:absolute;left:452px;top:246px;width:340px;">
+    <div class="scale-num">13,800</div>
+    <div class="scale-cap">dialysis machines across 751 PMNDP districts</div>
+    <div class="scale-sub">1,856–1,925 centres</div>
+  </div>
+  <div style="position:absolute;left:840px;top:246px;width:360px;">
+    <div class="scale-num">1–1.5</div>
+    <div class="scale-cap">nephrologists per million people</div>
+    <div class="scale-sub">vs ~25 per million in high-income systems</div>
+  </div>
+
+  <div class="deal-band">
+    <div class="label" style="color:var(--sage);margin-bottom:12px;">Current deal at the chair</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;">
+      <div class="deal-item"><b>Alarms fire after the number falls.</b><br><span class="muted">The technician is already reacting, not preparing.</span></div>
+      <div class="deal-item"><b>Dashboards document; they do not decide.</b><br><span class="muted">The state lives in the machine, the chart and a phone call.</span></div>
+      <div class="deal-item"><b>Staff already taper UF in 87.2% of sessions.</b><br><span class="muted">Without a shared plan, the fluid moves to the next session.</span></div>
+    </div>
+  </div>
+  <div class="source">Sources: PMNDP; HEMOBP cohort; FACTS.md. 34M is an estimate. 87.2% = sessions with a &gt;20% mid-session UF reduction.</div>
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">03 / 11</div>
+</section>
+
+<!-- ================= 4 · WHY A TWIN ================= -->
+<section class="slide" id="s4">
+  <div class="kicker label eyebrow">Why a twin</div>
+  <h1 class="h1 display" style="top:96px;">A number is not a plan.</h1>
+  <p class="lede" style="left:64px;top:176px;width:880px;">A score ends at a prediction. A twin carries the session state to the decision.</p>
+  <div class="rule" style="left:64px;top:238px;width:1152px;"></div>
+
+  <div class="why-grid">
+    <div>
+      <svg class="why-icon" viewBox="0 0 42 42" fill="none" stroke="#161A19" stroke-width="1.4">
+        <circle cx="16" cy="21" r="11"></circle>
+        <circle cx="26" cy="21" r="11"></circle>
+        <circle cx="21" cy="21" r="2.2" fill="#B4472F" stroke="none"></circle>
+      </svg>
+      <h2 class="why-title">Mirror</h2>
+      <p class="why-body">Cuffs, ultrafiltration, history, symptoms. One patient-specific state, updated at the chair.</p>
+    </div>
+    <div>
+      <svg class="why-icon" viewBox="0 0 42 42" fill="none">
+        <path d="M7 30 L20 20" stroke="#161A19" stroke-width="1.6"></path>
+        <path d="M20 20 C25 12, 30 9, 37 8" stroke="#B4472F" stroke-width="1.5" stroke-dasharray="3 3"></path>
+        <path d="M20 20 C27 17, 32 16, 38 16" stroke="#3F6B5E" stroke-width="1.3"></path>
+        <path d="M20 20 C27 24, 32 27, 38 30" stroke="#3F6B5E" stroke-width="1.3"></path>
+        <circle cx="20" cy="20" r="2.5" fill="#161A19"></circle>
+        <line x1="5" y1="33" x2="12" y2="33" stroke="#161A19" stroke-width="1.2"></line>
+      </svg>
+      <h2 class="why-title">Forecast</h2>
+      <p class="why-body">The next 60 minutes, with a 90% band. Refreshed at every cuff — and withheld when the data is stale.</p>
+    </div>
+    <div>
+      <svg class="why-icon" viewBox="0 0 42 42" fill="none" stroke="#161A19" stroke-width="1.4">
+        <path d="M21 5 V35"></path>
+        <path d="M8 12 H34"></path>
+        <path d="M8 12 L3 23 H13 Z"></path>
+        <path d="M34 12 L29 23 H39 Z"></path>
+        <path d="M12 35 H30"></path>
+      </svg>
+      <h2 class="why-title">Price the trade-off</h2>
+      <p class="why-body">Every UF option in litres left today and UF carried into the next session. Arithmetic, not a prescription.</p>
+    </div>
+  </div>
+
+  <div class="why-timeline">
+    <div class="line"></div>
+    <div class="why-steps">
+      <div class="why-step"><div class="dot"></div><div class="step-label">Before the first cuff</div><div class="step-text">Risk band from history and the planned UF goal.</div></div>
+      <div class="why-step"><div class="dot"></div><div class="step-label">During the session</div><div class="step-text">A calibrated +60 min forecast, refreshed at every cuff.</div></div>
+      <div class="why-step"><div class="dot"></div><div class="step-label">At the decision</div><div class="step-text">The fluid arithmetic behind each UF option.</div></div>
+    </div>
+  </div>
+
+  <div class="why-quote">“The twin does not choose. It makes the choice legible.”</div>
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">04 / 11</div>
+</section>
+
+<!-- ================= 5 · CHAIR BOARD ================= -->
+<section class="slide" id="s5">
+  <div class="kicker label eyebrow">Before the first cuff</div>
+  <h1 class="h1 display" style="top:92px;">Five chairs. One is different.</h1>
+
+  <div class="plate" style="left:64px;top:174px;width:700px;height:320px;">
+    <img src="../summit_assets/chairs_revealed_crop.png" alt="Chair board with five pre-session risk estimates revealed: chair 4 at 70% crashed at 112 minutes; the four low chairs did not">
+  </div>
+  <div class="cap" style="left:64px;top:508px;">Chair board · revealed after the pre-session estimate</div>
+
+  <div class="label" style="position:absolute;left:800px;top:160px;color:var(--terracotta);">Chair 04 · the one to watch</div>
+  <div class="plate" style="left:800px;top:186px;width:416px;height:145px;">
+    <img src="../summit_assets/chair4_card.png" alt="Chair 4 detail: 70.2% pre-session estimate, recorded crash at 112 minutes, nadir 78 mmHg">
+  </div>
+
+  <div class="stat-row" style="position:absolute;left:800px;top:360px;width:416px;justify-content:space-between;">
+    <div><div class="stat-num">112<span style="font-size:15px;"> min</span></div><div class="stat-cap">recorded crash</div></div>
+    <div><div class="stat-num">78</div><div class="stat-cap">mmHg nadir</div></div>
+    <div><div class="stat-num">1.00</div><div class="stat-cap">prior IDH rate</div></div>
+  </div>
+
+  <div class="callout" style="left:800px;top:458px;width:400px;">
+    <b>No BP taken. No current UF.</b><br>
+    <span class="muted">History, static fields and the planned UF goal alone — computed before the first cuff.</span>
+  </div>
+  <div class="tiny" style="position:absolute;left:800px;top:528px;width:400px;">Curated five-chair story · not an accuracy estimate · low band is not safe</div>
+
+  <div class="problem-quote" style="left:64px;top:590px;width:1000px;">“The high chair crashed. The four low chairs did not.”</div>
+
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">05 / 11</div>
+</section>
+
+<!-- ================= 6 · FLUID ================= -->
+<section class="slide" id="s6">
+  <div class="kicker label eyebrow">At the decision</div>
+  <h1 class="h1 display" style="top:92px;">Every option has a price.</h1>
+  <p class="lede" style="left:64px;top:160px;width:900px;">The forecast is shared across policies. What changes is the fluid arithmetic.</p>
+
+  <div class="plate" style="left:64px;top:208px;width:740px;height:282px;">
+    <img src="../summit_assets/fluid_table_crop.png" alt="Fluid trade-off table: hold, taper, keep-open and pause options with fluid left and next-session UF">
+  </div>
+  <div class="cap" style="left:64px;top:516px;">Fluid arithmetic · all policies share the same calibrated +60 min</div>
+
+  <div style="position:absolute;left:840px;top:208px;width:376px;">
+    <div style="padding-bottom:14px;border-bottom:1px solid var(--line);">
+      <div class="label" style="color:var(--muted);">Hold current UF</div>
+      <div class="big" style="font-size:34px;margin-top:6px;">0.00 L <span class="body" style="font-size:12px;color:var(--muted);font-weight:400;">left today</span></div>
+      <div class="tiny" style="margin-top:4px;">Next-session UF 18.2 mL/kg/h</div>
+    </div>
+    <div style="padding:14px 0;border-bottom:1px solid var(--line);">
+      <div class="label" style="color:var(--muted);">Taper to 50%</div>
+      <div class="big" style="font-size:34px;margin-top:6px;">0.25 L <span class="body" style="font-size:12px;color:var(--muted);font-weight:400;">left today</span></div>
+      <div class="tiny" style="margin-top:4px;">Next-session UF 19.1 mL/kg/h</div>
+    </div>
+    <div style="padding:14px 0;">
+      <div class="label" style="color:var(--terracotta);">Keep open · 0.10 L/h</div>
+      <div class="big" style="font-size:34px;margin-top:6px;color:var(--terracotta);">1.44 L <span class="body" style="font-size:12px;color:var(--muted);font-weight:400;">left today</span></div>
+      <div class="tiny" style="margin-top:4px;">Next-session UF 23.6 mL/kg/h</div>
+    </div>
+  </div>
+
+  <div class="problem-quote" style="left:64px;top:566px;width:1000px;">“Stop the UF and the fluid does not disappear. It moves to the next session.”</div>
+  <div class="source">Expected SBP is an uncalibrated sketch; the fluid arithmetic is exact. Neither is a prescription.</div>
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">06 / 11</div>
+</section>
+
+<!-- ================= 7 · REPLAY ================= -->
+<section class="slide" id="s7">
+  <div class="kicker label eyebrow">Prediction, then the record</div>
+  <h1 class="h1 display" style="top:92px;">Two minutes ahead of the first low.</h1>
+
+  <div class="plate" style="left:64px;top:180px;width:620px;height:317px;">
+    <img src="../summit_assets/replay_chart_only.png" alt="Session replay chart: systolic pressure forecast and recorded readings across the session, with the 90 mmHg floor">
+  </div>
+  <div class="cap" style="left:64px;top:540px;">Recorded session · forecast drawn first, then the cuffs</div>
+  <div class="tiny" style="position:absolute;left:64px;top:570px;width:620px;text-transform:none;letter-spacing:.02em;font-family:'Segoe UI',sans-serif;font-size:9.5px;line-height:1.55;">Dashed line = 90 mmHg floor · teal = research forecast · black = recorded cuffs · amber ticks = UF changes.</div>
+  <div style="position:absolute;left:720px;top:170px;width:496px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px 34px;">
+      <div><div class="big" style="font-size:46px;">128<span style="font-size:16px;letter-spacing:0;"> min</span></div><div class="stat-cap">forecast crossed 90</div></div>
+      <div><div class="big" style="font-size:46px;">130<span style="font-size:16px;letter-spacing:0;"> min</span></div><div class="stat-cap">first measured low</div></div>
+      <div><div class="big" style="font-size:46px;">88<span style="font-size:16px;letter-spacing:0;"> mmHg</span></div><div class="stat-cap">actual low</div></div>
+      <div><div class="big" style="font-size:46px;color:var(--terracotta);">84.4<span style="font-size:16px;letter-spacing:0;"> mmHg</span></div><div class="stat-cap">forecast low</div></div>
+    </div>
+    <div style="margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-family:Georgia,serif;font-style:italic;font-size:21px;line-height:1.4;color:var(--ink);">
+      The forecast crossed 90 two minutes before the first measured low.
+    </div>
+    <div class="tiny" style="margin-top:20px;text-transform:none;letter-spacing:.02em;font-family:'Segoe UI',sans-serif;font-size:9.5px;line-height:1.55;">
+      Retrospective replay. The forecast is observational; it is not an alert and did not trigger one. The scene is a synthetic illustration; the readings are recorded.
+    </div>
+  </div>
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">07 / 11</div>
+</section>
+
+<!-- ================= 8 · TRUST ================= -->
+<section class="slide" id="s8">
+  <div class="kicker label eyebrow">The boundary</div>
+  <h1 class="h1 display" style="top:92px;">The twin knows what it cannot do.</h1>
+
+  <div class="claim-col" style="left:64px;">
+    <div class="label" style="color:var(--sage);margin-bottom:6px;">We claim</div>
+    <div class="claim-item"><b>A calibrated next-hour forecast.</b> 10.99 mmHg average miss on patients never seen in training.</div>
+    <div class="claim-item"><b>A pre-session risk band.</b> AUROC 0.83 from history and the planned UF goal; no BP needed.</div>
+    <div class="claim-item"><b>Exact fluid arithmetic and a review pathway.</b> Nothing adjusts the machine.</div>
+  </div>
+
+  <div class="claim-col" style="left:660px;">
+    <div class="label" style="color:var(--terracotta);margin-bottom:6px;">We refuse to claim</div>
+    <div class="claim-item"><b>A what-if treatment effect.</b> We tested it; it failed. The counterfactual is retired.</div>
+    <div class="claim-item"><b>Alert utility or fewer crashes.</b> No outcome data; the event model is shadow-only.</div>
+    <div class="claim-item"><b>Indian or external validation.</b> No Indian cohort; the Spanish transport check failed at 0.474.</div>
+  </div>
+
+  <div class="g7-band">
+    <svg viewBox="0 0 560 92" role="img" aria-label="G7 effect estimate +0.13 mmHg with 95% confidence interval from minus 2.63 to plus 3.06, crossing zero">
+      <!-- axis -->
+      <line x1="30" y1="58" x2="530" y2="58" stroke="#161A19" stroke-width="1"></line>
+      <line x1="277" y1="16" x2="277" y2="70" stroke="#161A19" stroke-width="1.2" stroke-dasharray="3 3"></line>
+      <!-- CI band -->
+      <rect x="166" y="49" width="286" height="18" fill="#B4472F" opacity=".20" rx="2"></rect>
+      <line x1="166" y1="58" x2="452" y2="58" stroke="#B4472F" stroke-width="1.4"></line>
+      <line x1="166" y1="52" x2="166" y2="64" stroke="#B4472F" stroke-width="1.4"></line>
+      <line x1="452" y1="52" x2="452" y2="64" stroke="#B4472F" stroke-width="1.4"></line>
+      <!-- point -->
+      <circle cx="283" cy="58" r="5" fill="#B4472F"></circle>
+      <!-- labels -->
+      <g font-family="Bahnschrift, Segoe UI, sans-serif" font-size="8.5" fill="#6E675D" letter-spacing=".06em">
+        <text x="30" y="82">less UF</text>
+        <text x="530" y="82" text-anchor="end">more UF</text>
+        <text x="277" y="12" text-anchor="middle">no effect</text>
+        <text x="166" y="44" text-anchor="middle">−2.63</text>
+        <text x="452" y="44" text-anchor="middle">+3.06</text>
+      </g>
+      <text x="295" y="36" font-family="Bahnschrift, Segoe UI, sans-serif" font-size="9" fill="#B4472F" letter-spacing=".04em">+0.13</text>
+    </svg>
+    <div class="g7-copy">
+      <div class="label" style="color:var(--terracotta);">The test we ran</div>
+      <div style="font-family:Georgia,serif;font-size:21px;line-height:1.25;margin-top:5px;">Does less ultrafiltration raise pressure?</div>
+      <div style="font-size:12.5px;line-height:1.45;color:var(--ink);margin-top:6px;">+0.13 mmHg per 0.25 L/h less UF · 95% CI −2.63 to +3.06. The interval crosses zero. We retired the what-if.</div>
+    </div>
+  </div>
+  <div class="source" style="bottom:56px;">Seven pre-registered checks. The twin test failed; the forecast and risk surfaces remain. A pass is an engineering check, not clinical validation.</div>
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">08 / 11</div>
+</section>
+
+<!-- ================= 9 · IMPACT ================= -->
+<section class="slide" id="s9">
+  <div class="kicker label eyebrow">Impact &amp; integration</div>
+  <h1 class="h1 display" style="top:92px;">From one chair to one unit.</h1>
+
+  <div class="impact-grid">
+    <div>
+      <div class="label" style="color:var(--sage);margin-bottom:4px;">Impact we can measure</div>
+      <div class="impact-item"><b>Time-to-review.</b> How long before a falling session is escalated.</div>
+      <div class="impact-item"><b>Shared state.</b> One screen for the technician and the remote doctor.</div>
+      <div class="impact-item"><b>Fluid carry-forward.</b> Every UF choice logged against the next session.</div>
+    </div>
+    <div>
+      <div class="label" style="color:var(--muted);margin-bottom:4px;">How it fits</div>
+      <div class="impact-item"><b>Device-agnostic.</b> Manual entry or CSV today; no machine integration.</div>
+      <div class="impact-item"><b>FHIR R4 export.</b> ABDM path; DPDP-aware local deployment.</div>
+      <div class="impact-item"><b>No runtime network.</b> A stale cuff withholds the projection instead of guessing.</div>
+    </div>
+    <div>
+      <div class="label" style="color:var(--terracotta);margin-bottom:4px;">Next step</div>
+      <div class="impact-item"><b>One unit. 2–4 weeks.</b> Silent mode: no machine control, no alarms.</div>
+      <div class="impact-item"><b>Local recalibration.</b> Indian labels, local cuff cadence, local practice.</div>
+      <div class="impact-item"><b>Pre-registered workflow study.</b> Time-to-review first; outcomes later.</div>
+    </div>
+  </div>
+
+  <div class="ask-band">
+    <div class="ask-title">Give us one unit<br>for four weeks.</div>
+    <div class="ask-sub">No machine control. No alarms. A log of what the twin would have said — and every claim it refused.</div>
+  </div>
+  <div class="source" style="bottom:56px;">CDSCO Class B intent · DPDP Act 2023 · no Indian cohort yet. Impact measures are the next study, not current claims.</div>
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">09 / 11</div>
+</section>
+
+<!-- ================= 10 · MODELS ================= -->
+<section class="slide" id="s10">
+  <div class="kicker label eyebrow">The models</div>
+  <h1 class="h1 display" style="top:92px;">Two models, two questions.</h1>
+
+  <div class="model-col" style="left:64px;">
+    <div class="model-q" style="color:var(--sage);">Who is likely to crash today?</div>
+    <div class="model-name">Pre-session risk · A2 · LightGBM</div>
+    <div class="model-big">0.831</div>
+    <div class="model-unit">AUROC · fold 2 · no BP, no current UF</div>
+    <div class="model-metrics">Recall@25 <b>0.60</b> · PPV@25 <b>0.59</b> · ECE10 <b>0.018</b></div>
+    <div class="model-desc">History, static fields and the planned UF goal. One high chair, four low — before the first cuff.</div>
+  </div>
+
+  <div style="position:absolute;left:636px;top:160px;width:1px;height:330px;background:var(--line);"></div>
+
+  <div class="model-col" style="left:680px;">
+    <div class="model-q" style="color:var(--terracotta);">What will the next hour look like?</div>
+    <div class="model-name">60-minute forecast · v4.1 · LightGBM</div>
+    <div class="model-big">10.99</div>
+    <div class="model-unit">mmHg MAE · fold 2 · 59 pre-anchor features</div>
+    <div class="model-metrics">RMSE <b>14.65</b> · 90% band <b>89.2 / 90.1%</b> coverage</div>
+    <div class="model-desc">No future-UF oracle. A calibrated trajectory, refreshed at every cuff — not a treatment effect.</div>
+  </div>
+
+  <div style="position:absolute;left:64px;top:398px;width:1152px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:20px;align-items:center;">
+    <div><div class="label" style="color:var(--muted);">Static history</div><div style="font-size:11px;line-height:1.4;color:var(--ink);margin-top:4px;">Age · vintage · prior IDH rate · prior nadirs</div></div>
+    <div style="font-family:Georgia,serif;font-size:20px;color:var(--terracotta);">+</div>
+    <div><div class="label" style="color:var(--muted);">Medical IoT</div><div style="font-size:11px;line-height:1.4;color:var(--ink);margin-top:4px;">Cuffs · UF · machine settings</div></div>
+    <div style="font-family:Georgia,serif;font-size:20px;color:var(--terracotta);">→</div>
+    <div><div class="label" style="color:var(--sage);">One session state</div><div style="font-size:11px;line-height:1.4;color:var(--ink);margin-top:4px;">Mirror · forecast · arithmetic</div></div>
+  </div>
+
+  <div class="data-band">205,482 sessions · 1,070 patients · 4.19M medical-IoT rows · HEMOBP Taiwan (CC BY 4.0) · fold 2 untouched</div>
+
+  <div class="compare">
+    <div class="dotplot">
+      <div class="dot" style="left:40.5%;background:var(--ink);width:12px;height:12px;bottom:-6px;"></div>
+      <div class="dot-label" style="left:40.5%;color:var(--ink);">Ours 0.831<br>pre-session</div>
+      <div class="dot" style="left:55%;background:#9A9488;"></div>
+      <div class="dot-label" style="left:55%;">Hong 0.86<br>meta-analysis</div>
+      <div class="dot" style="left:70%;background:#9A9488;"></div>
+      <div class="dot-label" style="left:70%;">Zhang 0.89<br>intra-session</div>
+      <div style="position:absolute;left:0;bottom:-22px;font-family:Bahnschrift,Segoe UI,sans-serif;font-size:8px;letter-spacing:.07em;color:var(--muted);">0.75</div>
+      <div style="position:absolute;right:0;bottom:-22px;font-family:Bahnschrift,Segoe UI,sans-serif;font-size:8px;letter-spacing:.07em;color:var(--muted);">0.95</div>
+    </div>
+    <div class="compare-note"><b>Not directly comparable.</b> Zhang and Hong are intra-session, different horizons and cohorts. Our 0.831 asks a harder question: no BP, no current UF. No published MAE comparator for the forecast; the retired v3 twin scored 15.6 on the same taper slice (n=374).</div>
+  </div>
+
+  <div class="foot">HemoTwin · Research prototype · Not a medical device</div>
+  <div class="pagenum">10 / 11</div>
+</section>
+
+<!-- ================= 11 · DRIVERS / CLOSE ================= -->
+<section class="slide" id="s11">
+  <div class="kicker label eyebrow">What drives them</div>
+  <h1 class="h1 display" style="top:92px;">What the models actually read.</h1>
+
+  <div style="position:absolute;left:64px;top:166px;width:520px;">
+    <div class="label" style="color:var(--sage);">Pre-session risk · A2</div>
+    <div class="tiny" style="margin-top:4px;text-transform:none;letter-spacing:.02em;font-family:'Segoe UI',sans-serif;font-size:10px;">29 fields + 20 missingness flags · no BP · no current UF</div>
+    <div class="bars">
+      <div class="bar-row"><div class="bar-label">Prior 10-session IDH rate</div><div class="bar-track"><div class="bar-fill" style="width:100%;"></div></div><div class="bar-val">20.6%</div></div>
+      <div class="bar-row"><div class="bar-label">Prior 3-session mean nadir</div><div class="bar-track"><div class="bar-fill" style="width:76%;"></div></div><div class="bar-val">15.7%</div></div>
+      <div class="bar-row"><div class="bar-label">Prior 10-session mean nadir</div><div class="bar-track"><div class="bar-fill" style="width:50%;"></div></div><div class="bar-val">10.3%</div></div>
+      <div class="bar-row"><div class="bar-label">Prior session nadir</div><div class="bar-track"><div class="bar-fill" style="width:29%;"></div></div><div class="bar-val">6.0%</div></div>
+      <div class="bar-row"><div class="bar-label">Dialysis vintage</div><div class="bar-track"><div class="bar-fill" style="width:15%;"></div></div><div class="bar-val">3.0%</div></div>
+      <div class="bar-row"><div class="bar-label">Planned UF goal</div><div class="bar-track"><div class="bar-fill" style="width:14%;"></div></div><div class="bar-val">2.8%</div></div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:680px;top:166px;width:536px;">
+    <div class="label" style="color:var(--terracotta);">60-minute forecast · v4.1</div>
+    <div class="tiny" style="margin-top:4px;text-transform:none;letter-spacing:.02em;font-family:'Segoe UI',sans-serif;font-size:10px;">59 pre-anchor fields · no future-UF oracle</div>
+    <div class="bars">
+      <div class="bar-row"><div class="bar-label">Internal session projection <span style="color:var(--muted);">*</span></div><div class="bar-track"><div class="bar-fill grey" style="width:100%;"></div></div><div class="bar-val">47.4%</div></div>
+      <div class="bar-row"><div class="bar-label">Recent SBP minimum · 30 min</div><div class="bar-track"><div class="bar-fill terra" style="width:25%;"></div></div><div class="bar-val">12.0%</div></div>
+      <div class="bar-row"><div class="bar-label">Recent SBP minimum · 60 min</div><div class="bar-track"><div class="bar-fill terra" style="width:10%;"></div></div><div class="bar-val">4.9%</div></div>
+      <div class="bar-row"><div class="bar-label">Prior 3-session mean nadir</div><div class="bar-track"><div class="bar-fill terra" style="width:9%;"></div></div><div class="bar-val">4.2%</div></div>
+      <div class="bar-row"><div class="bar-label">Prior 10-session mean nadir</div><div class="bar-track"><div class="bar-fill terra" style="width:8%;"></div></div><div class="bar-val">3.8%</div></div>
+      <div class="bar-row"><div class="bar-label">Patient BP sensitivity</div><div class="bar-track"><div class="bar-fill terra" style="width:7%;"></div></div><div class="bar-val">3.4%</div></div>
+    </div>
+  </div>
+
+  <div class="note-row">
+    <div class="note"><b>Associations, not causes.</b> Planned UF goal encodes clinician behaviour; BP sensitivity is not an intervention effect. *Internal projection is a model input — not evidence the counterfactual works.</div>
+    <div class="note" style="text-align:right;"><b>5 pass or partial · 2 fail.</b> No alert authority · no Indian validation · no clinical-benefit claim.</div>
+  </div>
+  <div style="position:absolute;left:64px;top:536px;width:1000px;font-family:Georgia,serif;font-style:italic;font-size:16px;color:var(--muted);">The model is not a black box: every input is named, and every boundary is printed.</div>
+
+  <div class="close-band">
+    <div class="close-line">The twin knows what it cannot do. That is what makes it safe to try.</div>
+    <div class="close-ask">One unit · four weeks · silent mode</div>
+  </div>
+</section>
+
+</body>
+</html>
