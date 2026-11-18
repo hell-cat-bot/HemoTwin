@@ -1,0 +1,194 @@
+{
+  "features": [
+    "sbp_now",
+    "dbp_now",
+    "map_now",
+    "sbp_mean_15",
+    "sbp_min_15",
+    "sbp_slope_15",
+    "sbp_mean_30",
+    "sbp_min_30",
+    "sbp_slope_30",
+    "sbp_mean_60",
+    "sbp_min_60",
+    "sbp_slope_60",
+    "sbp_mean_120",
+    "sbp_min_120",
+    "sbp_slope_120",
+    "sbp_drop_from_max",
+    "n_bp_so_far",
+    "uf_Lh",
+    "blood_flow",
+    "conductivity",
+    "dia_temp",
+    "cum_uf_L",
+    "uf_ml_kg_h",
+    "uf_goal_L",
+    "frac_uf_done",
+    "uf_required_Lh",
+    "uf_gap_Lh",
+    "age",
+    "sex_M",
+    "dm",
+    "vintage_years",
+    "dry_weight",
+    "pre_weight",
+    "elapsed_frac",
+    "minutes_to_end",
+    "uf_slope_15",
+    "uf_slope_30",
+    "uf_var_30",
+    "uf_over13",
+    "cond_dev",
+    "temp_dev",
+    "sbp_std_30",
+    "sbp_std_60",
+    "pulse_pressure",
+    "map_slope_30",
+    "gap_since_last",
+    "n_bp_60",
+    "month",
+    "k_pat",
+    "beta_pat",
+    "twin_D_now",
+    "twin_refill_Lh",
+    "twin_refill_ratio",
+    "twin_pred_nadir",
+    "hist_idh_rate10",
+    "hist_mean_nadir3",
+    "hist_mean_nadir10",
+    "hist_prev_nadir",
+    "hist_mean_first_sbp3",
+    "hist_early_crash10",
+    "hist_last_idh",
+    "hist_n_sessions"
+  ],
+  "best_iteration": 636,
+  "ensemble": {
+    "members": 3,
+    "files": [
+      "v3_m0.txt",
+      "v3_m1.txt",
+      "v3_m2.txt"
+    ],
+    "note": "average raw member scores before calibration",
+    "original_files": [
+      "hemotwin_event_model.txt",
+      "hemotwin_event_model_m1.txt",
+      "hemotwin_event_model_m2.txt"
+    ]
+  },
+  "calibration": {
+    "ece_raw_holdout": 0.2034342761517272,
+    "ece_cal_holdout": 0.000661064874238833,
+    "reliability": [
+      {
+        "bin_mid": 0.05,
+        "predicted": 0.011372902877751499,
+        "observed": 0.011244424252436809,
+        "n": 96848
+      },
+      {
+        "bin_mid": 0.15000000000000002,
+        "predicted": 0.14651034083360434,
+        "observed": 0.14485912376456705,
+        "n": 6779
+      },
+      {
+        "bin_mid": 0.25,
+        "predicted": 0.251366752233658,
+        "observed": 0.25758754863813227,
+        "n": 2570
+      },
+      {
+        "bin_mid": 0.35000000000000003,
+        "predicted": 0.34974745274954405,
+        "observed": 0.3615548455804047,
+        "n": 1878
+      },
+      {
+        "bin_mid": 0.45,
+        "predicted": 0.4789735201467765,
+        "observed": 0.44086021505376344,
+        "n": 186
+      },
+      {
+        "bin_mid": 0.55,
+        "predicted": 0.5517355717426882,
+        "observed": 0.5172413793103449,
+        "n": 29
+      },
+      {
+        "bin_mid": 0.75,
+        "predicted": 0.7010631867715638,
+        "observed": 0.0,
+        "n": 1
+      },
+      {
+        "bin_mid": 0.95,
+        "predicted": 1.0,
+        "observed": 0.5,
+        "n": 2
+      }
+    ],
+    "threshold": 0.03937007874015748,
+    "target_sensitivity": 0.85,
+    "val_sens_at_thr": 0.8665318503538928,
+    "val_alarm_rate_at_thr": 0.19807374437867636
+  },
+  "test": {
+    "auroc": 0.922797605524585,
+    "auroc_ci": [
+      0.9055300523916964,
+      0.9373112733863065
+    ],
+    "auprc": 0.24956633350186092,
+    "prevalence": 0.028047617365502136,
+    "lift": 8.897951303657658,
+    "sens_at_spec90": 0.7206129303106633,
+    "brier": 0.023260721854243063,
+    "n": 169854,
+    "positives": 4764,
+    "threshold": 0.03937007874015748,
+    "sens_at_thr": 0.8492863140218304,
+    "alarm_rate_at_thr": 0.16773228772946178,
+    "ppv_at_thr": 0.142014742014742,
+    "calibration": {
+      "ece": 0.0024010969426015794
+    },
+    "auroc_by_horizon": {
+      "onset_15_30": {
+        "auroc": 0.9333019537748084,
+        "n_pos": 1576
+      },
+      "onset_30_60": {
+        "auroc": 0.9332879434343296,
+        "n_pos": 3188
+      }
+    }
+  },
+  "label": "first IDH (nadir SBP<90) onset in (t+15, t+60]",
+  "model_name": "event_model_v3",
+  "version": "v3",
+  "feature_count": 62,
+  "event_level": {
+    "detected": 1769,
+    "missed": 304,
+    "no_anchor_window": 281,
+    "n_idh_sessions": 2354,
+    "detection_rate_evaluable": 0.8533526290400386,
+    "detection_rate_all_sessions": 0.7514868309260833,
+    "false_alarm_session_rate": 0.18171300913551683,
+    "warn_lo": 15,
+    "warn_hi": 60
+  },
+  "session_ppv": {
+    "sessions_flagged": 6563,
+    "flagged_and_true": 2008,
+    "session_ppv": 0.3059576413225659,
+    "flagged_share": 0.23934211006163159
+  },
+  "artifact_status": "historical ranking model; not the default Live-session scorer",
+  "provenance": "Retained from the v1 research workspace: 62-feature v3 event model (3-seed LightGBM + isotonic). Old-exam metrics, not the Task-02 online alert test.",
+  "online_alert_note": "Under the Task-02 online rule (60-min non-resetting refractory; 15-60 min timely window; 0.25-0.26 non-useful alerts/session) the model family detects 8.2% timely. Not an alarm."
+}

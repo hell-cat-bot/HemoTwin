@@ -57,6 +57,12 @@ decide first. HemoTwin shadows that session end to end:
 The 0.923 is a retrospective ranking result, not a catch rate. The strict online
 alarm test is in [When the crash model was tested as a live alarm](#when-the-crash-model-was-tested-as-a-live-alarm).
 
+The v3 62-feature artifacts (3-seed LightGBM + isotonic) are bundled under
+[`models/event_model_v3/`](models/event_model_v3/). Files: `v3_m0.txt`,
+`v3_m1.txt`, `v3_m2.txt`, `v3_isotonic.json`, `v3_meta.json`. The Live session
+still uses the 48-feature universal Task-02 scorer; the v3 model is a historical
+ranking artifact, not the default live scorer.
+
 ### The data behind them
 
 **205,482** QC-eligible HEMOBP sessions (Taiwan, CC BY 4.0) ·
@@ -259,7 +265,7 @@ live-alarm result. Full protocol and numbers:
 ├── src/                 forecast serving, protocol engine, fluid arithmetic,
 │                        v4 twin, G7 identification, FHIR, audit
 ├── models/              bundled weights (no raw data): forecast_v2, physiotwin_v4,
-│                        event_model, crashrisk A2
+│                        event_model, event_model_v3, crashrisk A2
 ├── evidence/            frozen reports, G7 protocol + hash, demo + per-cuff JSON,
 │                        chair_risk.json, crashrisk confirm files
 ├── demo/                curated playback bundle, audit chain, example session CSV
